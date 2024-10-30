@@ -4,6 +4,17 @@
 - Michał Pędziwiatr
 - Miłosz Andryszczuk
 
+# Wymagania
+- Możliwość założenia konta przez e-mail.
+- Do zalogowania użytkownik używa adresu e-mail lub nicku oraz hasła.
+- Użytkownik może personalizować profil zmieniając zdjęcie profilowe, nick, dane osobiste, poziom zaawansowania, ulubione ćwiczenia.
+- System zawiera bazę danych z danymi użytkowników oraz informacjami o ćwiczeniach.
+- Opcja układania i planowania własnych treningów (ćwiczenia, powtórzenia, ciężary, przerwy).
+- Ustawianie konkretnych celów, powiadomienia przypominające o nich.
+- Możliwość śledzenia swoich postępów na siłowni m.in. w postaci raportów z danego odcinka czasu.
+- Każdy użytkownik posiada pełną historię swoich treningów.
+- Możliwość dodawania innych użytkowników do znajomych oraz dzielenia się z nimi swoimi osiągnięciami.
+
 
 # Dr Gym - śledź postępy na siłowni i dziel się ze znajomymi.
 
