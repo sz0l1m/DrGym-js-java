@@ -1,3 +1,5 @@
+package com.drgym.drgym.model;
+
 import java.time.LocalDateTime;
 
 public class Post {

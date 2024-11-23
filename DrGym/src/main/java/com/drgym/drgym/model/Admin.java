@@ -1,3 +1,6 @@
+package com.drgym.drgym.model;
+
+
 public class Admin extends UserTemplate {
     public Admin() {}
 
