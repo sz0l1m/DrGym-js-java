@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public abstract class Exercise {
     private String name;
     private ArrayList<String> musclesWorked;
+    private int id;
 
     public Exercise(String name, ArrayList<String> musclesWorked){
         this.name = name;
@@ -15,6 +16,14 @@ public abstract class Exercise {
         else{
             this.musclesWorked = new ArrayList<>();
         }
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    public void getId(int newId){
+        id = newId;
     }
 
     public String getName(){

@@ -3,9 +3,18 @@
 
 public class Activity {
     private Exercise exercise;
+    private int id;
 
     public Activity(Exercise exercise) {
         this.exercise = exercise;
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    public void getId(int newId){
+        id = newId;
     }
 
     public Exercise getExercise(){
