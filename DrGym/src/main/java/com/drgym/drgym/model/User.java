@@ -41,7 +41,7 @@ public class User extends UserTemplate {
             double weight,
             double height,
             Set<User> friends,
-            Exercise favoriteExercise,
+            Exercise favouriteExercise,
             List<Training> trainingHistory,
             List<Post> posts
     ) {
