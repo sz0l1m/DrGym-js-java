@@ -175,5 +175,79 @@ public class UserTest {
         user1.addFriend(user2);
         assertEquals(1, user1.getFriends().size());
     }
+
+    @Test
+    public void addTrainingShouldAddTrainingToHistory() {
+        User user = new User();
+        Training training = new Training();
+        user.addTraining(training);
+        assertTrue(user.getTrainingHistory().contains(training));
+    }
+
+    @Test
+    public void addTrainingShouldNotAddDuplicateTraining() {
+        User user = new User();
+        Training training = new Training();
+        user.addTraining(training);
+        user.addTraining(training);
+        assertEquals(1, user.getTrainingHistory().size());
+    }
+
+    @Test
+    public void removeTrainingShouldRemoveTrainingFromHistory() {
+        User user = new User();
+        Training training = new Training();
+        user.addTraining(training);
+        user.removeTraining(training);
+        assertFalse(user.getTrainingHistory().contains(training));
+    }
+
+    @Test
+    public void clearTrainingHistoryShouldClearAllTrainings() {
+        User user = new User();
+        Training training1 = new Training();
+        Training training2 = new Training();
+        user.addTraining(training1);
+        user.addTraining(training2);
+        user.clearTrainingHistory();
+        assertTrue(user.getTrainingHistory().isEmpty());
+    }
+
+    @Test
+    public void addPostShouldAddPostToList() {
+        User user = new User();
+        Post post = new Post();
+        user.addPost(post);
+        assertTrue(user.getPosts().contains(post));
+    }
+
+    @Test
+    public void addPostShouldNotAddDuplicatePost() {
+        User user = new User();
+        Post post = new Post();
+        user.addPost(post);
+        user.addPost(post);
+        assertEquals(1, user.getPosts().size());
+    }
+
+    @Test
+    public void removePostShouldRemovePostFromList() {
+        User user = new User();
+        Post post = new Post();
+        user.addPost(post);
+        user.removePost(post);
+        assertFalse(user.getPosts().contains(post));
+    }
+
+    @Test
+    public void updateUserInfoShouldUpdateAllFields() {
+        User user = new User(1, "oldUsername", "oldName", "oldSurname", "oldEmail@example.com", "oldPassword", 70.0, 180.0);
+        user.updateUserInfo("newUsername", "newName", "newSurname", "newEmail@example.com", "newPassword");
+        assertEquals("newUsername", user.getUsername());
+        assertEquals("newName", user.getName());
+        assertEquals("newSurname", user.getSurname());
+        assertEquals("newEmail@example.com", user.getEmail());
+        assertEquals("newPassword", user.getPassword());
+    }
 }
 
