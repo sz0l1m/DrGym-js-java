@@ -8,9 +8,9 @@ public class User extends UserTemplate {
     private double weight;
     private double height;
     private Set<User> friends = new HashSet<>();
-    // private Exercise favoriteExercise; (when Excercise class will be available)
-    // private List<Training> trainingHistory = new ArrayList<>(); (when Training class will be available)
-    // private List<Post> posts = new ArrayList<>(); (when Post class will be available)
+    private Exercise favouriteExercise;
+    private List<Training> trainingHistory = new ArrayList<>();
+    private List<Post> posts = new ArrayList<>();
 
     // empty constructor
     public User() {}
@@ -31,7 +31,6 @@ public class User extends UserTemplate {
         this.height = height;
     }
 
-    /* soon
     public User(
             int id,
             String username,
@@ -54,7 +53,6 @@ public class User extends UserTemplate {
         this.trainingHistory = trainingHistory;
         this.posts = posts;
     }
-    */
 
     // getters
     public double getWeight() {
@@ -68,19 +66,18 @@ public class User extends UserTemplate {
     public Set<User> getFriends() {
         return friends;
     }
-    /*
+
     public Exercise getFavoriteExercise() {
-        return favouriteExcercise;
+        return favouriteExercise;
     }
 
-    public List<Training> getTrainingHistory {
+    public List<Training> getTrainingHistory() {
         return trainingHistory;
     }
 
     public List<Post> getPosts() {
         return posts;
     }
-    */
 
     // setters
     public void setWeight(double newWeight) {
@@ -95,19 +92,19 @@ public class User extends UserTemplate {
         this.friends = newFriends;
     }
 
-    /*
+
     public void setFavoriteExercise(Exercise newFavouriteExercise) {
-        this.favouriteExercise = newFavouriteExercise
+        this.favouriteExercise = newFavouriteExercise;
     }
 
     public void setTrainingHistory(List<Training> newTrainingHistory) {
-        this.trainingHistory = newTrainingHistory
+        this.trainingHistory = newTrainingHistory;
     }
 
     public void setPosts(List<Post> newPosts) {
         this.posts = newPosts;
     }
-    */
+
 
     public void addFriend(User newFriend) {
         if (!this.equals(newFriend)) {
