@@ -8,7 +8,7 @@ public abstract class Exercise {
     public Exercise(String name, ArrayList<String> musclesWorked){
         this.name = name;
         if(musclesWorked != null){
-            this.musclesWorked = musclesWorked;
+            this.musclesWorked = new ArrayList<>(musclesWorked);
         }
         else{
             this.musclesWorked = new ArrayList<>();
@@ -40,4 +40,11 @@ public abstract class Exercise {
             musclesWorked.remove(muscleToRemove);
             }
     }
+
+    @Override
+    public String toString(){
+        String output = "Exercise name: " + name + ", muscles worked: " + musclesWorked + ".";
+        return output;
+    }
+
 }
