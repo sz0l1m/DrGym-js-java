@@ -108,6 +108,19 @@ public class User extends UserTemplate {
         this.posts = newPosts;
     }
 
+    public void updateUserInfo(
+            String newUsername,
+            String newName,
+            String newSurname,
+            String newEmail,
+            String newPassword
+    ) {
+        this.setUsername(newUsername);
+        this.setName(newName);
+        this.setSurname(newSurname);
+        this.setEmail(newEmail);
+        this.setPassword(newPassword);
+    }
 
     public void addFriend(User newFriend) {
         if (!this.equals(newFriend)) {
@@ -119,6 +132,30 @@ public class User extends UserTemplate {
     public void removeFriend(User friend) {
         this.friends.remove(friend);
         friend.getFriends().remove(this);
+    }
+
+    public void addTraining(Training training) {
+        if(!this.getTrainingHistory().contains(training)){
+            this.getTrainingHistory().add(training);
+        }
+    }
+
+    public void removeTraining(Training training) {
+        this.getTrainingHistory().remove(training);
+    }
+
+    public void clearTrainingHistory() {
+        this.getTrainingHistory().clear();
+    }
+
+    public void addPost(Post post) {
+        if(!this.getPosts().contains(post)){
+            this.getPosts().add(post);
+        }
+    }
+
+    public void removePost(Post post) {
+        this.getPosts().remove(post);
     }
 
     @Override
