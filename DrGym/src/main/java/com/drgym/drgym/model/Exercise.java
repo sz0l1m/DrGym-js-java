@@ -2,6 +2,7 @@
 
 import java.util.ArrayList;
 
+
 public abstract class Exercise {
     private String name;
     private ArrayList<String> musclesWorked;
