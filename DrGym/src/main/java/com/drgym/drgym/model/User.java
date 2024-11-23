@@ -17,7 +17,7 @@ public class User extends UserTemplate {
 
     // basic constructor without lists
     public User(
-            int id,
+            Integer id,
             String username,
             String name,
             String surname,
