@@ -32,6 +32,14 @@ public class StrengthExercise extends Exercise {
         this.weight = weight;
     }
 
+    public String getWeightUnit(){
+        return weightUnit;
+    }
+
+    public void setWeightUnit(String newWeightUnit){
+        weightUnit = newWeightUnit;
+    }
+
     @Override
     public String toString(){
         String output = super.toString() + ",\n Repetitions: " + repetitions + ", Weight: " + weight + weightUnit;
