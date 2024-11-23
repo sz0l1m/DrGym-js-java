@@ -1,13 +1,15 @@
 public abstract class UserTemplate {
-    private int id;
+    private Integer id;
     private String username;
     private String name;
     private String surname;
     private String email;
     private String password;
 
+    public UserTemplate() {}
+
     public UserTemplate(
-            int id,
+            Integer id,
             String username,
             String name,
             String surname,
@@ -23,7 +25,7 @@ public abstract class UserTemplate {
     }
 
     // getters
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -48,7 +50,7 @@ public abstract class UserTemplate {
     }
 
     // setters
-    public void setId(int newId) {
+    public void setId(Integer newId) {
         this.id = newId;
     }
 

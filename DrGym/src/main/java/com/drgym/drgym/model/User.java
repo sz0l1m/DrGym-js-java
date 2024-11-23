@@ -1,10 +1,13 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 
 public class User extends UserTemplate {
     private double weight;
     private double height;
-    private List<User> friends = new ArrayList<>();
+    private Set<User> friends = new HashSet<>();
     // private Exercise favoriteExercise; (when Excercise class will be available)
     // private List<Training> trainingHistory = new ArrayList<>(); (when Training class will be available)
     // private List<Post> posts = new ArrayList<>(); (when Post class will be available)
@@ -38,7 +41,7 @@ public class User extends UserTemplate {
             String password,
             double weight,
             double height,
-            List<User> friends,
+            Set<User> friends,
             Exercise favoriteExercise,
             List<Training> trainingHistory,
             List<Post> posts
@@ -46,6 +49,10 @@ public class User extends UserTemplate {
         super(id, username, name, surname, email, password);
         this.weight = weight;
         this.height = height;
+        this.friends = friends;
+        this.favouriteExercise = favouriteExercise;
+        this.trainingHistory = trainingHistory;
+        this.posts = posts;
     }
     */
 
@@ -58,7 +65,7 @@ public class User extends UserTemplate {
         return height;
     }
 
-    public List<User> getFriends() {
+    public Set<User> getFriends() {
         return friends;
     }
     /*
@@ -84,7 +91,7 @@ public class User extends UserTemplate {
         this.height = newHeight;
     }
 
-    public void setFriends(List<User> newFriends) {
+    public void setFriends(Set<User> newFriends) {
         this.friends = newFriends;
     }
 
@@ -101,4 +108,24 @@ public class User extends UserTemplate {
         this.posts = newPosts;
     }
     */
+
+    public void addFriend(User newFriend) {
+        if (!this.equals(newFriend)) {
+            this.friends.add(newFriend);
+            newFriend.addFriend(this);
+        }
+    }
+
+    public void removeFriend(User friend) {
+        this.friends.remove(friend);
+        friend.removeFriend(this);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        final User user = (User) obj;
+        return this.getId() != null && this.getId().equals(user.getId());
+    }
 }
