@@ -1,0 +1,32 @@
+//author: Michał Pędziwiatr
+
+import java.time.LocalTime;
+import java.util.ArrayList;
+
+
+public class CardioExercise extends Exercise {
+    private LocalTime duration;
+
+    public CardioExercise(String name, ArrayList<String> musclesWorked, LocalTime duration) {
+        super(name, musclesWorked);
+        this.duration = duration;
+    }
+
+    public CardioExercise(String name, ArrayList<String> musclesWorked) {
+        this(name, musclesWorked, LocalTime.of(0, 0));
+    }
+
+    public LocalTime getDuration() {
+        return duration;
+    }
+
+    public void setDuration(LocalTime newDuration) {
+        this.duration = newDuration;
+    }
+
+    @Override
+    public String toString(){
+        String output = super.toString() + ",\n Duration: " + duration;
+        return output;
+    }
+}
