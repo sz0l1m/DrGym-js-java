@@ -1,5 +1,5 @@
 import java.util.ArrayList;
-
+//author: Michał Pędziwiatr
 
 public abstract class Exercise {
     private String name;
