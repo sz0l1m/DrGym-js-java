@@ -1,5 +1,8 @@
 //author: Michał Pędziwiatr
 
+import java.util.ArrayList;
+
+
 public class StrengthExercise extends Exercise {
     private int repetitions;
     private int weight;
