@@ -1,3 +1,6 @@
+package com.drgym.drgym.model;
+
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -109,13 +112,13 @@ public class User extends UserTemplate {
     public void addFriend(User newFriend) {
         if (!this.equals(newFriend)) {
             this.friends.add(newFriend);
-            newFriend.addFriend(this);
+            newFriend.getFriends().add(this);
         }
     }
 
     public void removeFriend(User friend) {
         this.friends.remove(friend);
-        friend.removeFriend(this);
+        friend.getFriends().remove(this);
     }
 
     @Override

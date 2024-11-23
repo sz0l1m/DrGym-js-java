@@ -1,3 +1,5 @@
+package com.drgym.drgym.model;
+
 public abstract class UserTemplate {
     private Integer id;
     private String username;
