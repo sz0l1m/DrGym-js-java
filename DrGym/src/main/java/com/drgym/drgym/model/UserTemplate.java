@@ -1,3 +1,4 @@
+// author: ksiemion
 package com.drgym.drgym.model;
 
 public abstract class UserTemplate {

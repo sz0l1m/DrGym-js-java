@@ -1,4 +1,3 @@
-<<<<<<< DrGym/src/main/java/com/drgym/drgym/model/Exercise.java
 //author: Michał Pędziwiatr
 package com.drgym.drgym.model;
 

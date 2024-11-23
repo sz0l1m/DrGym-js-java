@@ -1,4 +1,5 @@
 //author: Michał Pędziwiatr
+package com.drgym.drgym.model;
 
 import java.time.LocalTime;
 import java.util.ArrayList;

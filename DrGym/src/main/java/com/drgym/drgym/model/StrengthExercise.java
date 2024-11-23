@@ -1,4 +1,5 @@
 //author: Michał Pędziwiatr
+package com.drgym.drgym.model;
 
 import java.util.ArrayList;
 

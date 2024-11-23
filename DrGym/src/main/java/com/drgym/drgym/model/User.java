@@ -1,5 +1,5 @@
+// author: ksiemion
 package com.drgym.drgym.model;
-
 
 import java.util.ArrayList;
 import java.util.HashSet;
