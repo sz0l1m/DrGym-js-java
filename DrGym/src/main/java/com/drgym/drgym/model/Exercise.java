@@ -23,7 +23,7 @@ public abstract class Exercise {
         return id;
     }
 
-    public void getId(int newId){
+    public void setId(int newId){
         id = newId;
     }
 
