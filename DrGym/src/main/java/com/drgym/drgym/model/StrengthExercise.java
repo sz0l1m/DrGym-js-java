@@ -20,6 +20,8 @@ public class StrengthExercise extends Exercise {
         this(name, musclesWorked, repetitions, weight, "kg");
     }
 
+    public StrengthExercise() {}
+
     public int getRepetitions(){
         return repetitions;
     }

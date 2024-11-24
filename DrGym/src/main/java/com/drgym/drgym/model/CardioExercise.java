@@ -17,6 +17,8 @@ public class CardioExercise extends Exercise {
         this(name, musclesWorked, LocalTime.of(0, 0));
     }
 
+    public CardioExercise() {}
+
     public LocalTime getDuration() {
         return duration;
     }
