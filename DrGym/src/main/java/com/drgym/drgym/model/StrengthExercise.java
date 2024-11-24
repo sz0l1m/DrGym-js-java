@@ -46,7 +46,7 @@ public class StrengthExercise extends Exercise {
 
     @Override
     public String toString(){
-        String output = super.toString() + ",\n Repetitions: " + repetitions + ", Weight: " + weight + weightUnit;
+        String output = super.toString() + ",\nRepetitions: " + repetitions + ", Weight: " + weight + weightUnit;
         return output;
     }
 
