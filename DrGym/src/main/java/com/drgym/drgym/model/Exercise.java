@@ -19,6 +19,11 @@ public abstract class Exercise {
         }
     }
 
+    public Exercise(String name){
+        this.name = name;
+        this.musclesWorked = new ArrayList<>(musclesWorked);
+    }
+
     public int getId(){
         return id;
     }
