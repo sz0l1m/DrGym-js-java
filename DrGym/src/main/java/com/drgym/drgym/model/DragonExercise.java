@@ -12,7 +12,7 @@ public class DragonExercise extends Exercise {
         super(name, musclesWorked);
         this.heads = heads;
         this.health = health;
-        System.out.println("grrrr");
+        this.roar();
     }
 
     public float getHealth(){
@@ -36,5 +36,9 @@ public class DragonExercise extends Exercise {
         if(health < 0){
             health = 0;
         }
+    }
+
+    public void roar(){
+        System.out.println("grrrrr!");
     }
 }
