@@ -21,7 +21,7 @@ public abstract class Exercise {
 
     public Exercise(String name){
         this.name = name;
-        this.musclesWorked = new ArrayList<>(musclesWorked);
+        this.musclesWorked = new ArrayList<>();
     }
 
     public Integer getId(){
