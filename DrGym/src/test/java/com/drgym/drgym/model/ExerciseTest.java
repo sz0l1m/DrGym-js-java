@@ -21,6 +21,14 @@ public class ExerciseTest{
     }
 
     @Test
+    public void testConstructorWithoutMusclesWorked(){
+        ExerciseTestDummy exercise = new ExerciseTestDummy("Bench press");
+        ArrayList<String> emptyList = new ArrayList<>();
+
+        assertEquals(exercise.getMusclesWorked(), emptyList);
+    }
+
+    @Test
     public void testSetters(){
         ArrayList<String> musclesV1 = new ArrayList<>();
         musclesV1.add("pectorals");
@@ -66,6 +74,19 @@ public class ExerciseTest{
 
         exercise.addToMusclesWorked("pectorals");
         assertTrue(exercise.getMusclesWorked().size() == 1);
+    }
+
+    @Test
+    public void testToString(){
+        ArrayList<String> muscles = new ArrayList<>();
+        muscles.add("pectorals");
+        muscles.add("triceps");
+        muscles.add("front delts");
+        ExerciseTestDummy exercise = new ExerciseTestDummy("Bench press", muscles);
+
+        String expectedString = "Exercise name: Bench press, "+
+         "muscles worked: [pectorals, triceps, front delts]";
+        assertEquals(exercise.toString(), expectedString);
     }
 
 }
