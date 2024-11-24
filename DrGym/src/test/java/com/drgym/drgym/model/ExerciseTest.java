@@ -3,16 +3,8 @@ package com.drgym.drgym.model;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
 import java.util.ArrayList;
 
-
-public class ExerciseTestDummy extends Exercise {
-
-    public ExerciseTestDummy(String name, ArrayList<String> musclesWorked) {
-        super(name, musclesWorked);
-    }
-}
 
 public class ExerciseTest{
 
@@ -24,7 +16,7 @@ public class ExerciseTest{
         muscles.add("front delts");
         ExerciseTestDummy exercise = new ExerciseTestDummy("Bench press", muscles);
 
-        assertEquals("Bench Press", exercise.getName());
+        assertEquals("Bench press", exercise.getName());
         assertEquals(muscles, exercise.getMusclesWorked());
     }
 
@@ -58,7 +50,7 @@ public class ExerciseTest{
         assertTrue(exercise.getMusclesWorked().size() == 2);
 
         exercise.addToMusclesWorked("front delts");
-        assertTrue(exercise.getMusclesWorked().contains("front delts");
+        assertTrue(exercise.getMusclesWorked().contains("front delts"));
         assertTrue(exercise.getMusclesWorked().size() == 3);
 
         exercise.removeFromMusclesWorked("triceps");
@@ -68,8 +60,7 @@ public class ExerciseTest{
 
     @Test
     public void testConstructorWithNullMuscles(){
-        int muscles = null;
-        ExerciseTestDummy exercise = new ExerciseTestDummy("Bench press", muscles);
+        ExerciseTestDummy exercise = new ExerciseTestDummy("Bench press", null);
 
         assertTrue(exercise.getMusclesWorked() != null);
 
