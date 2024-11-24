@@ -5,34 +5,34 @@ import java.util.ArrayList;
 
 
 public class StrengthExercise extends Exercise {
-    private int repetitions;
-    private int weight;
+    private Integer repetitions;
+    private Integer weight;
     private String weightUnit;
 
-    public StrengthExercise(String name, ArrayList<String> musclesWorked, int repetitions, int weight, String weightUnit){
+    public StrengthExercise(String name, ArrayList<String> musclesWorked, Integer repetitions, Integer weight, String weightUnit){
         super(name, musclesWorked);
         this.repetitions = repetitions;
         this.weight = weight;
         this.weightUnit = weightUnit;
     }
 
-    public StrengthExercise(String name, ArrayList<String> musclesWorked, int repetitions, int weight){
+    public StrengthExercise(String name, ArrayList<String> musclesWorked, Integer repetitions, Integer weight){
         this(name, musclesWorked, repetitions, weight, "kg");
     }
 
-    public int getRepetitions(){
+    public Integer getRepetitions(){
         return repetitions;
     }
 
-    public void setRepetitions(int newRepetitions) {
+    public void setRepetitions(Integer newRepetitions) {
         this.repetitions = newRepetitions;
     }
 
-    public int getWeight() {
+    public Integer getWeight() {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(Integer weight) {
         this.weight = weight;
     }
 
