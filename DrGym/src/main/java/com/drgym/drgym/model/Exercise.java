@@ -55,7 +55,7 @@ public abstract class Exercise {
 
     @Override
     public String toString(){
-        String output = "Exercise name: " + name + ", muscles worked: " + musclesWorked + ".";
+        String output = "Exercise name: " + name + ", muscles worked: " + musclesWorked;
         return output;
     }
 
