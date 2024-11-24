@@ -29,6 +29,24 @@ public class ExerciseTest{
     }
 
     @Test
+    public void testSetters(){
+        ArrayList<String> musclesV1 = new ArrayList<>();
+        musclesV1.add("pectorals");
+        musclesV1.add("triceps");
+        musclesV1.add("front delts");
+        ExerciseTestDummy exercise = new ExerciseTestDummy("Bench press", musclesV1);
+
+        exercise.setName("Bicep curl");
+        assertTrue(exercise.getName() == "Bicep curl");
+
+        ArrayList<String> musclesV2 = new ArrayList<>();
+        musclesV2.add("biceps");
+        musclesV2.add("brachialis");
+        exercise.setMusclesWorked(musclesV2);
+        assertEquals(musclesV2, exercise.getMusclesWorked());
+    }
+
+    @Test
     public void testMusclesWorkedOperations(){
         ArrayList<String> muscles = new ArrayList<>();
         muscles.add("pectorals");
@@ -46,6 +64,17 @@ public class ExerciseTest{
         exercise.removeFromMusclesWorked("triceps");
         assertTrue(exercise.getMusclesWorked().size() == 2);
         assertFalse(exercise.getMusclesWorked().contains("triceps"));
+    }
+
+    @Test
+    public void testConstructorWithNullMuscles(){
+        int muscles = null;
+        ExerciseTestDummy exercise = new ExerciseTestDummy("Bench press", muscles);
+
+        assertTrue(exercise.getMusclesWorked() != null);
+
+        exercise.addToMusclesWorked("pectorals");
+        assertTrue(exercise.getMusclesWorked().size() == 1);
     }
 
 }
