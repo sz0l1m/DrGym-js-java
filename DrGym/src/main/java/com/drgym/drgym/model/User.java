@@ -35,7 +35,7 @@ public class User extends UserTemplate {
     }
 
     public User(
-            int id,
+            Integer id,
             String username,
             String name,
             String surname,
