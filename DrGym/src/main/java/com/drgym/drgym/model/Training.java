@@ -11,11 +11,11 @@ public class Training {
     private LocalDateTime dateStart;
     private LocalDateTime dateEnd;
     private Duration totalTime;
-    private List<Exercise> exercises = new ArrayList<>();
+    private List<Integer> exercises = new ArrayList<>();
 
     public Training() {}
 
-    public Training(LocalDateTime dateStart, LocalDateTime dateEnd, List<Exercise> exercises) {
+    public Training(LocalDateTime dateStart, LocalDateTime dateEnd, List<Integer> exercises) {
         if (dateStart.isAfter(dateEnd)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
@@ -46,7 +46,7 @@ public class Training {
         return totalTime;
     }
 
-    public List<Exercise> getExercises() {
+    public List<Integer> getExercises() {
         return exercises;
     }
 
@@ -58,7 +58,7 @@ public class Training {
         this.dateStart = dateStart;
     }
 
-    public void setExercises(List<Exercise> exercises) {
+    public void setExercises(List<Integer> exercises) {
         this.exercises = exercises;
     }
 
@@ -67,13 +67,13 @@ public class Training {
     }
 
     public void addExercise(Exercise exercise) {
-        if(!this.getExercises().contains(exercise)) {
-            this.getExercises().add(exercise);
+        if(!this.getExercises().contains(exercise.getId())) {
+            this.getExercises().add(exercise.getId());
         }
     }
 
     public void removeExercise(Exercise exercise) {
-        this.getExercises().remove(exercise);
+        this.getExercises().remove(exercise.getId());
     }
 
     public void clearExercises() {

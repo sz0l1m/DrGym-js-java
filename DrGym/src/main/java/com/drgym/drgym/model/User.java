@@ -12,7 +12,6 @@ public class User extends UserTemplate {
 
     // basic constructor without lists
     public User(
-            Integer id,
             String username,
             String name,
             String surname,
@@ -21,13 +20,12 @@ public class User extends UserTemplate {
             double weight,
             double height
     ) {
-        super(id, username, name, surname, email, password);
+        super(username, name, surname, email, password);
         this.weight = weight;
         this.height = height;
     }
 
     public User(
-            Integer id,
             String username,
             String name,
             String surname,
@@ -37,7 +35,7 @@ public class User extends UserTemplate {
             double height,
             Integer favouriteExerciseId
     ) {
-        super(id, username, name, surname, email, password);
+        super(username, name, surname, email, password);
         this.weight = weight;
         this.height = height;
         this.favouriteExerciseId = favouriteExerciseId;
@@ -90,7 +88,7 @@ public class User extends UserTemplate {
         if (this == obj) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
         final User user = (User) obj;
-        return this.getId() != null && this.getId().equals(user.getId());
+        return this.getUsername() != null && this.getUsername().equals(user.getUsername());
     }
 
 }

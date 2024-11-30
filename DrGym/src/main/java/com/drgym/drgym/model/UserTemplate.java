@@ -2,7 +2,6 @@
 package com.drgym.drgym.model;
 
 public abstract class UserTemplate {
-    private Integer id;
     private String username;
     private String name;
     private String surname;
@@ -12,14 +11,12 @@ public abstract class UserTemplate {
     public UserTemplate() {}
 
     public UserTemplate(
-            Integer id,
             String username,
             String name,
             String surname,
             String email,
             String password // will be encrypted in the future
     ) {
-        this.id = id;
         this.username = username;
         this.name = name;
         this.surname = surname;
@@ -28,10 +25,6 @@ public abstract class UserTemplate {
     }
 
     // getters
-    public Integer getId() {
-        return id;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -53,10 +46,6 @@ public abstract class UserTemplate {
     }
 
     // setters
-    public void setId(Integer newId) {
-        this.id = newId;
-    }
-
     public void setUsername(String newUsername) {
         this.username = newUsername;
     }

@@ -39,7 +39,7 @@ public class TrainingTest {
         Training training = new Training(LocalDateTime.now(), LocalDateTime.now().plusHours(1));
         Exercise exercise = new StrengthExercise();
         training.addExercise(exercise);
-        assertTrue(training.getExercises().contains(exercise));
+        assertTrue(training.getExercises().contains(exercise.getId()));
     }
 
     @Test
@@ -57,7 +57,7 @@ public class TrainingTest {
         Exercise exercise = new StrengthExercise();
         training.addExercise(exercise);
         training.removeExercise(exercise);
-        assertFalse(training.getExercises().contains(exercise));
+        assertFalse(training.getExercises().contains(exercise.getId()));
     }
 
     @Test
