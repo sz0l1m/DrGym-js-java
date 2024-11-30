@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public abstract class Exercise {
     private String name;
     private ArrayList<String> musclesWorked;
-    private int id;
+    private Integer id;
 
     public Exercise() {}
 
@@ -21,11 +21,16 @@ public abstract class Exercise {
         }
     }
 
-    public int getId(){
+    public Exercise(String name){
+        this.name = name;
+        this.musclesWorked = new ArrayList<>();
+    }
+
+    public Integer getId(){
         return id;
     }
 
-    public void getId(int newId){
+    public void setId(Integer newId){
         id = newId;
     }
 
@@ -57,7 +62,7 @@ public abstract class Exercise {
 
     @Override
     public String toString(){
-        String output = "Exercise name: " + name + ", muscles worked: " + musclesWorked + ".";
+        String output = "Exercise name: " + name + ", muscles worked: " + musclesWorked;
         return output;
     }
 

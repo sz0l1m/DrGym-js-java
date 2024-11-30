@@ -29,7 +29,7 @@ public class CardioExercise extends Exercise {
 
     @Override
     public String toString(){
-        String output = super.toString() + ",\n Duration: " + duration;
+        String output = super.toString() + ",\nDuration: " + duration;
         return output;
     }
 }
