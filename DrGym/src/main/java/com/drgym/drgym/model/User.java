@@ -1,19 +1,11 @@
 // author: ksiemion
 package com.drgym.drgym.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 
 public class User extends UserTemplate {
     private double weight;
     private double height;
-    private Set<User> friends = new HashSet<>();
-    private Exercise favouriteExercise;
-    private List<Training> trainingHistory = new ArrayList<>();
-    private List<Post> posts = new ArrayList<>();
+    private Integer favouriteExerciseId;
 
     // empty constructor
     public User() {}
@@ -35,7 +27,7 @@ public class User extends UserTemplate {
     }
 
     public User(
-            int id,
+            Integer id,
             String username,
             String name,
             String surname,
@@ -43,18 +35,12 @@ public class User extends UserTemplate {
             String password,
             double weight,
             double height,
-            Set<User> friends,
-            Exercise favouriteExercise,
-            List<Training> trainingHistory,
-            List<Post> posts
+            Integer favouriteExerciseId
     ) {
         super(id, username, name, surname, email, password);
         this.weight = weight;
         this.height = height;
-        this.friends = friends;
-        this.favouriteExercise = favouriteExercise;
-        this.trainingHistory = trainingHistory;
-        this.posts = posts;
+        this.favouriteExerciseId = favouriteExerciseId;
     }
 
     // getters
@@ -66,23 +52,12 @@ public class User extends UserTemplate {
         return height;
     }
 
-    public Set<User> getFriends() {
-        return friends;
-    }
-
-    public Exercise getFavoriteExercise() {
-        return favouriteExercise;
-    }
-
-    public List<Training> getTrainingHistory() {
-        return trainingHistory;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
+    public Integer getFavoriteExerciseId() {
+        return favouriteExerciseId;
     }
 
     // setters
+
     public void setWeight(double newWeight) {
         this.weight = newWeight;
     }
@@ -91,34 +66,23 @@ public class User extends UserTemplate {
         this.height = newHeight;
     }
 
-    public void setFriends(Set<User> newFriends) {
-        this.friends = newFriends;
+    public void setFavoriteExerciseId(Integer newFavouriteExerciseId) {
+        this.favouriteExerciseId = newFavouriteExerciseId;
     }
 
 
-    public void setFavoriteExercise(Exercise newFavouriteExercise) {
-        this.favouriteExercise = newFavouriteExercise;
-    }
-
-    public void setTrainingHistory(List<Training> newTrainingHistory) {
-        this.trainingHistory = newTrainingHistory;
-    }
-
-    public void setPosts(List<Post> newPosts) {
-        this.posts = newPosts;
-    }
-
-
-    public void addFriend(User newFriend) {
-        if (!this.equals(newFriend)) {
-            this.friends.add(newFriend);
-            newFriend.getFriends().add(this);
-        }
-    }
-
-    public void removeFriend(User friend) {
-        this.friends.remove(friend);
-        friend.getFriends().remove(this);
+    public void updateUserInfo(
+            String newUsername,
+            String newName,
+            String newSurname,
+            String newEmail,
+            String newPassword
+    ) {
+        this.setUsername(newUsername);
+        this.setName(newName);
+        this.setSurname(newSurname);
+        this.setEmail(newEmail);
+        this.setPassword(newPassword);
     }
 
     @Override
@@ -128,4 +92,5 @@ public class User extends UserTemplate {
         final User user = (User) obj;
         return this.getId() != null && this.getId().equals(user.getId());
     }
+
 }

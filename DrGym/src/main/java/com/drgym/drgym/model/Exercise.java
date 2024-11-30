@@ -9,6 +9,8 @@ public abstract class Exercise {
     private ArrayList<String> musclesWorked;
     private Integer id;
 
+    public Exercise() {}
+
     public Exercise(String name, ArrayList<String> musclesWorked){
         this.name = name;
         if(musclesWorked != null){
