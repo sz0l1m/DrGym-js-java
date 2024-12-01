@@ -1,10 +1,9 @@
 import { Typography } from '@mui/material';
 import Link from 'next/link';
-import style from './DrGymLogo.module.css';
 
 export default function DrGymLogo() {
   return (
-    <Link href="/" className={style.drGymLink}>
+    <Link href="/">
       <Typography
         color="primary"
         variant="h5"

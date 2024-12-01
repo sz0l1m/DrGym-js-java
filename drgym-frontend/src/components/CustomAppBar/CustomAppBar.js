@@ -11,6 +11,7 @@ import GroupIcon from '@mui/icons-material/Group';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import DrGymLogo from '@/components/DrGymLogo';
 import CustomDrawer from '@/components/CustomDrawer';
+import Link from 'next/link';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -48,41 +49,49 @@ export default function CustomAppBar() {
             <DrGymLogo />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Button
-                variant="text"
-                color="secondary"
-                size="small"
-                startIcon={<EmojiPeopleIcon />}
-              >
-                Posts
-              </Button>
+              <Link href="/user/posts">
+                <Button
+                  variant="text"
+                  color="secondary"
+                  size="small"
+                  startIcon={<EmojiPeopleIcon />}
+                >
+                  Posts
+                </Button>
+              </Link>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Button
-                variant="text"
-                color="secondary"
-                size="small"
-                startIcon={<FitnessCenterIcon />}
-              >
-                Your Workouts
-              </Button>
+              <Link href="/user/workouts">
+                <Button
+                  variant="text"
+                  color="secondary"
+                  size="small"
+                  startIcon={<FitnessCenterIcon />}
+                >
+                  Workouts
+                </Button>
+              </Link>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Button
-                variant="text"
-                color="secondary"
-                size="small"
-                startIcon={<BarChartIcon />}
-              >
-                Statistics
-              </Button>
+              <Link href="/user/stats">
+                <Button
+                  variant="text"
+                  color="secondary"
+                  size="small"
+                  startIcon={<BarChartIcon />}
+                >
+                  Statistics
+                </Button>
+              </Link>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Button
-                variant="text"
-                color="secondary"
-                size="small"
-                startIcon={<GroupIcon />}
-              >
-                Friends
-              </Button>
+              <Link href="/user/friends">
+                <Button
+                  variant="text"
+                  color="secondary"
+                  size="small"
+                  startIcon={<GroupIcon />}
+                >
+                  Friends
+                </Button>
+              </Link>
             </Box>
           </Box>
           <Box
@@ -92,12 +101,16 @@ export default function CustomAppBar() {
               alignItems: 'center',
             }}
           >
-            <Button color="primary" variant="text" size="small">
-              Sign in
-            </Button>
-            <Button color="primary" variant="contained" size="small">
-              Sign up
-            </Button>
+            <Link href="/login">
+              <Button color="primary" variant="text" size="small">
+                Sign in
+              </Button>
+            </Link>
+            <Link href="/register">
+              <Button color="primary" variant="contained" size="small">
+                Sign up
+              </Button>
+            </Link>
           </Box>
           <CustomDrawer />
         </StyledToolbar>

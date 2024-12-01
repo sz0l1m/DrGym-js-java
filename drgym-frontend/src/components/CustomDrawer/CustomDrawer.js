@@ -14,6 +14,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import GroupIcon from '@mui/icons-material/Group';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import DrGymLogo from '@/components/DrGymLogo';
+import Link from 'next/link';
 
 export default function CustomDrawer() {
   const [open, setOpen] = useState(false);
@@ -51,41 +52,53 @@ export default function CustomDrawer() {
             </IconButton>
           </Box>
           <Divider sx={{ my: 2 }} />
-          <MenuItem>
-            <ListItemIcon>
-              <EmojiPeopleIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Posts</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemIcon>
-              <FitnessCenterIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>My Workouts</ListItemText>
-          </MenuItem>
-          <MenuItem>
-            <ListItemIcon>
-              <BarChartIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Statistics</ListItemText>
-          </MenuItem>
-          <MenuItem sx={{ mb: 2 }}>
-            <ListItemIcon>
-              <GroupIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText>Friends</ListItemText>
-          </MenuItem>
+          <Link href="/user/posts">
+            <MenuItem>
+              <ListItemIcon>
+                <EmojiPeopleIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Posts</ListItemText>
+            </MenuItem>
+          </Link>
+          <Link href="/user/workouts">
+            <MenuItem>
+              <ListItemIcon>
+                <FitnessCenterIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Workouts</ListItemText>
+            </MenuItem>
+          </Link>
+          <Link href="/user/stats">
+            <MenuItem>
+              <ListItemIcon>
+                <BarChartIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Statistics</ListItemText>
+            </MenuItem>
+          </Link>
+          <Link href="/user/friends">
+            <MenuItem sx={{ mb: 2 }}>
+              <ListItemIcon>
+                <GroupIcon fontSize="small" />
+              </ListItemIcon>
+              <ListItemText>Friends</ListItemText>
+            </MenuItem>
+          </Link>
           <Divider />
-          <MenuItem sx={{ mt: 2 }}>
-            <Button color="primary" variant="contained" fullWidth>
-              Sign up
-            </Button>
-          </MenuItem>
-          <MenuItem>
-            <Button color="primary" variant="outlined" fullWidth>
-              Sign in
-            </Button>
-          </MenuItem>
+          <Link href="/login">
+            <MenuItem sx={{ mt: 2 }}>
+              <Button color="primary" variant="contained" fullWidth>
+                Sign up
+              </Button>
+            </MenuItem>
+          </Link>
+          <Link href="/register">
+            <MenuItem>
+              <Button color="primary" variant="outlined" fullWidth>
+                Sign in
+              </Button>
+            </MenuItem>
+          </Link>
         </Box>
       </Drawer>
     </Box>
