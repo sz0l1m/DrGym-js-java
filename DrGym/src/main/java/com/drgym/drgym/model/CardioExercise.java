@@ -32,4 +32,5 @@ public class CardioExercise extends Exercise {
         String output = super.toString() + ",\nDuration: " + duration;
         return output;
     }
+
 }
