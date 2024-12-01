@@ -1,3 +1,4 @@
+// author: ksiemion
 package com.drgym.drgym.repository;
 
 import com.drgym.drgym.model.User;
