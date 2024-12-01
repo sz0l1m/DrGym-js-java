@@ -1,7 +1,9 @@
 // author: ksiemion
 package com.drgym.drgym.model;
 
+import jakarta.persistence.Entity;
 
+@Entity
 public class User extends UserTemplate {
     private double weight;
     private double height;
