@@ -4,7 +4,7 @@ export default function HomePage() {
   return (
     <>
       <Typography variant="h4" gutterBottom>
-        Main Page
+        Posts
       </Typography>
     </>
   );
