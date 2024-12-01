@@ -1,7 +1,14 @@
 // author: ksiemion
 package com.drgym.drgym.model;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public abstract class UserTemplate {
+    @Id
+    @Column(unique = true)
     private String username;
     private String name;
     private String surname;
