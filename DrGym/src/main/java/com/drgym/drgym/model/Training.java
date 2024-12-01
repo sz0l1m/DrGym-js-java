@@ -1,18 +1,29 @@
 // author: ksiemion
 package com.drgym.drgym.model;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="workouts")
 public class Training {
+    @Id
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name = "start_datetime")
     private LocalDateTime dateStart;
+
+    @Column(name = "end_datetime")
     private LocalDateTime dateEnd;
-    private Duration totalTime;
-    private List<Long> exercises = new ArrayList<>();
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "created_datetime")
+    private LocalDateTime dateCreated;
 
     public Training() {}
 
@@ -22,8 +33,6 @@ public class Training {
         }
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
-        this.totalTime = Duration.between(dateStart, dateEnd);
-        this.exercises = exercises;
     }
 
     public Training(LocalDateTime dateStart, LocalDateTime dateEnd) {
@@ -32,7 +41,6 @@ public class Training {
         }
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
-        this.totalTime = Duration.between(dateStart, dateEnd);
     }
 
     public LocalDateTime getDateEnd() {
@@ -43,41 +51,9 @@ public class Training {
         return dateStart;
     }
 
-    public Duration getTotalTime() {
-        return totalTime;
-    }
+    public String getDescription() {return description;}
 
-    public List<Long> getExercises() {
-        return exercises;
-    }
-
-    public void setDateEnd(LocalDateTime dateEnd) {
-        this.dateEnd = dateEnd;
-    }
-
-    public void setDateStart(LocalDateTime dateStart) {
-        this.dateStart = dateStart;
-    }
-
-    public void setExercises(List<Long> exercises) {
-        this.exercises = exercises;
-    }
-
-    public void setTotalTime(Duration totalTime) {
-        this.totalTime = totalTime;
-    }
-
-    public void addExercise(Long exerciseId) {
-        if(!this.getExercises().contains(exerciseId)) {
-            this.getExercises().add(exerciseId);
-        }
-    }
-
-    public void removeExercise(Long exerciseId) {
-        this.getExercises().remove(exerciseId);
-    }
-
-    public void clearExercises() {
-        this.getExercises().clear();
-    }
 }
+
+
+
