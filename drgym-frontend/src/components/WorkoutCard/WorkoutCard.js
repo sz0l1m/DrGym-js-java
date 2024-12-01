@@ -8,13 +8,12 @@ import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import EastIcon from '@mui/icons-material/East';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import { formatDate, formatRelativeTime } from '@/utils/dateUtils';
 import style from './WorkoutCard.module.css';
 
@@ -62,7 +61,7 @@ export default function WorkoutCard() {
         />
         <CardContent>
           <Box className={style.workoutDateTime} sx={{ marginBottom: 4 }}>
-            <CalendarMonthIcon />
+            <CalendarMonthIcon sx={{ pb: '1px' }} />
             10.11.2024 13:30
             <EastIcon />
             10.11.2024 15:30
@@ -75,13 +74,9 @@ export default function WorkoutCard() {
             the mussels, if you like.
           </Typography>
         </CardContent>
-        <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="share">
-            <ShareIcon />
-          </IconButton>
+        <CardActions sx={{ px: 2, pb: 2 }}>
+          <FormatListBulletedIcon sx={{ mr: '4px' }} />
+          <Typography>Exercises</Typography>
           <ExpandMore
             expand={expanded}
             onClick={handleExpandClick}
