@@ -28,12 +28,6 @@ import '@/app/globals.css';
 import CustomAppBar from '@/components/CustomAppBar';
 
 export default function RootLayout({ children }) {
-  const [openDrawer, setOpenDrawer] = useState(false);
-
-  const toggleDrawer = (newOpenDrawer) => () => {
-    setOpenDrawer(newOpenDrawer);
-  };
-
   return (
     <html lang="en">
       <body>
@@ -57,6 +51,7 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
 // 'use client';
 
 // import { useState } from 'react';
