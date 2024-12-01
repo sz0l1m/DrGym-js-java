@@ -1,0 +1,93 @@
+import { useState } from 'react';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import Drawer from '@mui/material/Drawer';
+import MenuIcon from '@mui/icons-material/Menu';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import GroupIcon from '@mui/icons-material/Group';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import DrGymLogo from '@/components/DrGymLogo';
+
+export default function CustomDrawer() {
+  const [open, setOpen] = useState(false);
+
+  const toggleDrawer = (newOpen) => () => {
+    setOpen(newOpen);
+  };
+
+  return (
+    <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
+      <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
+        <MenuIcon />
+      </IconButton>
+      <Drawer
+        anchor="top"
+        open={open}
+        onClose={toggleDrawer(false)}
+        PaperProps={{
+          sx: {
+            top: 'var(--template-frame-height, 0px)',
+          },
+        }}
+      >
+        <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'baseline',
+            }}
+          >
+            <DrGymLogo />
+            <IconButton onClick={toggleDrawer(false)}>
+              <CloseRoundedIcon />
+            </IconButton>
+          </Box>
+          <Divider sx={{ my: 2 }} />
+          <MenuItem>
+            <ListItemIcon>
+              <EmojiPeopleIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Posts</ListItemText>
+          </MenuItem>
+          <MenuItem>
+            <ListItemIcon>
+              <FitnessCenterIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>My Workouts</ListItemText>
+          </MenuItem>
+          <MenuItem>
+            <ListItemIcon>
+              <BarChartIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Statistics</ListItemText>
+          </MenuItem>
+          <MenuItem sx={{ mb: 2 }}>
+            <ListItemIcon>
+              <GroupIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Friends</ListItemText>
+          </MenuItem>
+          <Divider />
+          <MenuItem sx={{ mt: 2 }}>
+            <Button color="primary" variant="contained" fullWidth>
+              Sign up
+            </Button>
+          </MenuItem>
+          <MenuItem>
+            <Button color="primary" variant="outlined" fullWidth>
+              Sign in
+            </Button>
+          </MenuItem>
+        </Box>
+      </Drawer>
+    </Box>
+  );
+}
