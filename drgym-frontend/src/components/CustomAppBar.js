@@ -11,15 +11,13 @@ import MenuItem from '@mui/material/MenuItem';
 import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import Typography from '@mui/material/Typography';
 import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import Link from 'next/link';
-import style from './CustomAppBar.module.css';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import GroupIcon from '@mui/icons-material/Group';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
+import DrGymLogo from '@/components/DrGymLogo';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -60,16 +58,7 @@ export default function CustomAppBar() {
           <Box
             sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}
           >
-            <Link href="/" className={style.drGymLink}>
-              <Typography
-                color="primary"
-                variant="h5"
-                component="div"
-                sx={{ flexGrow: 1, px: '5px' }}
-              >
-                DrGym
-              </Typography>
-            </Link>
+            <DrGymLogo />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
               <Button
@@ -145,16 +134,7 @@ export default function CustomAppBar() {
                     alignItems: 'baseline',
                   }}
                 >
-                  <Link href="/" className={style.drGymLink}>
-                    <Typography
-                      color="primary"
-                      variant="h5"
-                      component="div"
-                      sx={{ flexGrow: 1, px: '5px' }}
-                    >
-                      DrGym
-                    </Typography>
-                  </Link>
+                  <DrGymLogo />
                   <IconButton onClick={toggleDrawer(false)}>
                     <CloseRoundedIcon />
                   </IconButton>
