@@ -12,12 +12,11 @@ import Drawer from '@mui/material/Drawer';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Typography from '@mui/material/Typography';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
 import Link from 'next/link';
 import style from './CustomAppBar.module.css';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
-import LoginIcon from '@mui/icons-material/Login';
-import HomeIcon from '@mui/icons-material/Home';
-import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import GroupIcon from '@mui/icons-material/Group';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
@@ -142,21 +141,51 @@ export default function CustomAppBar() {
                 <Box
                   sx={{
                     display: 'flex',
-                    justifyContent: 'flex-end',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline',
                   }}
                 >
+                  <Link href="/" className={style.drGymLink}>
+                    <Typography
+                      color="primary"
+                      variant="h5"
+                      component="div"
+                      sx={{ flexGrow: 1, px: '5px' }}
+                    >
+                      DrGym
+                    </Typography>
+                  </Link>
                   <IconButton onClick={toggleDrawer(false)}>
                     <CloseRoundedIcon />
                   </IconButton>
                 </Box>
-                <MenuItem>Features</MenuItem>
-                <MenuItem>Testimonials</MenuItem>
-                <MenuItem>Highlights</MenuItem>
-                <MenuItem>Pricing</MenuItem>
-                <MenuItem>FAQ</MenuItem>
-                <MenuItem>Blog</MenuItem>
-                <Divider sx={{ my: 3 }} />
+                <Divider sx={{ my: 2 }} />
                 <MenuItem>
+                  <ListItemIcon>
+                    <EmojiPeopleIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Posts</ListItemText>
+                </MenuItem>
+                <MenuItem>
+                  <ListItemIcon>
+                    <FitnessCenterIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>My Workouts</ListItemText>
+                </MenuItem>
+                <MenuItem>
+                  <ListItemIcon>
+                    <BarChartIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Statistics</ListItemText>
+                </MenuItem>
+                <MenuItem sx={{ mb: 2 }}>
+                  <ListItemIcon>
+                    <GroupIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Friends</ListItemText>
+                </MenuItem>
+                <Divider />
+                <MenuItem sx={{ mt: 2 }}>
                   <Button color="primary" variant="contained" fullWidth>
                     Sign up
                   </Button>
