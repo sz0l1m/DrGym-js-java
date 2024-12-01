@@ -1,96 +1,106 @@
 // author: ksiemion
 package com.drgym.drgym.model;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 
 @Entity
-public class User extends UserTemplate {
-    private double weight;
-    private double height;
-    private Integer favouriteExerciseId;
+@Table(name="users")
+public class User {
+    @Id
+    @Column(name = "username", nullable = false)
+    private String username;
 
-    // empty constructor
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "surname")
+    private String surname;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "weight")
+    private Double weight;
+
+    @Column(name = "height")
+    private Double height;
+
     public User() {}
 
-    // basic constructor without lists
     public User(
             String username,
             String name,
             String surname,
             String email,
-            String password,
-            double weight,
-            double height
+            String password, // will be encrypted in the future
+            Double weight,
+            Double height
     ) {
-        super(username, name, surname, email, password);
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
         this.weight = weight;
         this.height = height;
-    }
-
-    public User(
-            String username,
-            String name,
-            String surname,
-            String email,
-            String password,
-            double weight,
-            double height,
-            Integer favouriteExerciseId
-    ) {
-        super(username, name, surname, email, password);
-        this.weight = weight;
-        this.height = height;
-        this.favouriteExerciseId = favouriteExerciseId;
     }
 
     // getters
-    public double getWeight() {
-        return weight;
+
+    public String getUsername() {
+        return username;
     }
 
-    public double getHeight() {
-        return height;
+    public String getName() {
+        return name;
     }
 
-    public Integer getFavoriteExerciseId() {
-        return favouriteExerciseId;
+    public String getSurname() {
+        return surname;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public Double getWeight() {return weight;}
+
+    public Double getHeight() {return height;}
 
     // setters
 
-    public void setWeight(double newWeight) {
+    public void setUsername(String newUsername) {
+        this.username = newUsername;
+    }
+
+    public void setName(String newName) {
+        this.name = newName;
+    }
+
+    public void setSurname(String newSurname) {
+        this.surname = newSurname;
+    }
+
+    public void setEmail(String newEmail) {
+        this.email = newEmail;
+    }
+
+    public void setPassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    public void setWeight(Double newWeight) {
         this.weight = newWeight;
     }
 
-    public void setHeight(double newHeight) {
+    public void setHeight(Double newHeight) {
         this.height = newHeight;
     }
-
-    public void setFavoriteExerciseId(Integer newFavouriteExerciseId) {
-        this.favouriteExerciseId = newFavouriteExerciseId;
-    }
-
-
-    public void updateUserInfo(
-            String newUsername,
-            String newName,
-            String newSurname,
-            String newEmail,
-            String newPassword
-    ) {
-        this.setUsername(newUsername);
-        this.setName(newName);
-        this.setSurname(newSurname);
-        this.setEmail(newEmail);
-        this.setPassword(newPassword);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        final User user = (User) obj;
-        return this.getUsername() != null && this.getUsername().equals(user.getUsername());
-    }
-
 }

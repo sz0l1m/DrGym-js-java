@@ -3,39 +3,39 @@ package com.drgym.drgym.model;
 
 
 public class PostReaction {
-    private Integer reactionId;
-    private Integer postId;
-    private Integer userId;
+    private Long reactionId;
+    private Long postId;
+    private Long userId;
 
     public PostReaction() {}
 
-    public PostReaction(Integer reactionId, Integer postId, Integer userId) {
+    public PostReaction(Long reactionId, Long postId, Long userId) {
         this.reactionId = reactionId;
         this.postId = postId;
         this.userId = userId;
     }
 
-    public Integer getReactionId() {
+    public Long getReactionId() {
         return reactionId;
     }
 
-    public void setReactionId(Integer reactionId) {
+    public void setReactionId(Long reactionId) {
         this.reactionId = reactionId;
     }
 
-    public Integer getPostId() {
+    public Long getPostId() {
         return postId;
     }
 
-    public void setPostId(Integer postId) {
+    public void setPostId(Long postId) {
         this.postId = postId;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 }

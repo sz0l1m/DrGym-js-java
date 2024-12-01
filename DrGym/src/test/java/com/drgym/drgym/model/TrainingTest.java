@@ -38,7 +38,7 @@ public class TrainingTest {
     public void addExerciseShouldAddExerciseToList() {
         Training training = new Training(LocalDateTime.now(), LocalDateTime.now().plusHours(1));
         Exercise exercise = new StrengthExercise();
-        training.addExercise(exercise);
+        training.addExercise(exercise.getId());
         assertTrue(training.getExercises().contains(exercise.getId()));
     }
 
@@ -46,8 +46,8 @@ public class TrainingTest {
     public void addExerciseShouldNotAddDuplicateExercise() {
         Training training = new Training(LocalDateTime.now(), LocalDateTime.now().plusHours(1));
         Exercise exercise = new StrengthExercise();
-        training.addExercise(exercise);
-        training.addExercise(exercise);
+        training.addExercise(exercise.getId());
+        training.addExercise(exercise.getId());
         assertEquals(1, training.getExercises().size());
     }
 
@@ -55,8 +55,8 @@ public class TrainingTest {
     public void removeExerciseShouldRemoveExerciseFromList() {
         Training training = new Training(LocalDateTime.now(), LocalDateTime.now().plusHours(1));
         Exercise exercise = new StrengthExercise();
-        training.addExercise(exercise);
-        training.removeExercise(exercise);
+        training.addExercise(exercise.getId());
+        training.removeExercise(exercise.getId());
         assertFalse(training.getExercises().contains(exercise.getId()));
     }
 
@@ -65,8 +65,8 @@ public class TrainingTest {
         Training training = new Training(LocalDateTime.now(), LocalDateTime.now().plusHours(1));
         Exercise exercise1 = new StrengthExercise();
         Exercise exercise2 = new CardioExercise();
-        training.addExercise(exercise1);
-        training.addExercise(exercise2);
+        training.addExercise(exercise1.getId());
+        training.addExercise(exercise2.getId());
         training.clearExercises();
         assertTrue(training.getExercises().isEmpty());
     }
