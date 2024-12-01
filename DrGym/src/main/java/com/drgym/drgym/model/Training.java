@@ -8,14 +8,15 @@ import java.util.List;
 
 
 public class Training {
+    private Long id;
     private LocalDateTime dateStart;
     private LocalDateTime dateEnd;
     private Duration totalTime;
-    private List<Exercise> exercises = new ArrayList<>();
+    private List<Long> exercises = new ArrayList<>();
 
     public Training() {}
 
-    public Training(LocalDateTime dateStart, LocalDateTime dateEnd, List<Exercise> exercises) {
+    public Training(LocalDateTime dateStart, LocalDateTime dateEnd, List<Long> exercises) {
         if (dateStart.isAfter(dateEnd)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
@@ -46,7 +47,7 @@ public class Training {
         return totalTime;
     }
 
-    public List<Exercise> getExercises() {
+    public List<Long> getExercises() {
         return exercises;
     }
 
@@ -58,7 +59,7 @@ public class Training {
         this.dateStart = dateStart;
     }
 
-    public void setExercises(List<Exercise> exercises) {
+    public void setExercises(List<Long> exercises) {
         this.exercises = exercises;
     }
 
@@ -66,14 +67,14 @@ public class Training {
         this.totalTime = totalTime;
     }
 
-    public void addExercise(Exercise exercise) {
-        if(!this.getExercises().contains(exercise)) {
-            this.getExercises().add(exercise);
+    public void addExercise(Long exerciseId) {
+        if(!this.getExercises().contains(exerciseId)) {
+            this.getExercises().add(exerciseId);
         }
     }
 
-    public void removeExercise(Exercise exercise) {
-        this.getExercises().remove(exercise);
+    public void removeExercise(Long exerciseId) {
+        this.getExercises().remove(exerciseId);
     }
 
     public void clearExercises() {

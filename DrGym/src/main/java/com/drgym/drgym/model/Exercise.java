@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public abstract class Exercise {
     private String name;
     private ArrayList<String> musclesWorked;
-    private Integer id;
+    private Long id;
 
     public Exercise() {}
 
@@ -26,11 +26,11 @@ public abstract class Exercise {
         this.musclesWorked = new ArrayList<>();
     }
 
-    public Integer getId(){
+    public Long getId(){
         return id;
     }
 
-    public void setId(Integer newId){
+    public void setId(Long newId){
         id = newId;
     }
 

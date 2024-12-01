@@ -3,40 +3,40 @@ package com.drgym.drgym.model;
 import java.time.LocalDateTime;
 
 public class Friendship {
-    private Integer id;
-    private Integer friendId1;
-    private Integer friendId2;
+    private Long id;
+    private Long friendId1;
+    private Long friendId2;
     private LocalDateTime createdAt;
 
     public Friendship() {}
 
-    public Friendship(Integer id, Integer friendId1, Integer friendId2) {
+    public Friendship(Long id, Long friendId1, Long friendId2) {
         this.id = id;
         this.friendId1 = friendId1;
         this.friendId2 = friendId2;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getFriendId1() {
+    public Long getFriendId1() {
         return friendId1;
     }
 
-    public void setFriendId1(Integer friendId1) {
+    public void setFriendId1(Long friendId1) {
         this.friendId1 = friendId1;
     }
 
-    public Integer getFriendId2() {
+    public Long getFriendId2() {
         return friendId2;
     }
 
-    public void setFriendId2(Integer friendId2) {
+    public void setFriendId2(Long friendId2) {
         this.friendId2 = friendId2;
     }
 }
