@@ -13,6 +13,10 @@ import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import EastIcon from '@mui/icons-material/East';
+import { formatDate, formatRelativeTime } from '@/utils/dateUtils';
+import style from './WorkoutCard.module.css';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -57,14 +61,18 @@ export default function WorkoutCard() {
           title="Monday 10.11.2024"
         />
         <CardContent>
-          <Typography sx={{ marginBottom: 2 }}>
-            <AccessTimeIcon />
+          <Box className={style.workoutDateTime} sx={{ marginBottom: 4 }}>
+            <CalendarMonthIcon />
             10.11.2024 13:30
-          </Typography>
+            <EastIcon />
+            10.11.2024 15:30
+            <AccessTimeIcon sx={{ ml: 4 }} />
+            2:00
+          </Box>
           <Typography>
-            DESCRIPTION This impressive paella is a perfect party dish and a fun
-            meal to cook together with your guests. Add 1 cup of frozen peas
-            along with the mussels, if you like.
+            This impressive paella is a perfect party dish and a fun meal to
+            cook together with your guests. Add 1 cup of frozen peas along with
+            the mussels, if you like.
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
