@@ -54,6 +54,21 @@ public class UserControllerTests {
     }
 
     @Test
+    void testGetUserByEmail() throws Exception {
+        User user = new User("ziutson", "test", "test", "test@test.test", "test", 80.0, 180.0);
+        when(userService.findByEmail("test@test.test")).thenReturn(Optional.of(user));
+
+        mockMvc.perform(get("/api/users/email/test@test.test"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.username").value("ziutson"))
+                .andExpect(jsonPath("$.name").value("test"))
+                .andExpect(jsonPath("$.surname").value("test"))
+                .andExpect(jsonPath("$.weight").value(80.0))
+                .andExpect(jsonPath("$.height").value(180.0));
+    }
+
+    @Test
     public void testGetUserNotFound() throws Exception {
         when(userService.findByUsername("  ")).thenReturn(Optional.empty());
 

@@ -30,6 +30,22 @@ public class UserRepositoryTests {
     }
 
     @Test
+    void testFindByEmail() {
+        User user = new User("ziutson", "test", "test", "test@test.test", "test", 80.0, 180.0);
+
+        User savedUser = userRepository.save(user);
+
+        assertNotNull(savedUser);
+        assertEquals("ziutson", savedUser.getUsername());
+
+        User foundUser = userRepository.findByEmail("test@test.test").orElse(null);
+        assertNotNull(foundUser);
+        assertEquals("test@test.test", foundUser.getEmail());
+
+        userRepository.deleteById("ziutson");
+    }
+
+    @Test
     void testDeleteUser() {
         User user = new User("ziutson", "test", "test", "test", "test", 80.0, 180.0);
         userRepository.save(user);

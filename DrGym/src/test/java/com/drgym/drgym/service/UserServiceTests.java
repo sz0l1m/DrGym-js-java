@@ -38,6 +38,17 @@ public class UserServiceTests {
     }
 
     @Test
+    void testFindByEmail() {
+        User user = new User("ziutson", "test", "test", "test@test.test", "test", 80.0, 180.0);
+        when(userRepository.findByEmail("test@test.test")).thenReturn(Optional.of(user));
+
+        Optional<User> result = userService.findByEmail("test@test.test");
+
+        assertTrue(result.isPresent());
+        assertEquals("test@test.test", result.get().getEmail());
+    }
+
+    @Test
     void testCreateUser() {
         User user = new User("ziutson", "test", "test", "test", "test", 80.0, 180.0);
         when(userRepository.save(user)).thenReturn(user);
