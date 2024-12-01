@@ -3,41 +3,41 @@ package com.drgym.drgym.model;
 import java.time.LocalDateTime;
 
 public class FriendshipInvitation {
-    private Integer id;
-    private Integer whoSendId;
-    private Integer whoReceiveId;
+    private Long id;
+    private Long whoSendId;
+    private Long whoReceiveId;
     private LocalDateTime sendTime;
 
     public FriendshipInvitation() {}
 
-    public FriendshipInvitation(Integer id, Integer whoSendId, Integer whoReceiveId, LocalDateTime sendTime) {
+    public FriendshipInvitation(Long id, Long whoSendId, Long whoReceiveId, LocalDateTime sendTime) {
         this.id = id;
         this.whoSendId = whoSendId;
         this.whoReceiveId = whoReceiveId;
         this.sendTime = sendTime;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Integer getWhoSendId() {
+    public Long getWhoSendId() {
         return whoSendId;
     }
 
-    public void setWhoSendId(Integer whoSendId) {
+    public void setWhoSendId(Long whoSendId) {
         this.whoSendId = whoSendId;
     }
 
-    public Integer getWhoReceiveId() {
+    public Long getWhoReceiveId() {
         return whoReceiveId;
     }
 
-    public void setWhoReceiveId(Integer whoReceiveId) {
+    public void setWhoReceiveId(Long whoReceiveId) {
         this.whoReceiveId = whoReceiveId;
     }
 

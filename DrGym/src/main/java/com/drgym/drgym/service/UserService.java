@@ -1,6 +1,6 @@
 package com.drgym.drgym.service;
 
-import com.drgym.drgym.model.UserTemplate;
+import com.drgym.drgym.model.User;
 import com.drgym.drgym.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,11 +12,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public Optional<UserTemplate> findByUsername(String username) {
+    public Optional<User> findByUsername(String username) {
         return userRepository.findById(username);
     }
 
-    public UserTemplate saveUser(UserTemplate user) {
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 
@@ -24,7 +28,7 @@ public class UserService {
         userRepository.deleteById(username);
     }
 
-    public Optional<UserTemplate> updateUser(String username, String new_name, Double height) {
+    public Optional<User> updateUser(String username, String new_name, Double height) {
         return userRepository.findById(username).map(user -> {
             user.setName(new_name);
             return userRepository.save(user);

@@ -7,29 +7,29 @@ import java.util.List;
 
 
 public class Post {
-    private Integer id;
-    private Integer authorId;
+    private Long id;
+    private Long authorId;
     private LocalDateTime date;
     private String content;
     private String title;
-    private Integer trainingId;
-    private List<Integer> comments = new ArrayList<>();
-    private List<Integer> reactions = new ArrayList<>();
+    private Long trainingId;
+    private List<Long> comments = new ArrayList<>();
+    private List<Long> reactions = new ArrayList<>();
 
     public Post() {}
 
-    public Post(Integer id, LocalDateTime date, String title, String content) {
+    public Post(Long id, LocalDateTime date, String title, String content) {
         this.id = id;
         this.date = date;
         this.title = title;
         this.content = content;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public Integer getAuthorId() {
+    public Long getAuthorId() {
         return authorId;
     }
 
@@ -45,23 +45,23 @@ public class Post {
         return content;
     }
 
-    public Integer getTraining() {
+    public Long getTraining() {
         return trainingId;
     }
 
-    public List<Integer> getComments() {
+    public List<Long> getComments() {
         return comments;
     }
 
-    public List<Integer> getReactions() {
+    public List<Long> getReactions() {
         return reactions;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public void setAuthorId(Integer authorId) {
+    public void setAuthorId(Long authorId) {
         this.authorId = authorId;
     }
 
@@ -77,31 +77,31 @@ public class Post {
         this.content = content;
     }
 
-    public void setTraining(Integer training) {
+    public void setTraining(Long training) {
         this.trainingId = training;
     }
 
-    public void setComments(List<Integer> comments) {
+    public void setComments(List<Long> comments) {
         this.comments = comments;
     }
 
-    public void setReactions(List<Integer> reactions) {
+    public void setReactions(List<Long> reactions) {
         this.reactions = reactions;
     }
 
-    public void addComment(Integer commentId) {
+    public void addComment(Long commentId) {
         comments.add(commentId);
     }
 
-    public void addReaction(Integer reactionId) {
+    public void addReaction(Long reactionId) {
         reactions.add(reactionId);
     }
 
-    public void removeComment(Integer commentId) {
+    public void removeComment(Long commentId) {
         comments.remove(commentId);
     }
 
-    public void removeReaction(Integer reactionId) {
+    public void removeReaction(Long reactionId) {
         reactions.remove(reactionId);
     }
 }
