@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="users")
-public abstract class UserTemplate {
+public class User {
     @Id
     @Column(name = "username", nullable = false)
     private String username;
@@ -28,10 +28,9 @@ public abstract class UserTemplate {
     @Column(name = "height")
     private Double height;
 
-    public UserTemplate() {}
+    public User() {}
 
-    public UserTemplate(
-            Integer id,
+    public User(
             String username,
             String name,
             String surname,
@@ -96,7 +95,4 @@ public abstract class UserTemplate {
     public void setPassword(String newPassword) {
         this.password = newPassword;
     }
-
-
-
 }
