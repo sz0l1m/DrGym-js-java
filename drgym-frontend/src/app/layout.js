@@ -1,11 +1,10 @@
 'use client';
 
 import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import Container from '@mui/material/Container';
+import { CssBaseline, Container } from '@mui/material';
+import CustomAppBar from '@/components/CustomAppBar';
 import theme from '@/styles/theme';
 import '@/app/globals.css';
-import CustomAppBar from '@/components/CustomAppBar';
 
 export default function RootLayout({ children }) {
   return (
@@ -13,17 +12,17 @@ export default function RootLayout({ children }) {
       <body>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          <CustomAppBar />
           <Container
-            maxWidth="false"
+            maxWidth="lg"
             component="main"
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              my: 4,
+              my: 16,
               gap: 4,
             }}
           >
-            <CustomAppBar />
             {children}
           </Container>
         </ThemeProvider>
