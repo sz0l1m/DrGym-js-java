@@ -25,14 +25,7 @@ public class Training {
     @Column(name = "created_datetime")
     private LocalDateTime dateCreated;
 
-    public Training() {}
-
-    public Training(LocalDateTime dateStart, LocalDateTime dateEnd, List<Long> exercises) {
-        if (dateStart.isAfter(dateEnd)) {
-            throw new IllegalArgumentException("Start date cannot be after end date");
-        }
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
+    public Training() {
     }
 
     public Training(LocalDateTime dateStart, LocalDateTime dateEnd) {
@@ -43,17 +36,29 @@ public class Training {
         this.dateEnd = dateEnd;
     }
 
-    public LocalDateTime getDateEnd() {
-        return dateEnd;
-    }
+    // getters
 
-    public LocalDateTime getDateStart() {
-        return dateStart;
-    }
+    public Long getId() {return id;}
+
+    public LocalDateTime getDateEnd() {return dateEnd;}
+
+    public LocalDateTime getDateStart() {return dateStart;}
 
     public String getDescription() {return description;}
 
+    public LocalDateTime getDateCreated() {return dateCreated;}
+
+    // setters
+
+    public void setId(Long id) {this.id = id;}
+
+    public void setDateStart(LocalDateTime dateStart) {this.dateStart = dateStart;}
+
+    public void setDateEnd(LocalDateTime dateEnd) {this.dateEnd = dateEnd;}
+
+    public void setDescription(String description) {this.description = description;}
+
+    public void setDateCreated(LocalDateTime dateCreated) {this.dateCreated = dateCreated;}
+
 }
-
-
 
