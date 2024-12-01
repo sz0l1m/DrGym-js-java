@@ -95,4 +95,12 @@ public class User {
     public void setPassword(String newPassword) {
         this.password = newPassword;
     }
+
+    public void setWeight(Double newWeight) {
+        this.weight = newWeight;
+    }
+
+    public void setHeight(Double newHeight) {
+        this.height = newHeight;
+    }
 }
