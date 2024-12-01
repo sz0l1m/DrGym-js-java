@@ -14,6 +14,13 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Typography from '@mui/material/Typography';
 import Link from 'next/link';
 import style from './CustomAppBar.module.css';
+import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
+import LoginIcon from '@mui/icons-material/Login';
+import HomeIcon from '@mui/icons-material/Home';
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import GroupIcon from '@mui/icons-material/Group';
+import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -66,33 +73,40 @@ export default function CustomAppBar() {
             </Link>
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Button variant="text" color="info" size="small">
-                Features
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Testimonials
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Highlights
-              </Button>
-              <Button variant="text" color="info" size="small">
-                Pricing
-              </Button>
               <Button
                 variant="text"
-                color="info"
+                color="secondary"
                 size="small"
-                sx={{ minWidth: 0 }}
+                startIcon={<EmojiPeopleIcon />}
               >
-                FAQ
+                Posts
               </Button>
+              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
               <Button
                 variant="text"
-                color="info"
+                color="secondary"
                 size="small"
-                sx={{ minWidth: 0 }}
+                startIcon={<FitnessCenterIcon />}
               >
-                Blog
+                Your Workouts
+              </Button>
+              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+              <Button
+                variant="text"
+                color="secondary"
+                size="small"
+                startIcon={<BarChartIcon />}
+              >
+                Statistics
+              </Button>
+              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+              <Button
+                variant="text"
+                color="secondary"
+                size="small"
+                startIcon={<GroupIcon />}
+              >
+                Friends
               </Button>
             </Box>
           </Box>
