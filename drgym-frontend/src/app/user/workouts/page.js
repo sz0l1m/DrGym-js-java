@@ -14,14 +14,14 @@ let workoutsData = [
       {
         activity_id: 1,
         activity_name: 'Lat Pulldown',
-        weight: 50,
+        weight: 100,
         sets: 4,
       },
       {
         activity_id: 2,
         activity_name: 'Treadmill',
         weight: 30,
-        sets: 2,
+        sets: 20,
       },
     ],
   },

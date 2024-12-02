@@ -7,15 +7,15 @@ import style from './ExerciseInfo.module.css';
 export default function ExerciseInfo({ activity }) {
   return (
     <Box className={style.exercise}>
-      <Box className={style.exerciseElement}>
+      <Box sx={{ width: '200px' }} className={style.exerciseElement}>
         <FitnessCenterIcon />
         {activity.activity_name}
       </Box>
-      <Box className={style.exerciseElement}>
+      <Box sx={{ width: '100px' }} className={style.exerciseElement}>
         <LoopIcon />
         {activity.sets}
       </Box>
-      <Box className={style.exerciseElement}>
+      <Box sx={{ width: '100px' }} className={style.exerciseElement}>
         <BalanceIcon sx={{ ml: 4 }} />
         {activity.weight}
       </Box>
