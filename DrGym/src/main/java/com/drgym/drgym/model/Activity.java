@@ -2,33 +2,23 @@
 package com.drgym.drgym.model;
 
 
+import jakarta.persistence.Id;
+
 public class Activity {
-    private Exercise exercise;
-    private int id;
+    private Integer id_workout;
+    private Integer exercise_id;
 
-    public Activity(Exercise exercise) {
-        this.exercise = exercise;
+    public Activity(Integer id_workout, Integer exercise_id) {
+
+        this.id_workout = id_workout;
+        this.exercise_id = exercise_id;
     }
 
-    public int getId(){
-        return id;
-    }
+    public Integer getId_workout() {return id_workout;}
 
-    public void getId(int newId){
-        id = newId;
-    }
+    public Integer getExercise_id() {return exercise_id;}
 
-    public Exercise getExercise(){
-        return exercise;
-    }
+    public void setId_workout(Integer id_workout) {this.id_workout = id_workout;}
 
-    public void setExercise(Exercise newExercise){
-        exercise = newExercise;
-    }
-
-    @Override
-    public String toString(){
-        String output = exercise.toString();
-        return output;
-    }
+    public void setExercise_id(Integer exercise_id) {this.exercise_id = exercise_id;}
 }
