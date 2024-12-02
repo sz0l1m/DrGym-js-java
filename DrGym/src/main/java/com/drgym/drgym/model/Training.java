@@ -28,12 +28,15 @@ public class Training {
     public Training() {
     }
 
-    public Training(LocalDateTime dateStart, LocalDateTime dateEnd) {
+    public Training(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, String description, LocalDateTime create_datetime) {
         if (dateStart.isAfter(dateEnd)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
+        this.id = id;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
+        this.description = description;
+        this.dateCreated = create_datetime;
     }
 
     // getters
