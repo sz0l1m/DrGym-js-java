@@ -9,6 +9,7 @@ import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import Tooltip from '@mui/material/Tooltip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
@@ -50,8 +51,10 @@ export default function WorkoutCard({ workout }) {
     setExpanded(!expanded);
   };
 
+  const realitveStartDate = formatRelativeTime(workout.start_date);
+
   return (
-    <Box sx={{ width: '100%', maxWidth: '800px', margin: '0 auto', py: 2 }}>
+    <Box sx={{ width: '100%', maxWidth: '1000px', margin: '0 auto', py: 2 }}>
       <Card sx={{ maxWidth: '100%' }}>
         <CardHeader
           action={
@@ -59,18 +62,25 @@ export default function WorkoutCard({ workout }) {
               <MoreVertIcon />
             </IconButton>
           }
-          title="Monday 10.11.2024"
+          title={
+            realitveStartDate.charAt(0).toUpperCase() +
+            realitveStartDate.slice(1)
+          }
         />
         <CardContent>
           <Box className={style.workoutDateTime} sx={{ marginBottom: 4 }}>
-            <CalendarMonthIcon sx={{ pb: '1px' }} />
+            <Tooltip title="Time">
+              <CalendarMonthIcon sx={{ pb: '1px' }} />
+            </Tooltip>
             {workout.start_date}
             <EastIcon />
             {workout.end_date}
             <AccessTimeIcon sx={{ ml: 4 }} />
             2:00
           </Box>
-          <Typography>{workout.descripition}</Typography>
+          {workout.description && (
+            <Typography sx={{ mt: 3 }}>{workout.description}</Typography>
+          )}
         </CardContent>
         <CardActions sx={{ px: 2 }}>
           <FormatListBulletedIcon sx={{ mr: '4px' }} />

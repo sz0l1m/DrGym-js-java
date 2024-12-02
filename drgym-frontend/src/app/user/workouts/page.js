@@ -7,8 +7,8 @@ import style from './workouts.module.css';
 let workoutsData = [
   {
     workout_id: 12345,
-    start_date: '2022-01-01',
-    end_date: '2024-12-12',
+    start_date: '2024-11-01T17:41',
+    end_date: '2024-12-02T20:41',
     description: 'This is a workout description.',
     activities: [
       {
@@ -26,8 +26,8 @@ let workoutsData = [
   },
   {
     workout_id: 67890,
-    start_date: '2023-03-10',
-    end_date: '2023-03-10',
+    start_date: '2024-12-02T17:41',
+    end_date: '2024-12-02T20:41',
     description: 'Leg day workout!',
     activities: [
       {
@@ -40,9 +40,8 @@ let workoutsData = [
   },
   {
     workout_id: 67891,
-    start_date: '2023-03-10',
-    end_date: '2023-03-10',
-    description: 'Leg day workout!',
+    start_date: '2024-12-02T17:41',
+    end_date: '2024-12-02T20:41',
     activities: [
       {
         activity_id: 3,
