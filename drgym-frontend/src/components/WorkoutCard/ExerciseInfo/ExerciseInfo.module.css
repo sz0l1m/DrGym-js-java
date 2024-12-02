@@ -1,0 +1,12 @@
+.exercise {
+  display: flex;
+  justify-content: space-between;
+  max-width: 600px;
+  margin-bottom: 24px;
+  margin-right: 24px;
+}
+
+.exerciseElement {
+  display: flex;
+  gap: 16px;
+}

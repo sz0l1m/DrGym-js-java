@@ -7,6 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -14,6 +15,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import EastIcon from '@mui/icons-material/East';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import ExerciseInfo from './ExerciseInfo';
 import { formatDate, formatRelativeTime } from '@/utils/dateUtils';
 import style from './WorkoutCard.module.css';
 
@@ -74,7 +76,7 @@ export default function WorkoutCard() {
             the mussels, if you like.
           </Typography>
         </CardContent>
-        <CardActions sx={{ px: 2, pb: 2 }}>
+        <CardActions sx={{ px: 2 }}>
           <FormatListBulletedIcon sx={{ mr: '4px' }} />
           <Typography>Exercises</Typography>
           <ExpandMore
@@ -88,10 +90,12 @@ export default function WorkoutCard() {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography sx={{ marginBottom: 2 }}>
-              Heat 1/2 cup of the broth in a pot until simmering, add saffron
-              and set aside for 10 minutes.
-            </Typography>
+            <Divider sx={{ mb: 3 }} />
+            <ExerciseInfo />
+            <Divider sx={{ mb: 3 }} />
+            <ExerciseInfo />
+            <Divider sx={{ mb: 3 }} />
+            <ExerciseInfo />
           </CardContent>
         </Collapse>
       </Card>
