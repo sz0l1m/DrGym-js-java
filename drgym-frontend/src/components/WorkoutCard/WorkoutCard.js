@@ -43,7 +43,7 @@ const ExpandMore = styled((props) => {
   ],
 }));
 
-export default function WorkoutCard() {
+export default function WorkoutCard({ workout }) {
   const [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
@@ -51,8 +51,8 @@ export default function WorkoutCard() {
   };
 
   return (
-    <Box sx={{ py: 2 }}>
-      <Card sx={{ maxWidth: 1000 }}>
+    <Box sx={{ width: '100%', maxWidth: '800px', margin: '0 auto', py: 2 }}>
+      <Card sx={{ maxWidth: '100%' }}>
         <CardHeader
           action={
             <IconButton aria-label="settings">
@@ -64,17 +64,13 @@ export default function WorkoutCard() {
         <CardContent>
           <Box className={style.workoutDateTime} sx={{ marginBottom: 4 }}>
             <CalendarMonthIcon sx={{ pb: '1px' }} />
-            10.11.2024 13:30
+            {workout.start_date}
             <EastIcon />
-            10.11.2024 15:30
+            {workout.end_date}
             <AccessTimeIcon sx={{ ml: 4 }} />
             2:00
           </Box>
-          <Typography>
-            This impressive paella is a perfect party dish and a fun meal to
-            cook together with your guests. Add 1 cup of frozen peas along with
-            the mussels, if you like.
-          </Typography>
+          <Typography>{workout.descripition}</Typography>
         </CardContent>
         <CardActions sx={{ px: 2 }}>
           <FormatListBulletedIcon sx={{ mr: '4px' }} />
@@ -90,12 +86,12 @@ export default function WorkoutCard() {
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Divider sx={{ mb: 3 }} />
-            <ExerciseInfo />
-            <Divider sx={{ mb: 3 }} />
-            <ExerciseInfo />
-            <Divider sx={{ mb: 3 }} />
-            <ExerciseInfo />
+            {workout.activities.map((activity) => (
+              <Box key={activity.activity_id}>
+                <Divider sx={{ mb: 3 }} />
+                <ExerciseInfo activity={activity} />
+              </Box>
+            ))}
           </CardContent>
         </Collapse>
       </Card>

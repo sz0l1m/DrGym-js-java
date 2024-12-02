@@ -4,20 +4,20 @@ import BalanceIcon from '@mui/icons-material/Balance';
 import LoopIcon from '@mui/icons-material/Loop';
 import style from './ExerciseInfo.module.css';
 
-export default function ExerciseInfo() {
+export default function ExerciseInfo({ activity }) {
   return (
     <Box className={style.exercise}>
       <Box className={style.exerciseElement}>
         <FitnessCenterIcon />
-        Bench press
+        {activity.activity_name}
       </Box>
       <Box className={style.exerciseElement}>
         <LoopIcon />
-        10
+        {activity.sets}
       </Box>
       <Box className={style.exerciseElement}>
         <BalanceIcon sx={{ ml: 4 }} />
-        100 kg
+        {activity.weight}
       </Box>
     </Box>
   );
