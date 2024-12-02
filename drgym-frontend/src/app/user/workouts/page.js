@@ -1,6 +1,8 @@
 'use client';
 
 import { Box, Typography } from '@mui/material';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 import WorkoutCard from '@/components/WorkoutCard';
 import style from './workouts.module.css';
 
@@ -53,6 +55,29 @@ let workoutsData = [
 ];
 
 export default function HomePage() {
+  // const [workoutsData, setWorkoutsData] = useState([]);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchWorkouts = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const response = await axios.get('http://localhost:8080/api/workouts');
+  //       setWorkoutsData(response.data);
+  //     } catch (err) {
+  //       console.error('Error fetching workouts:', err);
+  //       setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchWorkouts();
+  // }, []);
+
+  // if (loading) return <Typography>Loading workouts...</Typography>;
+  // if (error) return <Typography>Error: {error}</Typography>;
   return (
     <>
       <Typography variant="h5" gutterBottom>
