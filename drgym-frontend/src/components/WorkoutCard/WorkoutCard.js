@@ -9,13 +9,19 @@ import Collapse from '@mui/material/Collapse';
 import IconButton from '@mui/material/IconButton';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import EastIcon from '@mui/icons-material/East';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ExerciseInfo from './ExerciseInfo';
 import {
   formatDate,
@@ -23,6 +29,7 @@ import {
   getDiffInHoursAndMinutes,
 } from '@/utils/dateUtils';
 import style from './WorkoutCard.module.css';
+import { DeleteForever } from '@mui/icons-material';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -50,9 +57,19 @@ const ExpandMore = styled((props) => {
 
 export default function WorkoutCard({ workout }) {
   const [expanded, setExpanded] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const menuOpen = Boolean(anchorEl);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  const handleMenuClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   const realitveStartDate = formatRelativeTime(workout.start_date);
@@ -62,7 +79,7 @@ export default function WorkoutCard({ workout }) {
       <Card sx={{ maxWidth: '100%' }}>
         <CardHeader
           action={
-            <IconButton aria-label="settings">
+            <IconButton aria-label="settings" onClick={handleMenuClick}>
               <MoreVertIcon />
             </IconButton>
           }
@@ -72,6 +89,28 @@ export default function WorkoutCard({ workout }) {
             realitveStartDate.slice(1)
           }
         />
+        <Menu
+          anchorEl={anchorEl}
+          open={menuOpen}
+          onClose={handleMenuClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <MenuItem onClick={handleMenuClose}>
+            <EditIcon sx={{ mr: 1 }} />
+            Edit
+          </MenuItem>
+          <MenuItem onClick={handleMenuClose}>
+            <DeleteForeverIcon sx={{ mr: 1 }} />
+            Delete
+          </MenuItem>
+        </Menu>
         <CardContent>
           <Box className={style.workoutDateTime} sx={{ marginBottom: 4 }}>
             <CalendarMonthIcon sx={{ pb: '1px' }} />
