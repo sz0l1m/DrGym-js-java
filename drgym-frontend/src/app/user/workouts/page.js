@@ -20,8 +20,7 @@ let workoutsData = [
       {
         activity_id: 2,
         activity_name: 'Treadmill',
-        weight: 30,
-        sets: 20,
+        duration: '1:00:00',
       },
     ],
   },
@@ -32,16 +31,23 @@ let workoutsData = [
     description: 'Leg day workout!',
     activities: [
       {
-        activity_id: 3,
-        activity_name: 'Squats',
-        weight: 100,
-        sets: 5,
-      },
-      {
         activity_id: 4,
         activity_name: 'Lunges',
         weight: 50,
         sets: 3,
+      },
+    ],
+  },
+  {
+    workout_id: 67891,
+    start_date: '2023-03-10',
+    end_date: '2023-03-10',
+    description: 'Leg day workout!',
+    activities: [
+      {
+        activity_id: 3,
+        activity_name: 'Squats',
+        duration: '0:20:15',
       },
     ],
   },
