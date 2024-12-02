@@ -8,9 +8,9 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="workouts")
-public class Training {
+public class Workout {
     @Id
-    @Column(name = "id", nullable = false)
+    @Column(name = "workout_id", nullable = false)
     private Long id;
 
     @Column(name = "start_datetime")
@@ -25,10 +25,17 @@ public class Training {
     @Column(name = "created_datetime")
     private LocalDateTime dateCreated;
 
-    public Training() {
+    @ElementCollection
+    @CollectionTable(
+            name = "workout_activities",
+            joinColumns = @JoinColumn(name = "workout_id")
+    )
+    @Column(name = "activity_id")
+    private List<Long> activityIds;
+    public Workout() {
     }
 
-    public Training(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, String description, LocalDateTime create_datetime) {
+    public Workout(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, String description, LocalDateTime create_datetime, List<Long> activityIds) {
         if (dateStart.isAfter(dateEnd)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
@@ -37,6 +44,7 @@ public class Training {
         this.dateEnd = dateEnd;
         this.description = description;
         this.dateCreated = create_datetime;
+        this.activityIds = activityIds;
     }
 
     // getters
@@ -51,6 +59,8 @@ public class Training {
 
     public LocalDateTime getDateCreated() {return dateCreated;}
 
+    public List<Long> getActivityIds() {return activityIds;}
+
     // setters
 
     public void setId(Long id) {this.id = id;}
@@ -62,6 +72,8 @@ public class Training {
     public void setDescription(String description) {this.description = description;}
 
     public void setDateCreated(LocalDateTime dateCreated) {this.dateCreated = dateCreated;}
+
+    public void setActivityIds(List<Long> activityIds) {this.activityIds = activityIds;}
 
 }
 

@@ -1,24 +1,63 @@
-//author: Michał Pędziwiatr
 package com.drgym.drgym.model;
 
+import jakarta.persistence.*;
 
-import jakarta.persistence.Id;
+import java.sql.Timestamp;
 
+@Entity
+@Table(name = "activities")
 public class Activity {
-    private Integer id_workout;
-    private Integer exercise_id;
+    @Id
+    @Column(name = "activity_id", nullable = false)
+    private Long id;
 
-    public Activity(Integer id_workout, Integer exercise_id) {
+    @Column(name = "exercise_id", nullable = false)
+    private Long exercise_id;
 
-        this.id_workout = id_workout;
+    @Column(name = "sets")
+    private Long sets;
+
+    @Column(name = "weight")
+    private Long weight;
+
+    @Column(name = "duration")
+    private Timestamp duration;
+
+    public Activity(Long id, Long exercise_id, Long sets, Long weight, Timestamp duration) {
+        this.id = id;
         this.exercise_id = exercise_id;
+        this.sets = sets;
+        this.weight = weight;
+        this.duration = duration;
     }
 
-    public Integer getId_workout() {return id_workout;}
+    public Activity() {}
 
-    public Integer getExercise_id() {return exercise_id;}
+    // getters
 
-    public void setId_workout(Integer id_workout) {this.id_workout = id_workout;}
+    public Long getId() {return id;}
 
-    public void setExercise_id(Integer exercise_id) {this.exercise_id = exercise_id;}
+    public Long getExercise_id() {return exercise_id;}
+
+    public Long getSets() {return sets;}
+
+    public Long getWeight() {return weight;}
+
+    public Timestamp getDuration() {return duration;}
+
+    // setters
+
+    public void setId_workout(Long id_workout) {this.id = id_workout;}
+
+    public void setExercise_id(Long exercise_id) {this.exercise_id = exercise_id;}
+
+    public void setSets(Long sets) {this.sets = sets;}
+
+    public void setWeight(Long weight) {this.weight = weight;}
+
+    public void setDuration(Timestamp duration) {this.duration = duration;}
+
+    public String durationToString() {
+        return duration.toString();
+    }
 }

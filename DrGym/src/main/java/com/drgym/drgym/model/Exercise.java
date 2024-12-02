@@ -1,69 +1,82 @@
 //author: Michał Pędziwiatr
 package com.drgym.drgym.model;
 
+
 import java.util.ArrayList;
 
-
-public abstract class Exercise {
+public class Exercise {
+    private Long id;
+    private char type;
+    private Long kcal_burned;
     private String name;
     private ArrayList<String> musclesWorked;
-    private Long id;
 
-    public Exercise() {}
+    public Exercise() {
+    }
 
-    public Exercise(String name, ArrayList<String> musclesWorked){
+    public Exercise(Long id, char type, Long kcal_burned, String name, ArrayList<String> musclesWorked) {
+        this.id = id;
+        this.type = type;
+        this.kcal_burned = kcal_burned;
         this.name = name;
-        if(musclesWorked != null){
+        if (musclesWorked != null) {
             this.musclesWorked = new ArrayList<>(musclesWorked);
-        }
-        else{
+        } else {
             this.musclesWorked = new ArrayList<>();
         }
     }
 
-    public Exercise(String name){
-        this.name = name;
-        this.musclesWorked = new ArrayList<>();
-    }
-
-    public Long getId(){
+    public Long getId() {
         return id;
     }
 
-    public void setId(Long newId){
+    public void setId(Long newId) {
         id = newId;
     }
 
-    public String getName(){
+    public char getType() {
+        return type;
+    }
+
+    public void setType(char newType) {
+        type = newType;
+    }
+
+    public Long getKcal_burned() {
+        return kcal_burned;
+    }
+
+    public void setKcal_burned(Long newKcal_burned) {
+        kcal_burned = newKcal_burned;
+    }
+
+    public String getName() {
         return name;
     }
 
-    public void setName(String newName){
+    public void setName(String newName) {
         name = newName;
     }
 
-    public ArrayList<String> getMusclesWorked(){
+    public ArrayList<String> getMusclesWorked() {
         return new ArrayList<>(musclesWorked);
     }
 
-    public void setMusclesWorked(ArrayList<String> newMusclesWorked){
+    public void setMusclesWorked(ArrayList<String> newMusclesWorked) {
         musclesWorked = newMusclesWorked;
     }
 
-    public void addToMusclesWorked(String newMuscle){
+    public void addToMusclesWorked(String newMuscle) {
         musclesWorked.add(newMuscle);
     }
 
-    public void removeFromMusclesWorked(String muscleToRemove){
-        if(musclesWorked.contains(muscleToRemove)){
+    public void removeFromMusclesWorked(String muscleToRemove) {
+        if (musclesWorked.contains(muscleToRemove)) {
             musclesWorked.remove(muscleToRemove);
-            }
+        }
     }
 
-    @Override
-    public String toString(){
-        String output = "Exercise name: " + name + ", muscles worked: " + musclesWorked;
-        return output;
+    public void clearMusclesWorked() {
+        musclesWorked.clear();
     }
-
 }
