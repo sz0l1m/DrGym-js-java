@@ -26,7 +26,7 @@ let workoutsData = [
   },
   {
     workout_id: 67890,
-    start_date: '2024-12-02T17:41',
+    start_date: '2024-12-02T20:35',
     end_date: '2024-12-02T20:41',
     description: 'Leg day workout!',
     activities: [

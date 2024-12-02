@@ -17,7 +17,11 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import EastIcon from '@mui/icons-material/East';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import ExerciseInfo from './ExerciseInfo';
-import { formatDate, formatRelativeTime } from '@/utils/dateUtils';
+import {
+  formatDate,
+  formatRelativeTime,
+  getDiffInHoursAndMinutes,
+} from '@/utils/dateUtils';
 import style from './WorkoutCard.module.css';
 
 const ExpandMore = styled((props) => {
@@ -62,27 +66,26 @@ export default function WorkoutCard({ workout }) {
               <MoreVertIcon />
             </IconButton>
           }
-          title={
+          title={formatDate(workout.start_date, 'd MMMM yyyy')}
+          subheader={
             realitveStartDate.charAt(0).toUpperCase() +
             realitveStartDate.slice(1)
           }
         />
         <CardContent>
           <Box className={style.workoutDateTime} sx={{ marginBottom: 4 }}>
-            <Tooltip title="Time">
-              <CalendarMonthIcon sx={{ pb: '1px' }} />
-            </Tooltip>
-            {workout.start_date}
+            <CalendarMonthIcon sx={{ pb: '1px' }} />
+            {formatDate(workout.start_date, 'd MMM H:mm')}
             <EastIcon />
-            {workout.end_date}
+            {formatDate(workout.end_date, 'd MMM H:mm')}
             <AccessTimeIcon sx={{ ml: 4 }} />
-            2:00
+            {getDiffInHoursAndMinutes(workout.start_date, workout.end_date)}
           </Box>
           {workout.description && (
             <Typography sx={{ mt: 3 }}>{workout.description}</Typography>
           )}
         </CardContent>
-        <CardActions sx={{ px: 2 }}>
+        <CardActions sx={{ px: 2, pb: 2 }}>
           <FormatListBulletedIcon sx={{ mr: '4px' }} />
           <Typography>Exercises</Typography>
           <ExpandMore
