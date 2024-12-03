@@ -33,6 +33,7 @@ public class WorkoutController {
         WorkoutResponse response = new WorkoutResponse(
                 workout.getId(),
                 workout.getDateStart(),
+                workout.getUsername(),
                 workout.getDateEnd(),
                 workout.getDescription(),
                 activities.stream()
@@ -47,13 +48,13 @@ public class WorkoutController {
         return ResponseEntity.ok(response);
     }
 
-    private record TrainingDTO(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, String description, LocalDateTime create_datetime) {}
-
+    private record TrainingDTO(Long id, String username, LocalDateTime dateStart, LocalDateTime dateEnd, String description, LocalDateTime create_datetime) {}
 
 
     public record WorkoutResponse(
             Long workoutId,
             LocalDateTime startDate,
+            String username,
             LocalDateTime endDate,
             String description,
             List<ActivityResponse> activities

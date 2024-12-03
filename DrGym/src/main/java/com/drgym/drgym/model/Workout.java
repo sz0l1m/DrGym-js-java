@@ -16,6 +16,9 @@ public class Workout {
     @Column(name = "start_datetime")
     private LocalDateTime dateStart;
 
+    @Column(name = "username")
+    private String username;
+
     @Column(name = "end_datetime")
     private LocalDateTime dateEnd;
 
@@ -35,11 +38,12 @@ public class Workout {
     public Workout() {
     }
 
-    public Workout(Long id, LocalDateTime dateStart, LocalDateTime dateEnd, String description, LocalDateTime create_datetime, List<Long> activityIds) {
+    public Workout(Long id, LocalDateTime dateStart, String username, LocalDateTime dateEnd, String description, LocalDateTime create_datetime, List<Long> activityIds) {
         if (dateStart.isAfter(dateEnd)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
         this.id = id;
+        this.username = username;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
         this.description = description;
@@ -61,6 +65,8 @@ public class Workout {
 
     public List<Long> getActivityIds() {return activityIds;}
 
+    public String getUsername() {return username;}
+
     // setters
 
     public void setId(Long id) {this.id = id;}
@@ -74,6 +80,8 @@ public class Workout {
     public void setDateCreated(LocalDateTime dateCreated) {this.dateCreated = dateCreated;}
 
     public void setActivityIds(List<Long> activityIds) {this.activityIds = activityIds;}
+
+    public void setUsername(String username) {this.username = username;}
 
 }
 
