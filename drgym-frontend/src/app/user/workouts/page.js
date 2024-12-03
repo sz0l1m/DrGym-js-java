@@ -1,16 +1,17 @@
 'use client';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import WorkoutCard from '@/components/WorkoutCard';
+import AddIcon from '@mui/icons-material/Add';
 import style from './workouts.module.css';
 
 let workoutsData = [
   {
     workout_id: 12345,
     start_date: '2024-11-01T17:41',
-    end_date: '2024-12-02T20:41',
+    end_date: '2024-11-02T20:41',
     description: 'This is a workout description.',
     activities: [
       {
@@ -86,9 +87,14 @@ export default function HomePage() {
   // if (error) return <Typography>Error: {error}</Typography>;
   return (
     <>
-      <Typography variant="h5" gutterBottom>
-        My Workouts
-      </Typography>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Typography variant="h5" gutterBottom>
+          My Workouts
+        </Typography>
+        <Button variant="contained" startIcon={<AddIcon />}>
+          Add workout
+        </Button>
+      </Box>
       <Box className={style.workoutsWrapper}>
         {workoutsData.map((workout) => (
           <WorkoutCard
