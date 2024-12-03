@@ -56,8 +56,8 @@ let workoutsData = [
 
 export default function HomePage() {
   // const [workoutsData, setWorkoutsData] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  // const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   // useEffect(() => {
   //   const fetchWorkouts = async () => {
@@ -76,6 +76,12 @@ export default function HomePage() {
   //   fetchWorkouts();
   // }, []);
 
+  const handleDeleteWorkout = (workoutId) => {
+    setWorkoutsData((prev) =>
+      prev.filter((workout) => workout.workout_id !== workoutId)
+    );
+  };
+
   // if (loading) return <Typography>Loading workouts...</Typography>;
   // if (error) return <Typography>Error: {error}</Typography>;
   return (
@@ -85,7 +91,11 @@ export default function HomePage() {
       </Typography>
       <Box className={style.workoutsWrapper}>
         {workoutsData.map((workout) => (
-          <WorkoutCard key={workout.workout_id} workout={workout} />
+          <WorkoutCard
+            key={workout.workout_id}
+            workout={workout}
+            onDelete={handleDeleteWorkout}
+          />
         ))}
       </Box>
     </>

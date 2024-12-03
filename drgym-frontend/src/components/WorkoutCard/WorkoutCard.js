@@ -20,6 +20,7 @@ import MenuItem from '@mui/material/MenuItem';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ExerciseInfo from './ExerciseInfo';
+import axios from 'axios';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
 import {
   formatDate,
@@ -52,10 +53,11 @@ const ExpandMore = styled((props) => {
   ],
 }));
 
-export default function WorkoutCard({ workout }) {
+export default function WorkoutCard({ workout, onDelete }) {
   const [expanded, setExpanded] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const menuOpen = Boolean(anchorEl);
   const realitveStartDate = formatRelativeTime(workout.start_date);
@@ -70,6 +72,22 @@ export default function WorkoutCard({ workout }) {
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const deleteWorkout = async () => {
+    // try {
+    //   setLoading(true);
+    //   await axios.delete(
+    //     `http://localhost:8080/api/workouts/${workout.workout_id}`
+    //   );
+    //   onDelete(workout.workout_id);
+    // } catch (error) {
+    //   console.error('Error deleting workout:', error);
+    //   alert('Failed to delete workout. Please try again.');
+    // } finally {
+    //   setLoading(false);
+    //   setOpenDeleteConfirmation(false);
+    // }
   };
 
   return (
@@ -149,7 +167,8 @@ export default function WorkoutCard({ workout }) {
         <DeleteConfirmation
           message="Are you sure you want to delete this workout?"
           open={openDeleteConfirmation}
-          onConfirm={() => setOpenDeleteConfirmation(false)}
+          loading={loading}
+          onConfirm={deleteWorkout}
           onClose={() => setOpenDeleteConfirmation(false)}
         />
       </Box>
