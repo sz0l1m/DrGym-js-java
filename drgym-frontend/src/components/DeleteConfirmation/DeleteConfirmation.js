@@ -16,6 +16,7 @@ export default function DeleteConfirmation({
   title = 'Warning!',
   message,
   open,
+  loading,
   onConfirm,
   onClose,
 }) {
@@ -23,7 +24,7 @@ export default function DeleteConfirmation({
     <>
       <Dialog
         open={open}
-        onClose={onClose}
+        onClose={loading ? null : onClose}
         TransitionComponent={Transition}
         aria-labelledby="delete-confirmation"
       >
@@ -32,17 +33,17 @@ export default function DeleteConfirmation({
         </DialogTitle>
         <DialogContent sx={{ p: 2 }}>{message}</DialogContent>
         <DialogActions>
-          <Button color="secondary" onClick={onClose}>
+          <Button color="secondary" onClick={onClose} disabled={loading}>
             Cancel
           </Button>
           <Button
             variant="contained"
             color="error"
             onClick={onConfirm}
-            // disabled={loading}
-            // endIcon={
-            //   loading && <CircularProgress color="secondary" size={18} />
-            // }
+            disabled={loading}
+            endIcon={
+              loading && <CircularProgress color="secondary" size={18} />
+            }
           >
             Delete
           </Button>
