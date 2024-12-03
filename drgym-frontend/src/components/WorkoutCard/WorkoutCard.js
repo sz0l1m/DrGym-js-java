@@ -19,6 +19,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Tooltip from '@mui/material/Tooltip';
 import ExerciseInfo from './ExerciseInfo';
 import axios from 'axios';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
@@ -130,11 +131,17 @@ export default function WorkoutCard({ workout, onDelete }) {
           </Menu>
           <CardContent>
             <Box className={style.workoutDateTime} sx={{ marginBottom: 4 }}>
-              <CalendarMonthIcon sx={{ pb: '1px' }} />
+              <Tooltip title="Start time">
+                <CalendarMonthIcon sx={{ pb: '1px' }} />
+              </Tooltip>
               {formatDate(workout.start_date, 'd MMM H:mm')}
-              <EastIcon />
+              <Tooltip title="End time">
+                <EastIcon />
+              </Tooltip>
               {formatDate(workout.end_date, 'd MMM H:mm')}
-              <AccessTimeIcon sx={{ ml: 4 }} />
+              <Tooltip title="Duration">
+                <AccessTimeIcon sx={{ ml: 5 }} />
+              </Tooltip>
               {getDiffInHoursAndMinutes(workout.start_date, workout.end_date)}
             </Box>
             {workout.description && (

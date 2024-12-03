@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box';
+import Tooltip from '@mui/material/Tooltip';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import BalanceIcon from '@mui/icons-material/Balance';
 import LoopIcon from '@mui/icons-material/Loop';
@@ -12,11 +13,16 @@ export default function ExerciseInfo({ activity }) {
       {activity.duration !== undefined ? (
         <>
           <Box sx={{ width: '200px' }} className={style.exerciseElement}>
-            <MonitorHeartOutlinedIcon />
+            <Tooltip title="Cardio exercise">
+              <MonitorHeartOutlinedIcon />
+            </Tooltip>
             {activity.activity_name}
           </Box>
+
           <Box sx={{ width: '100px' }} className={style.exerciseElement}>
-            <TimerOutlinedIcon />
+            <Tooltip title="Duration">
+              <TimerOutlinedIcon />
+            </Tooltip>
             {activity.duration}
           </Box>
           <Box sx={{ width: '100px' }} className={style.exerciseElement}></Box>
@@ -24,15 +30,23 @@ export default function ExerciseInfo({ activity }) {
       ) : (
         <>
           <Box sx={{ width: '200px' }} className={style.exerciseElement}>
-            <FitnessCenterIcon />
+            <Tooltip title="Strength exercise">
+              <FitnessCenterIcon />
+            </Tooltip>
             {activity.activity_name}
           </Box>
+
           <Box sx={{ width: '100px' }} className={style.exerciseElement}>
-            <LoopIcon />
+            <Tooltip title="Number of sets">
+              <LoopIcon />
+            </Tooltip>
             {activity.sets}
           </Box>
+
           <Box sx={{ width: '100px' }} className={style.exerciseElement}>
-            <BalanceIcon sx={{ ml: 4 }} />
+            <Tooltip title="Weight [kg]">
+              <BalanceIcon sx={{ ml: 4 }} />
+            </Tooltip>
             {activity.weight}
           </Box>
         </>
