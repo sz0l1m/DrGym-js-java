@@ -50,25 +50,15 @@ public class User {
 
     // getters
 
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() {return username;}
 
-    public String getName() {
-        return name;
-    }
+    public String getName() {return name;}
 
-    public String getSurname() {
-        return surname;
-    }
+    public String getSurname() {return surname;}
 
-    public String getEmail() {
-        return email;
-    }
+    public String getEmail() {return email;}
 
-    public String getPassword() {
-        return password;
-    }
+    public String getPassword() {return password;}
 
     public Double getWeight() {return weight;}
 
@@ -76,31 +66,17 @@ public class User {
 
     // setters
 
-    public void setUsername(String newUsername) {
-        this.username = newUsername;
-    }
+    public void setUsername(String newUsername) {this.username = newUsername;}
 
-    public void setName(String newName) {
-        this.name = newName;
-    }
+    public void setName(String newName) {this.name = newName;}
 
-    public void setSurname(String newSurname) {
-        this.surname = newSurname;
-    }
+    public void setSurname(String newSurname) {this.surname = newSurname;}
 
-    public void setEmail(String newEmail) {
-        this.email = newEmail;
-    }
+    public void setEmail(String newEmail) {this.email = newEmail;}
 
-    public void setPassword(String newPassword) {
-        this.password = newPassword;
-    }
+    public void setPassword(String newPassword) {this.password = newPassword;}
 
-    public void setWeight(Double newWeight) {
-        this.weight = newWeight;
-    }
+    public void setWeight(Double newWeight) {this.weight = newWeight;}
 
-    public void setHeight(Double newHeight) {
-        this.height = newHeight;
-    }
+    public void setHeight(Double newHeight) {this.height = newHeight;}
 }
