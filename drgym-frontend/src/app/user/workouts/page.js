@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import WorkoutCard from '@/components/WorkoutCard';
 import AddIcon from '@mui/icons-material/Add';
+import DialogBox from '@/components/DialogBox';
 import style from './workouts.module.css';
 
 let workoutsData = [
@@ -56,6 +57,7 @@ let workoutsData = [
 ];
 
 export default function HomePage() {
+  const [dialogOpen, setDialogOpen] = useState(false);
   // const [workoutsData, setWorkoutsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -91,7 +93,11 @@ export default function HomePage() {
         <Typography variant="h5" gutterBottom>
           My Workouts
         </Typography>
-        <Button variant="contained" startIcon={<AddIcon />}>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setDialogOpen(true)}
+        >
           Add workout
         </Button>
       </Box>
@@ -104,6 +110,11 @@ export default function HomePage() {
           />
         ))}
       </Box>
+      <DialogBox
+        dialogTitle="Add new workout"
+        popupStatus={dialogOpen}
+        togglePopup={setDialogOpen}
+      />
     </>
   );
 }
