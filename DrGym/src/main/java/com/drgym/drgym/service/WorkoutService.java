@@ -32,4 +32,17 @@ public class WorkoutService {
                 .toList();
         return activityRepository.findAllById(activityIds);
     }
+
+    public Workout saveWorkout(Workout workout) {
+        return workoutRepository.save(workout);
+    }
+
+    public void deleteWorkout(Long id) {
+        workoutActivityRepository.deleteByWorkoutId(id);
+
+        List<Activity> activities = findActivitiesByWorkoutId(id);
+        activityRepository.deleteAll(activities);
+
+        workoutRepository.deleteById(id);
+    }
 }
