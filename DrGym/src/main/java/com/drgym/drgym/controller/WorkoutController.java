@@ -66,6 +66,21 @@ public class WorkoutController {
             Timestamp duration,
             Long weight,
             Long reps
-    ) {}
-
+    ) {
+        public ActivityResponse(
+                Long activityId,
+                Long exerciseId,
+                Timestamp duration,
+                Long weight,
+                Long reps
+        ) {
+            this.activityId = activityId;
+            this.exerciseId = exerciseId;
+            this.duration = (duration != null && duration.toLocalDateTime().toLocalTime().equals(java.time.LocalTime.MIDNIGHT))
+                    ? null
+                    : duration;
+            this.weight = weight;
+            this.reps = reps;
+        }
+    }
 }
