@@ -3,6 +3,13 @@ import { Formik, Form } from 'formik';
 import {
   Box,
   CircularProgress,
+  FormControl,
+  FormLabel,
+  FormControlLabel,
+  Select,
+  Radio,
+  RadioGroup,
+  MenuItem,
   TextField,
   Button,
   Dialog,
@@ -20,6 +27,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DialogBoxTitle from './DialogBoxTitle';
 import * as yup from 'yup';
 
+const cardioExercises = ['Running', 'Cycling', 'Swimming'];
+const strengthExercises = ['Weightlifting', 'Push-ups', 'Squats'];
+
 const schema = yup.object().shape({
   startDate: yup
     .date()
@@ -30,6 +40,8 @@ const schema = yup.object().shape({
     .required('End date is required')
     .typeError('Invalid date'),
   description: yup.string().max(50, 'Description is too long (max 50 chars)'),
+  exerciseType: yup.string().required('Exercise type is required'),
+  exercise: yup.string().required('Exercise is required'),
 });
 
 export default function DialogBox({
@@ -37,6 +49,7 @@ export default function DialogBox({
   popupType,
   popupStatus,
   togglePopup,
+  workout = {},
 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -57,11 +70,23 @@ export default function DialogBox({
         {dialogTitle}
       </DialogBoxTitle>
       <Formik
-        initialValues={{
-          startDate: null,
-          endDate: null,
-          description: '',
-        }}
+        initialValues={
+          popupType === 'new'
+            ? {
+                startDate: null,
+                endDate: null,
+                description: '',
+                exerciseType: '',
+                exercise: '',
+              }
+            : {
+                startDate: new Date(workout.startDate),
+                endDate: new Date(workout.endDate),
+                description: workout.description,
+                exerciseType: workout.exerciseType || '',
+                exercise: workout.exercise || '',
+              }
+        }
         onSubmit={(values, actions) => {
           actions.setSubmitting(true);
           setTimeout(() => {
@@ -130,6 +155,58 @@ export default function DialogBox({
                 maxRows={4}
                 sx={{ mt: 2 }}
               />
+
+              <FormControl sx={{ mt: 2 }} fullWidth>
+                <FormLabel>Exercise Type</FormLabel>
+                <RadioGroup
+                  row
+                  name="exerciseType"
+                  value={values.exerciseType}
+                  onChange={(e) => {
+                    setFieldValue('exerciseType', e.target.value);
+                    setFieldValue('exercise', ''); // Reset exercise when type changes
+                  }}
+                >
+                  <FormControlLabel
+                    value="cardio"
+                    control={<Radio />}
+                    label="Cardio"
+                  />
+                  <FormControlLabel
+                    value="strength"
+                    control={<Radio />}
+                    label="Strength"
+                  />
+                </RadioGroup>
+                {errors.exerciseType && touched.exerciseType && (
+                  <Box color="error.main">{errors.exerciseType}</Box>
+                )}
+              </FormControl>
+              <FormControl
+                sx={{ mt: 2 }}
+                fullWidth
+                disabled={!values.exerciseType}
+              >
+                <FormLabel>Exercise</FormLabel>
+                <Select
+                  name="exercise"
+                  value={values.exercise}
+                  onChange={(e) => setFieldValue('exercise', e.target.value)}
+                  onBlur={handleBlur}
+                >
+                  {(values.exerciseType === 'cardio'
+                    ? cardioExercises
+                    : strengthExercises
+                  ).map((exercise) => (
+                    <MenuItem key={exercise} value={exercise}>
+                      {exercise}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.exercise && touched.exercise && (
+                  <Box color="error.main">{errors.exercise}</Box>
+                )}
+              </FormControl>
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>
               <Button onClick={handleClose} color="error">

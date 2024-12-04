@@ -21,6 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Tooltip from '@mui/material/Tooltip';
 import ExerciseInfo from './ExerciseInfo';
+import DialogBox from '@/components/DialogBox';
 import axios from 'axios';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
 import {
@@ -58,6 +59,7 @@ export default function WorkoutCard({ workout, onDelete }) {
   const [expanded, setExpanded] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const menuOpen = Boolean(anchorEl);
@@ -120,7 +122,7 @@ export default function WorkoutCard({ workout, onDelete }) {
               horizontal: 'right',
             }}
           >
-            <MenuItem onClick={handleMenuClose}>
+            <MenuItem onClick={() => setOpenDialog(true)}>
               <EditIcon sx={{ mr: 1 }} />
               Edit
             </MenuItem>
@@ -171,6 +173,13 @@ export default function WorkoutCard({ workout, onDelete }) {
             </CardContent>
           </Collapse>
         </Card>
+        <DialogBox
+          dialogTitle="Edit workout"
+          popupType="edit"
+          popupStatus={openDialog}
+          togglePopup={setOpenDialog}
+          workout={workout}
+        />
         <DeleteConfirmation
           message="Are you sure you want to delete this workout?"
           open={openDeleteConfirmation}
