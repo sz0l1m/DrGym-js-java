@@ -1,10 +1,3 @@
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import CommentIcon from '@mui/icons-material/Comment';
-import KeyIcon from '@mui/icons-material/Key';
-import LanguageIcon from '@mui/icons-material/Language';
-import PersonIcon from '@mui/icons-material/Person';
-import HttpIcon from '@mui/icons-material/Http';
 import { CircularProgress, Typography } from '@mui/material';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -17,6 +10,10 @@ import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import style from './DialogBox.module.css';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import * as yup from 'yup';
 
 let schema = yup.object().shape({
@@ -62,7 +59,16 @@ export default function DialogBox({ dialogTitle, popupStatus, togglePopup }) {
         <DialogBoxTitle id="new-workout-dialog" onClose={handleClose}>
           {dialogTitle}
         </DialogBoxTitle>
-        <Typography>In DialogBox</Typography>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DateTimePicker
+            label="With Time Clock"
+            viewRenderers={{
+              hours: renderTimeViewClock,
+              minutes: renderTimeViewClock,
+              seconds: renderTimeViewClock,
+            }}
+          />
+        </LocalizationProvider>
       </Dialog>
     </>
   );
