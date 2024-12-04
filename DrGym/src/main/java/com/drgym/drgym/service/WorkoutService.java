@@ -65,17 +65,9 @@ public class WorkoutService {
         workoutRepository.deleteById(id);
     }
 
-    @Transactional
     public void addActivityToWorkout(Long workoutId, Long activityId) {
-        Optional<Workout> workoutOptional = workoutRepository.findById(workoutId);
-        if (workoutOptional.isPresent() && activityRepository.existsById(activityId)) {
-            Workout workout = workoutOptional.get();
-            workout.getActivityIds().add(activityId);
-            workoutRepository.save(workout);
-
             WorkoutActivity workoutActivity = new WorkoutActivity(2137L, workoutId, activityId);
             workoutActivityRepository.save(workoutActivity);
-        }
     }
 
     public void removeActivityFromWorkout(Long workoutId, Long activityId) {
