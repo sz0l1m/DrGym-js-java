@@ -17,13 +17,13 @@ import style from './workouts.module.css';
 //     activities: [
 //       {
 //         activityId: 1,
-//         activity_name: 'Lat Pulldown',
+//         exerciseName: 'Lat Pulldown',
 //         weight: 100,
 //         reps: 4,
 //       },
 //       {
 //         activityId: 2,
-//         activity_name: 'Treadmill',
+//         exerciseName: 'Treadmill',
 //         duration: '1:00:00',
 //       },
 //     ],
@@ -36,7 +36,7 @@ import style from './workouts.module.css';
 //     activities: [
 //       {
 //         activityId: 4,
-//         activity_name: 'Lunges',
+//         exerciseName: 'Lunges',
 //         weight: 50,
 //         reps: 3,
 //       },
@@ -49,7 +49,7 @@ import style from './workouts.module.css';
 //     activities: [
 //       {
 //         activityId: 3,
-//         activity_name: 'Squats',
+//         exerciseName: 'Squats',
 //         duration: '0:20:15',
 //       },
 //     ],
@@ -67,7 +67,7 @@ export default function HomePage() {
       try {
         setLoading(true);
         const response = await axios.get(
-          'http://localhost:8080/api/workouts/3'
+          'http://localhost:8080/api/users/skuter/workouts'
         );
         setWorkoutsData(response.data);
       } catch (err) {
@@ -104,18 +104,13 @@ export default function HomePage() {
         </Button>
       </Box>
       <Box className={style.workoutsWrapper}>
-        {/* {workoutsData.map((workout) => (
+        {workoutsData.map((workout) => (
           <WorkoutCard
             key={workout.workoutId}
             workout={workout}
             onDelete={handleDeleteWorkout}
           />
-        ))} */}
-        <WorkoutCard
-          key={workoutsData.workoutId}
-          workout={workoutsData}
-          onDelete={handleDeleteWorkout}
-        />
+        ))}
       </Box>
       <DialogBox
         dialogTitle="Add new workout"
