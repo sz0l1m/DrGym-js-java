@@ -10,7 +10,7 @@ import style from './ExerciseInfo.module.css';
 export default function ExerciseInfo({ activity }) {
   return (
     <Box className={style.exercise}>
-      {activity.duration !== undefined ? (
+      {activity.duration !== undefined && activity.duration !== null ? (
         <>
           <Box sx={{ width: '200px' }} className={style.exerciseElement}>
             <Tooltip title="Cardio exercise">
@@ -37,10 +37,10 @@ export default function ExerciseInfo({ activity }) {
           </Box>
 
           <Box sx={{ width: '100px' }} className={style.exerciseElement}>
-            <Tooltip title="Number of sets">
+            <Tooltip title="Number of reps">
               <LoopIcon />
             </Tooltip>
-            {activity.sets}
+            {activity.reps}
           </Box>
 
           <Box sx={{ width: '100px' }} className={style.exerciseElement}>

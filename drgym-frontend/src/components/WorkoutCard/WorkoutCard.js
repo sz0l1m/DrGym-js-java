@@ -61,7 +61,7 @@ export default function WorkoutCard({ workout, onDelete }) {
   const [loading, setLoading] = useState(false);
 
   const menuOpen = Boolean(anchorEl);
-  const realitveStartDate = formatRelativeTime(workout.start_date);
+  const realitveStartDate = formatRelativeTime(workout.startDate);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -79,9 +79,9 @@ export default function WorkoutCard({ workout, onDelete }) {
     // try {
     //   setLoading(true);
     //   await axios.delete(
-    //     `http://localhost:8080/api/workouts/${workout.workout_id}`
+    //     `http://localhost:8080/api/workouts/${workout.workoutId}`
     //   );
-    //   onDelete(workout.workout_id);
+    //   onDelete(workout.workoutId);
     // } catch (error) {
     //   console.error('Error deleting workout:', error);
     //   alert('Failed to delete workout. Please try again.');
@@ -101,7 +101,7 @@ export default function WorkoutCard({ workout, onDelete }) {
                 <MoreVertIcon />
               </IconButton>
             }
-            title={formatDate(workout.start_date, 'd MMMM yyyy')}
+            title={formatDate(workout.startDate, 'd MMMM yyyy')}
             subheader={
               realitveStartDate.charAt(0).toUpperCase() +
               realitveStartDate.slice(1)
@@ -134,15 +134,15 @@ export default function WorkoutCard({ workout, onDelete }) {
               <Tooltip title="Start time">
                 <CalendarMonthIcon sx={{ pb: '1px' }} />
               </Tooltip>
-              {formatDate(workout.start_date, 'd MMM H:mm')}
+              {formatDate(workout.startDate, 'd MMM H:mm')}
               <Tooltip title="End time">
                 <EastIcon />
               </Tooltip>
-              {formatDate(workout.end_date, 'd MMM H:mm')}
+              {formatDate(workout.endDate, 'd MMM H:mm')}
               <Tooltip title="Duration">
                 <AccessTimeIcon sx={{ ml: 5 }} />
               </Tooltip>
-              {getDiffInHoursAndMinutes(workout.start_date, workout.end_date)}
+              {getDiffInHoursAndMinutes(workout.startDate, workout.endDate)}
             </Box>
             {workout.description && (
               <Typography sx={{ mt: 3 }}>{workout.description}</Typography>
@@ -163,7 +163,7 @@ export default function WorkoutCard({ workout, onDelete }) {
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
               {workout.activities.map((activity) => (
-                <Box key={activity.activity_id}>
+                <Box key={activity.activityId}>
                   <Divider sx={{ mb: 3 }} />
                   <ExerciseInfo activity={activity} />
                 </Box>
