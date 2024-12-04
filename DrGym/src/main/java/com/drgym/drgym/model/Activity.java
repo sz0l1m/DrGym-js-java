@@ -37,7 +37,7 @@ public class Activity {
 
     public Long getId() {return id;}
 
-    public Long getExercise_id() {return exercise_id;}
+    public Long getExerciseId() {return exercise_id;}
 
     public Long getReps() {return reps;}
 
@@ -47,9 +47,9 @@ public class Activity {
 
     // setters
 
-    public void setId_workout(Long id_workout) {this.id = id_workout;}
+    public void setId(Long id_workout) {this.id = id_workout;}
 
-    public void setExercise_id(Long exercise_id) {this.exercise_id = exercise_id;}
+    public void setExerciseId(Long exercise_id) {this.exercise_id = exercise_id;}
 
     public void setReps(Long reps) {this.reps = reps;}
 
