@@ -14,8 +14,8 @@ public class Activity {
     @Column(name = "exercise_id", nullable = false)
     private Long exercise_id;
 
-    @Column(name = "sets")
-    private Long sets;
+    @Column(name = "reps")
+    private Long reps;
 
     @Column(name = "weight")
     private Long weight;
@@ -23,10 +23,10 @@ public class Activity {
     @Column(name = "duration")
     private Timestamp duration;
 
-    public Activity(Long id, Long exercise_id, Long sets, Long weight, Timestamp duration) {
+    public Activity(Long id, Long exercise_id, Long reps, Long weight, Timestamp duration) {
         this.id = id;
         this.exercise_id = exercise_id;
-        this.sets = sets;
+        this.reps = reps;
         this.weight = weight;
         this.duration = duration;
     }
@@ -39,7 +39,7 @@ public class Activity {
 
     public Long getExercise_id() {return exercise_id;}
 
-    public Long getSets() {return sets;}
+    public Long getReps() {return reps;}
 
     public Long getWeight() {return weight;}
 
@@ -51,7 +51,7 @@ public class Activity {
 
     public void setExercise_id(Long exercise_id) {this.exercise_id = exercise_id;}
 
-    public void setSets(Long sets) {this.sets = sets;}
+    public void setReps(Long reps) {this.reps = reps;}
 
     public void setWeight(Long weight) {this.weight = weight;}
 

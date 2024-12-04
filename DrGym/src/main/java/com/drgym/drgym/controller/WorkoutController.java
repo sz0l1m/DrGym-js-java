@@ -42,7 +42,7 @@ public class WorkoutController {
                                 a.getExercise_id(),
                                 a.getDuration(),
                                 a.getWeight(),
-                                a.getSets()))
+                                a.getReps()))
                         .toList());
 
         return ResponseEntity.ok(response);
@@ -65,7 +65,7 @@ public class WorkoutController {
             Long exerciseId,
             Timestamp duration,
             Long weight,
-            Long sets
+            Long reps
     ) {}
 
 }
