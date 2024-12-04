@@ -67,7 +67,7 @@ export default function HomePage() {
       try {
         setLoading(true);
         const response = await axios.get(
-          'http://localhost:8080/api/workouts/2'
+          'http://localhost:8080/api/workouts/3'
         );
         setWorkoutsData(response.data);
       } catch (err) {
@@ -119,6 +119,7 @@ export default function HomePage() {
       </Box>
       <DialogBox
         dialogTitle="Add new workout"
+        popupType="new"
         popupStatus={dialogOpen}
         togglePopup={setDialogOpen}
       />
