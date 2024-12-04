@@ -37,6 +37,10 @@ public class WorkoutService {
         return activityRepository.findAllById(activityIds);
     }
 
+    public List<Workout> findByUsername(String username) {
+        return workoutRepository.findByUsername(username);
+    }
+
     public Workout saveWorkout(Workout workout) {
         List<Long> validActivityIds = workout.getActivityIds().stream()
                 .filter(activityId -> activityRepository.existsById(activityId))
