@@ -22,30 +22,19 @@ import {
   IconButton,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { DateTimePicker, TimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimePicker, TimePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
+
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WorkoutFormTitle from './WorkoutFormTitle';
-import * as yup from 'yup';
+import { schema, strengthExerciseSchema, cardioExerciseSchema } from './schema';
 
 const cardioExercises = ['Running', 'Cycling', 'Swimming'];
 const strengthExercises = ['Weightlifting', 'Push-ups', 'Squats'];
-
-const schema = yup.object().shape({
-  startDate: yup
-    .date()
-    .required('Start Date is required')
-    .typeError('Invalid date'),
-  endDate: yup
-    .date()
-    .required('End Date is required')
-    .typeError('Invalid date'),
-  description: yup.string().max(50, 'Description is too long (max 50 chars)'),
-});
 
 export default function WorkoutForm({
   dialogTitle,
@@ -82,6 +71,9 @@ export default function WorkoutForm({
                 description: '',
                 exerciseType: '',
                 exercise: '',
+                sets: '',
+                weight: '',
+                duration: null,
               }
             : {
                 startDate: new Date(workout.startDate),
@@ -89,12 +81,17 @@ export default function WorkoutForm({
                 description: workout.description,
                 exerciseType: workout.exerciseType || '',
                 exercise: workout.exercise || '',
+                sets: '',
+                weight: '',
+                duration: null,
               }
         }
         onSubmit={(values, actions) => {
           actions.setSubmitting(true);
           setTimeout(() => {
-            alert(JSON.stringify({ ...values, exerciseList }, null, 2));
+            alert(
+              JSON.stringify({ ...values, exercises: exerciseList }, null, 2)
+            );
             actions.setSubmitting(false);
             handleClose();
           }, 1000);
@@ -110,7 +107,6 @@ export default function WorkoutForm({
           setFieldValue,
           isSubmitting,
           setErrors,
-          setTouched,
         }) => (
           <Form>
             <DialogContent sx={{ p: 2 }}>
@@ -175,9 +171,7 @@ export default function WorkoutForm({
 
               <FormControl sx={{ mt: 2 }} fullWidth>
                 <FormLabel error={!!errors.exerciseType}>
-                  {!!errors.exerciseType
-                    ? `${errors.exerciseType}`
-                    : 'Exercise Type'}
+                  {errors.exerciseType || 'Exercise Type'}
                 </FormLabel>
                 <RadioGroup
                   row
@@ -186,6 +180,9 @@ export default function WorkoutForm({
                   onChange={(e) => {
                     setFieldValue('exerciseType', e.target.value);
                     setFieldValue('exercise', '');
+                    setFieldValue('sets', '');
+                    setFieldValue('weight', '');
+                    setFieldValue('duration', null);
                   }}
                 >
                   <FormControlLabel
@@ -200,18 +197,16 @@ export default function WorkoutForm({
                   />
                 </RadioGroup>
               </FormControl>
-              <FormControl
-                sx={{ mt: 2 }}
-                fullWidth
-                disabled={!values.exerciseType}
-              >
+
+              <FormControl fullWidth sx={{ mt: 2 }}>
                 <FormLabel error={!!errors.exercise}>
-                  {!!errors.exercise ? `${errors.exercise}` : 'Exercise'}
+                  {errors.exercise || 'Exercise'}
                 </FormLabel>
                 <Select
                   name="exercise"
                   value={values.exercise}
-                  onChange={(e) => setFieldValue('exercise', e.target.value)}
+                  onChange={handleChange}
+                  disabled={!values.exerciseType}
                   onBlur={handleBlur}
                 >
                   {(values.exerciseType === 'cardio'
@@ -226,7 +221,7 @@ export default function WorkoutForm({
               </FormControl>
 
               {values.exerciseType === 'strength' && (
-                <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                   <TextField
                     label="Sets"
                     name="sets"
@@ -235,7 +230,7 @@ export default function WorkoutForm({
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={!!errors.sets && touched.sets}
-                    helperText={touched.sets && errors.sets ? errors.sets : ''}
+                    helperText={touched.sets && errors.sets}
                   />
                   <TextField
                     label="Weight (kg)"
@@ -245,9 +240,7 @@ export default function WorkoutForm({
                     onChange={handleChange}
                     onBlur={handleBlur}
                     error={!!errors.weight && touched.weight}
-                    helperText={
-                      touched.weight && errors.weight ? errors.weight : ''
-                    }
+                    helperText={touched.weight && errors.weight}
                   />
                 </Box>
               )}
@@ -256,21 +249,16 @@ export default function WorkoutForm({
                 <Box sx={{ mt: 2 }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <TimePicker
-                      label="Time"
-                      value={values.time}
-                      onChange={(newValue) => setFieldValue('time', newValue)}
-                      onBlur={() =>
-                        handleBlur({
-                          target: { name: 'time' },
-                        })
+                      label="Duration"
+                      value={values.duration}
+                      onChange={(newValue) =>
+                        setFieldValue('duration', newValue)
                       }
                       renderInput={(params) => (
                         <TextField
                           {...params}
-                          error={!!errors.time && touched.time}
-                          helperText={
-                            touched.time && errors.time ? errors.time : ''
-                          }
+                          error={!!errors.duration && touched.duration}
+                          helperText={touched.duration && errors.duration}
                         />
                       )}
                     />
@@ -282,25 +270,55 @@ export default function WorkoutForm({
                 sx={{ mt: 2 }}
                 variant="outlined"
                 onClick={() => {
-                  if (!values.exerciseType || !values.exercise) {
-                    console.log('Setting errors');
-                    setErrors({
-                      exerciseType: values.exerciseType
-                        ? undefined
-                        : 'Exercise Type is required',
-                      exercise: values.exercise
-                        ? undefined
-                        : 'Exercise is required',
-                    });
-                    return;
-                  }
+                  const newExercise = {
+                    exerciseType: values.exerciseType,
+                    exercise: values.exercise,
+                    sets: values.sets || null,
+                    weight: values.weight || null,
+                    duration: values.duration || null,
+                  };
 
-                  setExerciseList((prev) => [
-                    ...prev,
-                    { type: values.exerciseType, name: values.exercise },
-                  ]);
-                  setFieldValue('exerciseType', '');
-                  setFieldValue('exercise', '');
+                  const exerciseSchema =
+                    values.exerciseType === 'strength'
+                      ? strengthExerciseSchema
+                      : cardioExerciseSchema;
+                  exerciseSchema
+                    .validate(newExercise, { abortEarly: false })
+                    .then(() => {
+                      console.log('VALIDATION PASSED');
+                      // Add exercise to the list if validation passes
+                      setExerciseList((prev) => [...prev, newExercise]);
+
+                      // Reset form fields after successful validation
+                      setFieldValue('exerciseType', '');
+                      setFieldValue('exercise', '');
+                      setFieldValue('sets', '');
+                      setFieldValue('weight', '');
+                      setFieldValue('duration', null);
+                      setErrors({}); // Clear any lingering errors
+                    })
+                    .catch((validationErrors) => {
+                      console.log('VALIDATION ERRORS');
+                      const errors = validationErrors.inner.reduce(
+                        (acc, err) => ({
+                          ...acc,
+                          [err.path]: err.message,
+                        }),
+                        {}
+                      );
+
+                      // Filter irrelevant errors based on exerciseType
+                      // const filteredErrors = {};
+                      // if (values.exerciseType === 'strength') {
+                      //   if (allErrors.duration) delete allErrors.duration;
+                      // } else if (values.exerciseType === 'cardio') {
+                      //   if (allErrors.sets) delete allErrors.sets;
+                      //   if (allErrors.weight) delete allErrors.weight;
+                      // }
+
+                      // Set filtered errors to Formik's error state
+                      setErrors(errors);
+                    });
                 }}
               >
                 Add Exercise
@@ -313,19 +331,23 @@ export default function WorkoutForm({
                     secondaryAction={
                       <IconButton
                         edge="end"
-                        onClick={() => {
+                        onClick={() =>
                           setExerciseList((prev) =>
                             prev.filter((_, i) => i !== index)
-                          );
-                        }}
+                          )
+                        }
                       >
                         <DeleteIcon />
                       </IconButton>
                     }
                   >
                     <ListItemText
-                      primary={exercise.name}
-                      secondary={`Type: ${exercise.type}`}
+                      primary={exercise.exercise}
+                      secondary={`Type: ${exercise.exerciseType}, ${
+                        exercise.exerciseType === 'strength'
+                          ? `Sets: ${exercise.sets}, Weight: ${exercise.weight}kg`
+                          : `Duration: ${exercise.duration}`
+                      }`}
                     />
                   </ListItem>
                 ))}
@@ -347,7 +369,7 @@ export default function WorkoutForm({
                   )
                 }
               >
-                {popupType === 'new' ? 'Add workout' : 'Edit workout'}
+                {popupType === 'new' ? 'Add Workout' : 'Edit Workout'}
               </Button>
             </DialogActions>
           </Form>
