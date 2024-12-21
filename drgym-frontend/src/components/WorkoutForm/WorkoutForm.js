@@ -29,7 +29,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import DialogBoxTitle from './WorkoutFormTitle';
+import WorkoutFormTitle from './WorkoutFormTitle';
 import * as yup from 'yup';
 
 const cardioExercises = ['Running', 'Cycling', 'Swimming'];
@@ -47,7 +47,7 @@ const schema = yup.object().shape({
   description: yup.string().max(50, 'Description is too long (max 50 chars)'),
 });
 
-export default function DialogBox({
+export default function WorkoutForm({
   dialogTitle,
   popupType,
   popupStatus,
@@ -70,9 +70,9 @@ export default function DialogBox({
       open={popupStatus}
       aria-labelledby="new-workout-dialog"
     >
-      <DialogBoxTitle id="new-workout-dialog" onClose={handleClose}>
+      <WorkoutFormTitle id="new-workout-dialog" onClose={handleClose}>
         {dialogTitle}
-      </DialogBoxTitle>
+      </WorkoutFormTitle>
       <Formik
         initialValues={
           popupType === 'new'

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import WorkoutCard from '@/components/WorkoutCard';
 import AddIcon from '@mui/icons-material/Add';
-import DialogBox from '@/components/WorkoutForm';
+import WorkoutForm from '@/components/WorkoutForm';
 import style from './workouts.module.css';
 
 // let workoutsData = [
@@ -112,7 +112,7 @@ export default function HomePage() {
           />
         ))}
       </Box>
-      <DialogBox
+      <WorkoutForm
         dialogTitle="Add new workout"
         popupType="new"
         popupStatus={dialogOpen}

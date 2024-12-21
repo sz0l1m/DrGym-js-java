@@ -21,7 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Tooltip from '@mui/material/Tooltip';
 import ExerciseInfo from './ExerciseInfo';
-import DialogBox from '@/components/WorkoutForm';
+import WorkoutForm from '@/components/WorkoutForm';
 import axios from 'axios';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
 import {
@@ -173,7 +173,7 @@ export default function WorkoutCard({ workout, onDelete }) {
             </CardContent>
           </Collapse>
         </Card>
-        <DialogBox
+        <WorkoutForm
           dialogTitle="Edit workout"
           popupType="edit"
           popupStatus={openDialog}

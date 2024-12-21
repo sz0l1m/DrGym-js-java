@@ -1,10 +1,10 @@
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import style from './DialogBoxTitle.module.css';
+import style from './WorkoutFormTitle.module.css';
 import Tooltip from '@mui/material/Tooltip';
 
-const DialogBoxTitle = ({ children, onClose, ...other }) => {
+const WorkoutFormTitle = ({ children, onClose, ...other }) => {
   return (
     <DialogTitle sx={{ m: 0, p: 2 }} {...other} className={style.title}>
       {children}
@@ -27,4 +27,4 @@ const DialogBoxTitle = ({ children, onClose, ...other }) => {
   );
 };
 
-export default DialogBoxTitle;
+export default WorkoutFormTitle;
