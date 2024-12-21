@@ -22,7 +22,7 @@ import {
   IconButton,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DateTimePicker, TimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
@@ -224,6 +224,60 @@ export default function WorkoutForm({
                   ))}
                 </Select>
               </FormControl>
+
+              {values.exerciseType === 'strength' && (
+                <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+                  <TextField
+                    label="Sets"
+                    name="sets"
+                    type="number"
+                    value={values.sets}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={!!errors.sets && touched.sets}
+                    helperText={touched.sets && errors.sets ? errors.sets : ''}
+                  />
+                  <TextField
+                    label="Weight (kg)"
+                    name="weight"
+                    type="number"
+                    value={values.weight}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={!!errors.weight && touched.weight}
+                    helperText={
+                      touched.weight && errors.weight ? errors.weight : ''
+                    }
+                  />
+                </Box>
+              )}
+
+              {values.exerciseType === 'cardio' && (
+                <Box sx={{ mt: 2 }}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <TimePicker
+                      label="Time"
+                      value={values.time}
+                      onChange={(newValue) => setFieldValue('time', newValue)}
+                      onBlur={() =>
+                        handleBlur({
+                          target: { name: 'time' },
+                        })
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          error={!!errors.time && touched.time}
+                          helperText={
+                            touched.time && errors.time ? errors.time : ''
+                          }
+                        />
+                      )}
+                    />
+                  </LocalizationProvider>
+                </Box>
+              )}
+
               <Button
                 sx={{ mt: 2 }}
                 variant="outlined"
