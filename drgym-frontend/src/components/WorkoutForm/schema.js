@@ -17,13 +17,13 @@ const strengthExerciseSchema = yup.object().shape({
   exercise: yup.string().required('Exercise is required'),
   sets: yup
     .number()
-    .nullable()
     .typeError('Sets must be a number')
+    .min(0, 'Sets cannot be negative')
     .required('Sets are required'),
   weight: yup
     .number()
-    .nullable()
     .typeError('Weight must be a number')
+    .min(0, 'Weight cannot be negative')
     .required('Weight is required'),
   duration: yup.mixed().nullable(),
 });

@@ -230,18 +230,48 @@ export default function WorkoutForm({
                     name="sets"
                     type="number"
                     value={values.sets}
-                    onChange={handleChange}
                     onBlur={handleBlur}
                     error={!!errors.sets}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (!value || parseInt(value, 10) >= 0) {
+                        handleChange(e);
+                      }
+                    }}
+                    slotProps={{
+                      input: {
+                        min: 0,
+                        onKeyDown: (e) => {
+                          if (e.key === '-' || e.key === 'e') {
+                            e.preventDefault();
+                          }
+                        },
+                      },
+                    }}
                   />
                   <TextField
                     label={errors.weight || 'Weight (kg)'}
                     name="weight"
                     type="number"
                     value={values.weight}
-                    onChange={handleChange}
                     onBlur={handleBlur}
                     error={!!errors.weight}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (!value || parseInt(value, 10) >= 0) {
+                        handleChange(e);
+                      }
+                    }}
+                    slotProps={{
+                      input: {
+                        min: 0,
+                        onKeyDown: (e) => {
+                          if (e.key === '-' || e.key === 'e') {
+                            e.preventDefault();
+                          }
+                        },
+                      },
+                    }}
                   />
                 </Box>
               )}
@@ -274,9 +304,9 @@ export default function WorkoutForm({
                   const newExercise = {
                     exerciseType: values.exerciseType,
                     exercise: values.exercise,
-                    sets: values.sets || null,
-                    weight: values.weight || null,
-                    duration: values.duration || null,
+                    sets: String(values.sets) || null,
+                    weight: String(values.weight) || null,
+                    duration: values.duration,
                   };
 
                   const exerciseSchema =
