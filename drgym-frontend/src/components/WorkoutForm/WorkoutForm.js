@@ -13,6 +13,7 @@ import {
   TextField,
   Button,
   Dialog,
+  Divider,
   DialogActions,
   DialogContent,
   useMediaQuery,
@@ -21,6 +22,8 @@ import {
   ListItem,
   ListItemText,
   IconButton,
+  Typography,
+  Tooltip,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { DateTimePicker, TimePicker } from '@mui/x-date-pickers';
@@ -32,6 +35,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WorkoutFormTitle from './WorkoutFormTitle';
+import ExerciseInfo from '@/components/WorkoutCard/ExerciseInfo';
 import { schema, strengthExerciseSchema, cardioExerciseSchema } from './schema';
 
 const cardioExercises = ['Running', 'Cycling', 'Swimming'];
@@ -111,7 +115,7 @@ export default function WorkoutForm({
           setErrors,
         }) => (
           <Form>
-            <DialogContent sx={{ p: 2 }}>
+            <DialogContent sx={{ p: 3 }}>
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DateTimePicker
@@ -174,7 +178,7 @@ export default function WorkoutForm({
                 sx={{ mt: 2 }}
               />
 
-              <FormControl sx={{ mt: 2 }} fullWidth>
+              <FormControl sx={{ mt: 4 }} fullWidth>
                 <FormLabel error={!!errors.exerciseType}>
                   {errors.exerciseType || 'Exercise Type'}
                 </FormLabel>
@@ -303,7 +307,8 @@ export default function WorkoutForm({
 
               <Button
                 sx={{ mt: 2 }}
-                variant="outlined"
+                variant="contained"
+                color="secondary"
                 onClick={() => {
                   const newExercise = {
                     exerciseType: values.exerciseType,
@@ -343,34 +348,48 @@ export default function WorkoutForm({
                 Add Exercise
               </Button>
 
-              <List sx={{ mt: 2 }}>
-                {exerciseList.map((exercise, index) => (
-                  <ListItem
-                    key={index}
-                    secondaryAction={
-                      <IconButton
-                        edge="end"
-                        onClick={() =>
-                          setExerciseList((prev) =>
-                            prev.filter((_, i) => i !== index)
-                          )
-                        }
-                      >
-                        <DeleteIcon />
-                      </IconButton>
-                    }
-                  >
-                    <ListItemText
-                      primary={exercise.exercise}
-                      secondary={`Type: ${exercise.exerciseType}, ${
-                        exercise.exerciseType === 'strength'
-                          ? `Sets: ${exercise.sets}, Weight: ${exercise.weight}kg`
-                          : `Duration: ${exercise.duration}`
-                      }`}
-                    />
-                  </ListItem>
-                ))}
-              </List>
+              {exerciseList.length > 0 && (
+                <Box>
+                  <Divider sx={{ mt: 2, mb: 2 }} />
+                  {exerciseList.map((exercise, index) => (
+                    <Box
+                      key={index}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'baseline',
+                        justifyContent: 'space-between',
+                        mb: 2,
+                      }}
+                    >
+                      <Box sx={{ flexGrow: 1 }}>
+                        <ExerciseInfo
+                          activity={{
+                            exerciseName: exercise.exercise,
+                            duration:
+                              exercise.duration?.toISOString() || '00:00:00',
+                            reps: exercise.sets || 0,
+                            weight: exercise.weight || 0,
+                          }}
+                        />
+                      </Box>
+                      <Tooltip title="Delete exercise">
+                        <IconButton
+                          edge="end"
+                          color="error"
+                          sx={{ mr: 1 }}
+                          onClick={() =>
+                            setExerciseList((prev) =>
+                              prev.filter((_, i) => i !== index)
+                            )
+                          }
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                  ))}
+                </Box>
+              )}
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>
               <Button onClick={handleClose} color="error">
@@ -379,7 +398,6 @@ export default function WorkoutForm({
               <Button
                 type="submit"
                 variant="contained"
-                color="secondary"
                 disabled={isSubmitting}
                 startIcon={popupType === 'new' ? <AddIcon /> : <EditIcon />}
                 endIcon={
