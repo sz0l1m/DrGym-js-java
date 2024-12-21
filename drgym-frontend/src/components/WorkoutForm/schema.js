@@ -18,7 +18,7 @@ const strengthExerciseSchema = yup.object().shape({
   reps: yup
     .number()
     .typeError('Reps must be a number')
-    .min(0, 'Reps cannot be negative')
+    .min(1, 'Reps must be at least 1')
     .required('Reps are required'),
   weight: yup
     .number()

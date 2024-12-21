@@ -348,50 +348,47 @@ export default function WorkoutForm({
                 Add Exercise
               </Button>
 
-              {exerciseList.length > 0 && (
-                <Box>
-                  <Divider sx={{ mt: 2, mb: 2 }} />
-                  {exerciseList.map((exercise, index) => (
-                    <Box
-                      key={index}
-                      sx={{
-                        display: 'flex',
-                        alignItems: 'baseline',
-                        justifyContent: 'space-between',
-                        mb: 2,
-                      }}
-                    >
-                      <Box sx={{ flexGrow: 1 }}>
-                        <ExerciseInfo
-                          activity={{
-                            exerciseName: exercise.exercise,
-                            duration:
-                              exercise.duration?.toISOString() || '00:00:00',
-                            reps: exercise.reps || 0,
-                            weight: exercise.weight || 0,
-                          }}
-                        />
-                      </Box>
-                      <Tooltip title="Delete exercise">
-                        <IconButton
-                          edge="end"
-                          color="error"
-                          sx={{ mr: 1 }}
-                          onClick={() =>
-                            setExerciseList((prev) =>
-                              prev.filter((_, i) => i !== index)
-                            )
-                          }
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </Tooltip>
+              {exerciseList.map((exercise, index) => (
+                <Box key={index}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'baseline',
+                      justifyContent: 'space-between',
+                      mt: 2,
+                    }}
+                  >
+                    <Box sx={{ flexGrow: 1 }}>
+                      <ExerciseInfo
+                        activity={{
+                          exerciseName: exercise.exercise,
+                          duration:
+                            exercise.duration?.toISOString() || '00:00:00',
+                          reps: exercise.reps || 0,
+                          weight: exercise.weight || 0,
+                        }}
+                      />
                     </Box>
-                  ))}
+                    <Tooltip title="Delete exercise">
+                      <IconButton
+                        edge="end"
+                        color="error"
+                        sx={{ mr: 1 }}
+                        onClick={() =>
+                          setExerciseList((prev) =>
+                            prev.filter((_, i) => i !== index)
+                          )
+                        }
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <Divider sx={{ mb: 2 }} />
                 </Box>
-              )}
+              ))}
             </DialogContent>
-            <DialogActions sx={{ p: 2 }}>
+            <DialogActions sx={{ px: 2, pb: 2, pt: 0 }}>
               <Button onClick={handleClose} color="error">
                 Cancel
               </Button>
