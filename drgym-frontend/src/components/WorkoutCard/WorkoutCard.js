@@ -21,7 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Tooltip from '@mui/material/Tooltip';
 import ExerciseInfo from './ExerciseInfo';
-import DialogBox from '@/components/DialogBox';
+import DialogBox from '@/components/WorkoutForm';
 import axios from 'axios';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
 import {
