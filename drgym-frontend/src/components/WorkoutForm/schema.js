@@ -15,11 +15,11 @@ const schema = yup.object().shape({
 const strengthExerciseSchema = yup.object().shape({
   exerciseType: yup.string().required('Exercise Type is required'),
   exercise: yup.string().required('Exercise is required'),
-  sets: yup
+  reps: yup
     .number()
-    .typeError('Sets must be a number')
-    .min(0, 'Sets cannot be negative')
-    .required('Sets are required'),
+    .typeError('Reps must be a number')
+    .min(0, 'Reps cannot be negative')
+    .required('Reps are required'),
   weight: yup
     .number()
     .typeError('Weight must be a number')
@@ -31,7 +31,7 @@ const strengthExerciseSchema = yup.object().shape({
 const cardioExerciseSchema = yup.object().shape({
   exerciseType: yup.string().required('Exercise Type is required'),
   exercise: yup.string().required('Exercise is required'),
-  sets: yup.number().nullable().typeError('Sets must be a number'),
+  reps: yup.number().nullable().typeError('Reps must be a number'),
   weight: yup.number().nullable().typeError('Weight must be a number'),
   duration: yup.mixed().nullable().required('Duration is required'),
 });

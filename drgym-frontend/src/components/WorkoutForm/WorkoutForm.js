@@ -86,7 +86,7 @@ export default function WorkoutForm({
                 description: '',
                 exerciseType: '',
                 exercise: '',
-                sets: '',
+                reps: '',
                 weight: '',
                 duration: null,
               }
@@ -96,7 +96,7 @@ export default function WorkoutForm({
                 description: workout.description,
                 exerciseType: workout.exerciseType || '',
                 exercise: workout.exercise || '',
-                sets: '',
+                reps: '',
                 weight: '',
                 duration: null,
               }
@@ -189,7 +189,7 @@ export default function WorkoutForm({
                   onChange={(e) => {
                     setFieldValue('exerciseType', e.target.value);
                     setFieldValue('exercise', '');
-                    setFieldValue('sets', '');
+                    setFieldValue('reps', '');
                     setFieldValue('weight', '');
                     setFieldValue('duration', null);
                   }}
@@ -234,12 +234,12 @@ export default function WorkoutForm({
               {values.exerciseType === 'strength' && (
                 <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                   <TextField
-                    label={errors.sets || 'Sets'}
-                    name="sets"
+                    label={errors.reps || 'Reps'}
+                    name="reps"
                     type="number"
-                    value={values.sets}
+                    value={values.reps}
                     onBlur={handleBlur}
-                    error={!!errors.sets}
+                    error={!!errors.reps}
                     onChange={(e) => {
                       const value = e.target.value;
                       if (!value || parseInt(value, 10) >= 0) {
@@ -313,7 +313,7 @@ export default function WorkoutForm({
                   const newExercise = {
                     exerciseType: values.exerciseType,
                     exercise: values.exercise,
-                    sets: String(values.sets) || null,
+                    reps: String(values.reps) || null,
                     weight: String(values.weight) || null,
                     duration: values.duration,
                   };
@@ -328,7 +328,7 @@ export default function WorkoutForm({
                       setExerciseList((prev) => [...prev, newExercise]);
                       setFieldValue('exerciseType', '');
                       setFieldValue('exercise', '');
-                      setFieldValue('sets', '');
+                      setFieldValue('reps', '');
                       setFieldValue('weight', '');
                       setFieldValue('duration', null);
                       setErrors({});
@@ -367,7 +367,7 @@ export default function WorkoutForm({
                             exerciseName: exercise.exercise,
                             duration:
                               exercise.duration?.toISOString() || '00:00:00',
-                            reps: exercise.sets || 0,
+                            reps: exercise.reps || 0,
                             weight: exercise.weight || 0,
                           }}
                         />
