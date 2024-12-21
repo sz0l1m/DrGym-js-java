@@ -48,6 +48,16 @@ export default function WorkoutForm({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [exerciseList, setExerciseList] = useState([]);
 
+  const handleAddWorkout = (values, actions) => {
+    actions.setSubmitting(true);
+    setTimeout(() => {
+      alert(JSON.stringify({ ...values, exercises: exerciseList }, null, 2));
+      setExerciseList([]);
+      actions.setSubmitting(false);
+      handleClose();
+    }, 1000);
+  };
+
   const handleClose = () => {
     togglePopup(false);
   };
@@ -87,16 +97,7 @@ export default function WorkoutForm({
                 duration: null,
               }
         }
-        onSubmit={(values, actions) => {
-          actions.setSubmitting(true);
-          setTimeout(() => {
-            alert(
-              JSON.stringify({ ...values, exercises: exerciseList }, null, 2)
-            );
-            actions.setSubmitting(false);
-            handleClose();
-          }, 1000);
-        }}
+        onSubmit={(values, actions) => handleAddWorkout(values, actions)}
         validationSchema={schema}
       >
         {({
@@ -121,6 +122,7 @@ export default function WorkoutForm({
                     }}
                     name="startDate"
                     value={values.startDate}
+                    maxDate={values.endDate || undefined}
                     onChange={(newValue) => {
                       setFieldValue('startDate', newValue);
                     }}
@@ -140,7 +142,9 @@ export default function WorkoutForm({
                       minutes: renderTimeViewClock,
                       seconds: renderTimeViewClock,
                     }}
+                    name="endDate"
                     value={values.endDate}
+                    minDate={values.startDate || undefined}
                     onChange={(newValue) => {
                       setFieldValue('endDate', newValue);
                     }}
