@@ -16,6 +16,7 @@ import {
   DialogActions,
   DialogContent,
   useMediaQuery,
+  InputLabel,
   List,
   ListItem,
   ListItemText,
@@ -198,12 +199,14 @@ export default function WorkoutForm({
                 </RadioGroup>
               </FormControl>
 
-              <FormControl fullWidth sx={{ mt: 2 }}>
-                <FormLabel error={!!errors.exercise}>
+              <FormControl fullWidth sx={{ mt: 2 }} error={!!errors.exercise}>
+                <InputLabel id="exerciseSelect">
                   {errors.exercise || 'Exercise'}
-                </FormLabel>
+                </InputLabel>
                 <Select
+                  labelId="exerciseSelect"
                   name="exercise"
+                  label={errors.exercise || 'Exercise'}
                   value={values.exercise}
                   onChange={handleChange}
                   disabled={!values.exerciseType}
@@ -223,24 +226,22 @@ export default function WorkoutForm({
               {values.exerciseType === 'strength' && (
                 <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
                   <TextField
-                    label="Sets"
+                    label={errors.sets || 'Sets'}
                     name="sets"
                     type="number"
                     value={values.sets}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    error={!!errors.sets && touched.sets}
-                    helperText={touched.sets && errors.sets}
+                    error={!!errors.sets}
                   />
                   <TextField
-                    label="Weight (kg)"
+                    label={errors.weight || 'Weight (kg)'}
                     name="weight"
                     type="number"
                     value={values.weight}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    error={!!errors.weight && touched.weight}
-                    helperText={touched.weight && errors.weight}
+                    error={!!errors.weight}
                   />
                 </Box>
               )}
@@ -285,20 +286,15 @@ export default function WorkoutForm({
                   exerciseSchema
                     .validate(newExercise, { abortEarly: false })
                     .then(() => {
-                      console.log('VALIDATION PASSED');
-                      // Add exercise to the list if validation passes
                       setExerciseList((prev) => [...prev, newExercise]);
-
-                      // Reset form fields after successful validation
                       setFieldValue('exerciseType', '');
                       setFieldValue('exercise', '');
                       setFieldValue('sets', '');
                       setFieldValue('weight', '');
                       setFieldValue('duration', null);
-                      setErrors({}); // Clear any lingering errors
+                      setErrors({});
                     })
                     .catch((validationErrors) => {
-                      console.log('VALIDATION ERRORS');
                       const errors = validationErrors.inner.reduce(
                         (acc, err) => ({
                           ...acc,
@@ -306,17 +302,6 @@ export default function WorkoutForm({
                         }),
                         {}
                       );
-
-                      // Filter irrelevant errors based on exerciseType
-                      // const filteredErrors = {};
-                      // if (values.exerciseType === 'strength') {
-                      //   if (allErrors.duration) delete allErrors.duration;
-                      // } else if (values.exerciseType === 'cardio') {
-                      //   if (allErrors.sets) delete allErrors.sets;
-                      //   if (allErrors.weight) delete allErrors.weight;
-                      // }
-
-                      // Set filtered errors to Formik's error state
                       setErrors(errors);
                     });
                 }}
