@@ -26,7 +26,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { DateTimePicker, TimePicker } from '@mui/x-date-pickers';
+import { DateTimePicker, TimeField } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
 
@@ -37,6 +37,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import WorkoutFormTitle from './WorkoutFormTitle';
 import ExerciseInfo from '@/components/WorkoutCard/ExerciseInfo';
 import { schema, strengthExerciseSchema, cardioExerciseSchema } from './schema';
+import { formatDate } from '@/utils/dateUtils';
 
 const cardioExercises = ['Running', 'Cycling', 'Swimming'];
 const strengthExercises = ['Weightlifting', 'Push-ups', 'Squats'];
@@ -107,7 +108,6 @@ export default function WorkoutForm({
         {({
           values,
           errors,
-          touched,
           handleBlur,
           handleChange,
           setFieldValue,
@@ -131,9 +131,7 @@ export default function WorkoutForm({
                       setFieldValue('startDate', newValue);
                     }}
                     onBlur={handleBlur}
-                    label={
-                      !!errors.startDate ? `${errors.startDate}` : 'Start Date'
-                    }
+                    label={errors.startDate || 'Start Date'}
                     slotProps={{
                       textField: {
                         error: !!errors.startDate,
@@ -153,7 +151,7 @@ export default function WorkoutForm({
                       setFieldValue('endDate', newValue);
                     }}
                     onBlur={handleBlur}
-                    label={!!errors.endDate ? `${errors.endDate}` : 'End Date'}
+                    label={errors.endDate || 'End Date'}
                     slotProps={{
                       textField: {
                         error: !!errors.endDate,
@@ -287,19 +285,18 @@ export default function WorkoutForm({
               {values.exerciseType === 'cardio' && (
                 <Box sx={{ mt: 2 }}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <TimePicker
-                      label="Duration"
+                    <TimeField
+                      format="HH:mm:ss"
                       value={values.duration}
                       onChange={(newValue) =>
                         setFieldValue('duration', newValue)
                       }
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          error={!!errors.duration && touched.duration}
-                          helperText={touched.duration && errors.duration}
-                        />
-                      )}
+                      label={errors.duration || 'Duration'}
+                      slotProps={{
+                        textField: {
+                          error: !!errors.duration,
+                        },
+                      }}
                     />
                   </LocalizationProvider>
                 </Box>
@@ -362,8 +359,12 @@ export default function WorkoutForm({
                       <ExerciseInfo
                         activity={{
                           exerciseName: exercise.exercise,
-                          duration:
-                            exercise.duration?.toISOString() || '00:00:00',
+                          duration: exercise.duration
+                            ? formatDate(
+                                exercise.duration.toISOString(),
+                                'HH:mm:ss'
+                              )
+                            : '00:00:00',
                           reps: exercise.reps || 0,
                           weight: exercise.weight || 0,
                         }}

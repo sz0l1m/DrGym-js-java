@@ -31,9 +31,12 @@ const strengthExerciseSchema = yup.object().shape({
 const cardioExerciseSchema = yup.object().shape({
   exerciseType: yup.string().required('Exercise Type is required'),
   exercise: yup.string().required('Exercise is required'),
-  reps: yup.number().nullable().typeError('Reps must be a number'),
-  weight: yup.number().nullable().typeError('Weight must be a number'),
-  duration: yup.mixed().nullable().required('Duration is required'),
+  reps: yup.number().nullable(),
+  weight: yup.number().nullable(),
+  duration: yup
+    .date()
+    .required('Duration is required')
+    .typeError('Duration is invalid'),
 });
 
 export { schema, strengthExerciseSchema, cardioExerciseSchema };
