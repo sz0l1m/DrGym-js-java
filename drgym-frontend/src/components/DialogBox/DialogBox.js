@@ -33,14 +33,14 @@ const strengthExercises = ['Weightlifting', 'Push-ups', 'Squats'];
 const schema = yup.object().shape({
   startDate: yup
     .date()
-    .required('Start date is required')
+    .required('Start Date is required')
     .typeError('Invalid date'),
   endDate: yup
     .date()
-    .required('End date is required')
+    .required('End Date is required')
     .typeError('Invalid date'),
   description: yup.string().max(50, 'Description is too long (max 50 chars)'),
-  exerciseType: yup.string().required('Exercise type is required'),
+  exerciseType: yup.string().required('Exercise Type is required'),
   exercise: yup.string().required('Exercise is required'),
 });
 
@@ -116,12 +116,20 @@ export default function DialogBox({
                       minutes: renderTimeViewClock,
                       seconds: renderTimeViewClock,
                     }}
-                    label="Start Date"
+                    name="startDate"
                     value={values.startDate}
                     onChange={(newValue) => {
                       setFieldValue('startDate', newValue);
                     }}
                     onBlur={handleBlur}
+                    label={
+                      !!errors.startDate ? `${errors.startDate}` : 'Start Date'
+                    }
+                    slotProps={{
+                      textField: {
+                        error: !!errors.startDate,
+                      },
+                    }}
                   />
                   <DateTimePicker
                     viewRenderers={{
@@ -129,21 +137,24 @@ export default function DialogBox({
                       minutes: renderTimeViewClock,
                       seconds: renderTimeViewClock,
                     }}
-                    label="End Date"
                     value={values.endDate}
                     onChange={(newValue) => {
                       setFieldValue('endDate', newValue);
                     }}
                     onBlur={handleBlur}
+                    label={!!errors.endDate ? `${errors.endDate}` : 'End Date'}
+                    slotProps={{
+                      textField: {
+                        error: !!errors.endDate,
+                      },
+                    }}
                   />
                 </LocalizationProvider>
               </Box>
               <TextField
                 id="description"
                 label={
-                  !!errors.description
-                    ? `Description ${errors.description}`
-                    : 'Description'
+                  !!errors.description ? `${errors.description}` : 'Description'
                 }
                 name="description"
                 error={!!errors.description}
@@ -157,37 +168,44 @@ export default function DialogBox({
               />
 
               <FormControl sx={{ mt: 2 }} fullWidth>
-                <FormLabel>Exercise Type</FormLabel>
+                <FormLabel
+                  error={!!errors.exerciseType && !!touched.exerciseType}
+                >
+                  {!!errors.exerciseType && !!touched.exerciseType
+                    ? `${errors.exerciseType}`
+                    : 'Exercise Type'}
+                </FormLabel>
                 <RadioGroup
                   row
                   name="exerciseType"
                   value={values.exerciseType}
                   onChange={(e) => {
                     setFieldValue('exerciseType', e.target.value);
-                    setFieldValue('exercise', ''); // Reset exercise when type changes
+                    setFieldValue('exercise', '');
                   }}
                 >
-                  <FormControlLabel
-                    value="cardio"
-                    control={<Radio />}
-                    label="Cardio"
-                  />
                   <FormControlLabel
                     value="strength"
                     control={<Radio />}
                     label="Strength"
                   />
+                  <FormControlLabel
+                    value="cardio"
+                    control={<Radio />}
+                    label="Cardio"
+                  />
                 </RadioGroup>
-                {errors.exerciseType && touched.exerciseType && (
-                  <Box color="error.main">{errors.exerciseType}</Box>
-                )}
               </FormControl>
               <FormControl
                 sx={{ mt: 2 }}
                 fullWidth
                 disabled={!values.exerciseType}
               >
-                <FormLabel>Exercise</FormLabel>
+                <FormLabel error={!!errors.exercise && !!touched.exercise}>
+                  {!!errors.exercise && !!touched.exercise
+                    ? `${errors.exercise}`
+                    : 'Exercise Type'}
+                </FormLabel>
                 <Select
                   name="exercise"
                   value={values.exercise}
@@ -203,9 +221,6 @@ export default function DialogBox({
                     </MenuItem>
                   ))}
                 </Select>
-                {errors.exercise && touched.exercise && (
-                  <Box color="error.main">{errors.exercise}</Box>
-                )}
               </FormControl>
             </DialogContent>
             <DialogActions sx={{ p: 2 }}>

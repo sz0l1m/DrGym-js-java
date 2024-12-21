@@ -78,19 +78,19 @@ export default function WorkoutCard({ workout, onDelete }) {
   };
 
   const deleteWorkout = async () => {
-    try {
-      setLoading(true);
-      await axios.delete(
-        `http://localhost:8080/api/workouts/${workout.workoutId}`
-      );
-      onDelete(workout.workoutId);
-    } catch (error) {
-      console.error('Error deleting workout:', error);
-      alert('Failed to delete workout. Please try again.');
-    } finally {
-      setLoading(false);
-      setOpenDeleteConfirmation(false);
-    }
+    // try {
+    //   setLoading(true);
+    //   await axios.delete(
+    //     `http://localhost:8080/api/workouts/${workout.workoutId}`
+    //   );
+    //   onDelete(workout.workoutId);
+    // } catch (error) {
+    //   console.error('Error deleting workout:', error);
+    //   alert('Failed to delete workout. Please try again.');
+    // } finally {
+    //   setLoading(false);
+    //   setOpenDeleteConfirmation(false);
+    // }
   };
 
   return (
