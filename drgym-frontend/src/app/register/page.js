@@ -87,7 +87,7 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
           validationSchema={RegisterSchema()}
           onSubmit={handleRegister}
         >
-          {({ errors, handleBlur, handleChange, values }) => {
+          {({ values, touched, errors, handleBlur, handleChange }) => {
             return (
               <Form>
                 <input
@@ -99,22 +99,22 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                   <Grid xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>
-                        {!!errors['firstName']
-                          ? `First name - ${errors['firstName']}`
+                        {!!errors.firstName && !!touched.firstName
+                          ? `First name - ${errors.firstName}`
                           : 'First name'}
                       </InputLabel>
                       <OutlinedInput
-                        error={!!errors['firstName']}
+                        error={!!errors.firstName && !!touched.firstName}
                         label={
-                          !!errors['firstName']
-                            ? `First name - ${errors['firstName']}`
+                          !!errors.firstName && !!touched.firstName
+                            ? `First name - ${errors.firstName}`
                             : 'First name'
                         }
                         name="firstName"
                         onBlur={(event) => handleBlur(event)}
                         onChange={(event) => handleChange(event)}
                         type="text"
-                        value={values['firstName']}
+                        value={values.firstName}
                         inputProps={{ tabIndex: '1', autoFocus: true }}
                       />
                     </FormControl>
@@ -122,22 +122,22 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                   <Grid xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>
-                        {!!errors['lastName']
-                          ? `Last name - ${errors['lastName']}`
+                        {!!errors.lastName && !!touched.lastName
+                          ? `Last name - ${errors.lastName}`
                           : 'Last name'}
                       </InputLabel>
                       <OutlinedInput
-                        error={!!errors['lastName']}
+                        error={!!errors.lastName && !!touched.lastName}
                         label={
-                          !!errors['lastName']
-                            ? `Last name - ${errors['lastName']}`
+                          !!errors.lastName && !!touched.lastName
+                            ? `Last name - ${errors.lastName}`
                             : 'Last name'
                         }
                         name="lastName"
                         onBlur={(event) => handleBlur(event)}
                         onChange={(event) => handleChange(event)}
                         type="text"
-                        value={values['lastName']}
+                        value={values.lastName}
                         inputProps={{ tabIndex: '2' }}
                       />
                     </FormControl>
@@ -145,22 +145,22 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                   <Grid xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>
-                        {!!errors['username']
-                          ? `E-mail address - ${errors['username']}`
+                        {!!errors.username && !!touched.username
+                          ? `E-mail address - ${errors.username}`
                           : 'E-mail address'}
                       </InputLabel>
                       <OutlinedInput
-                        error={!!errors['username']}
+                        error={!!errors.username && !!touched.username}
                         label={
-                          !!errors['username']
-                            ? `E-mail address - ${errors['username']}`
+                          !!errors.username && !!touched.username
+                            ? `E-mail address - ${errors.username}`
                             : 'E-mail address'
                         }
                         name="username"
                         onBlur={(event) => handleBlur(event)}
                         onChange={(event) => handleChange(event)}
                         type="email"
-                        value={values['username']}
+                        value={values.username}
                         inputProps={{ tabIndex: '3' }}
                       />
                     </FormControl>
@@ -168,8 +168,8 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                   <Grid xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>
-                        {!!errors['password']
-                          ? `Password - ${errors['password']}`
+                        {!!errors.password && !!touched.password
+                          ? `Password - ${errors.password}`
                           : 'Password'}
                       </InputLabel>
                       <OutlinedInput
@@ -190,17 +190,17 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                             </IconButton>
                           </InputAdornment>
                         }
-                        error={!!errors['password']}
+                        error={!!errors.password && !!touched.password}
                         label={
-                          !!errors['password']
-                            ? `Password - ${errors['password']}`
+                          !!errors.password && !!touched.password
+                            ? `Password - ${errors.password}`
                             : 'Password'
                         }
                         name="password"
                         onBlur={(event) => handleBlur(event)}
                         onChange={(event) => handleChange(event)}
                         type={showPassword ? 'text' : 'password'}
-                        value={values['password']}
+                        value={values.password}
                         inputProps={{ tabIndex: '4' }}
                       />
                     </FormControl>
@@ -208,8 +208,8 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                   <Grid xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>
-                        {!!errors['confirmPassword']
-                          ? `Confirm password - ${errors['confirmPassword']}`
+                        {!!errors.confirmPassword && !!touched.confirmPassword
+                          ? `Confirm password - ${errors.confirmPassword}`
                           : 'Confirm password'}
                       </InputLabel>
                       <OutlinedInput
@@ -230,17 +230,19 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                             </IconButton>
                           </InputAdornment>
                         }
-                        error={!!errors['confirmPassword']}
+                        error={
+                          !!errors.confirmPassword && !!touched.confirmPassword
+                        }
                         label={
-                          !!errors['confirmPassword']
-                            ? `Confirm password - ${errors['confirmPassword']}`
+                          !!errors.confirmPassword && !!touched.confirmPassword
+                            ? `Confirm password - ${errors.confirmPassword}`
                             : 'Confirm password'
                         }
                         name="confirmPassword"
                         onBlur={(event) => handleBlur(event)}
                         onChange={(event) => handleChange(event)}
                         type={showConfirmPassword ? 'text' : 'password'}
-                        value={values['confirmPassword']}
+                        value={values.confirmPassword}
                         inputProps={{ tabIndex: '5' }}
                       />
                     </FormControl>

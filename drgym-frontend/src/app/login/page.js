@@ -79,7 +79,7 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
           validationSchema={LoginSchema()}
           onSubmit={handleLogin}
         >
-          {({ values, errors, handleBlur, handleChange }) => {
+          {({ values, touched, errors, handleBlur, handleChange }) => {
             return (
               <Form>
                 <input
@@ -91,14 +91,14 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
                   <Grid xs={12} sx={{ width: '100%', mb: 2 }}>
                     <FormControl fullWidth>
                       <InputLabel>
-                        {!!errors.username
+                        {!!errors.username && !!touched.username
                           ? `E-mail address - ${errors.username}`
                           : 'E-mail address'}
                       </InputLabel>
                       <OutlinedInput
-                        error={!!errors.username}
+                        error={!!errors.username && !!touched.username}
                         label={
-                          !!errors.username
+                          !!errors.username && !!touched.username
                             ? `E-mail address - ${errors.username}`
                             : 'E-mail address'
                         }
@@ -114,7 +114,7 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
                   <Grid xs={12} sx={{ mb: 2 }}>
                     <FormControl fullWidth>
                       <InputLabel>
-                        {!!errors.password
+                        {!!errors.password && !!touched.password
                           ? `Password - ${errors.password}`
                           : 'Password'}
                       </InputLabel>
@@ -136,9 +136,9 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
                             </IconButton>
                           </InputAdornment>
                         }
-                        error={!!errors.password}
+                        error={!!errors.password && !!touched.password}
                         label={
-                          !!errors.password
+                          !!errors.password && !!touched.password
                             ? `Password - ${errors.password}`
                             : 'Password'
                         }
