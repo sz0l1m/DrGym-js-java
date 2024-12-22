@@ -15,22 +15,22 @@ import {
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
 
-const ResetPassword = ({ csrfToken, showAppMessage }) => {
+const ForgotPassword = ({ csrfToken, showAppMessage }) => {
   const [loading, setLoading] = useState(false);
-  const [resetMessage, setResetMessage] = useState(null);
+  const [message, setMessage] = useState(null);
 
   const formikRef = useRef();
 
-  const handleResetPassword = async (formData, form) => {
+  const handleForgotPassword = async (formData, form) => {
     try {
-      // Reset password endpoint
+      // Forgot password endpoint
       if (formData.email === 'drgym@admin') {
         showAppMessage({
           status: true,
           text: 'Request successfully sent.',
           type: 'success',
         });
-        setResetMessage(
+        setMessage(
           'We have sent you a link. Please check your inbox and follow the instructions.'
         );
       } else {
@@ -42,7 +42,7 @@ const ResetPassword = ({ csrfToken, showAppMessage }) => {
         });
       }
     } catch (error) {
-      console.error('reset password error', error);
+      console.error('forgot password error', error);
     }
   };
 
@@ -62,12 +62,12 @@ const ResetPassword = ({ csrfToken, showAppMessage }) => {
       }}
     >
       <Grid sx={{ width: '100%' }}>
-        {resetMessage && (
+        {message && (
           <Typography sx={{ mb: 2, textAlign: 'center' }} variant="body1">
-            {resetMessage}
+            {message}
           </Typography>
         )}
-        {!resetMessage && (
+        {!message && (
           <>
             <Typography sx={{ mb: 3 }} variant="body1">
               Please enter your e-mail
@@ -76,7 +76,7 @@ const ResetPassword = ({ csrfToken, showAppMessage }) => {
               innerRef={formikRef}
               initialValues={ForogtPasswordDefaultValues()}
               validationSchema={ForogtPasswordSchema()}
-              onSubmit={handleResetPassword}
+              onSubmit={handleForgotPassword}
             >
               {({
                 errors,
@@ -152,4 +152,4 @@ const ResetPassword = ({ csrfToken, showAppMessage }) => {
   );
 };
 
-export default withSnackbar(ResetPassword);
+export default withSnackbar(ForgotPassword);
