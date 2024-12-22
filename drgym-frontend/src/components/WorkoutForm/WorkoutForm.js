@@ -24,6 +24,7 @@ import {
   IconButton,
   Typography,
   Tooltip,
+  duration,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { DateTimePicker, TimeField } from '@mui/x-date-pickers';
@@ -220,10 +221,7 @@ export default function WorkoutForm({
                     ? cardioExercises
                     : strengthExercises
                   ).map((exercise) => (
-                    <MenuItem
-                      key={exercise.exerciseId}
-                      value={exercise.exerciseName}
-                    >
+                    <MenuItem key={exercise.exerciseId} value={exercise}>
                       {exercise.exerciseName}
                     </MenuItem>
                   ))}
@@ -310,7 +308,7 @@ export default function WorkoutForm({
                 onClick={() => {
                   const newExercise = {
                     exerciseType: values.exerciseType,
-                    exercise: values.exercise,
+                    exercise: values.exercise.exerciseName,
                     reps: String(values.reps) || null,
                     weight: String(values.weight) || null,
                     duration: values.duration,
@@ -323,7 +321,21 @@ export default function WorkoutForm({
                   exerciseSchema
                     .validate(newExercise, { abortEarly: false })
                     .then(() => {
-                      setExerciseList((prev) => [...prev, newExercise]);
+                      setExerciseList((prev) => [
+                        ...prev,
+                        {
+                          exerciseId: values.exercise.exerciseId,
+                          exerciseName: values.exercise.exerciseName,
+                          reps: values.reps || 0,
+                          weight: values.weight || 0,
+                          duration: values.duration
+                            ? formatDate(
+                                values.duration.toISOString(),
+                                'HH:mm:ss'
+                              )
+                            : '00:00:00',
+                        },
+                      ]);
                       setFieldValue('exerciseType', '');
                       setFieldValue('exercise', '');
                       setFieldValue('reps', '');
@@ -346,7 +358,7 @@ export default function WorkoutForm({
                 Add Exercise
               </Button>
 
-              {exerciseList.map((exercise, index) => (
+              {exerciseList.map(({ exerciseId, ...exercise }, index) => (
                 <Box key={index}>
                   <Box
                     sx={{
@@ -357,19 +369,7 @@ export default function WorkoutForm({
                     }}
                   >
                     <Box sx={{ flexGrow: 1 }}>
-                      <ExerciseInfo
-                        activity={{
-                          exerciseName: exercise.exercise,
-                          duration: exercise.duration
-                            ? formatDate(
-                                exercise.duration.toISOString(),
-                                'HH:mm:ss'
-                              )
-                            : '00:00:00',
-                          reps: exercise.reps || 0,
-                          weight: exercise.weight || 0,
-                        }}
-                      />
+                      <ExerciseInfo activity={exercise} />
                     </Box>
                     <Tooltip title="Delete exercise">
                       <IconButton
