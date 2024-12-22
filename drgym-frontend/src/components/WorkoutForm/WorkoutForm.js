@@ -47,6 +47,7 @@ export default function WorkoutForm({
   popupStatus,
   togglePopup,
   workout = {},
+  showAppMessage,
 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -61,12 +62,49 @@ export default function WorkoutForm({
   }, [popupType, workout.activities]);
 
   const handleAddWorkout = (values, actions) => {
+    if (!activityList.length) {
+      showAppMessage({
+        status: true,
+        text: 'Please add at least one exercise',
+        type: 'warning',
+      });
+      actions.setSubmitting(false);
+      return;
+    }
     actions.setSubmitting(true);
     setTimeout(() => {
       alert(JSON.stringify({ ...values, activities: activityList }, null, 2));
-      popupType === 'new' && setActivityList([]);
+      setActivityList([]);
       actions.setSubmitting(false);
       handleClose();
+      showAppMessage({
+        status: true,
+        text: 'Workout added successfully!',
+        type: 'success',
+      });
+    }, 1000);
+  };
+
+  const handleEditWorkout = (values, actions) => {
+    if (!activityList.length) {
+      showAppMessage({
+        status: true,
+        text: 'Please add at least one exercise',
+        type: 'warning',
+      });
+      actions.setSubmitting(false);
+      return;
+    }
+    actions.setSubmitting(true);
+    setTimeout(() => {
+      alert(JSON.stringify({ ...values, activities: activityList }, null, 2));
+      actions.setSubmitting(false);
+      handleClose();
+      showAppMessage({
+        status: true,
+        text: 'Workout edited successfully!',
+        type: 'success',
+      });
     }, 1000);
   };
 
@@ -109,7 +147,11 @@ export default function WorkoutForm({
                 duration: null,
               }
         }
-        onSubmit={(values, actions) => handleAddWorkout(values, actions)}
+        onSubmit={(values, actions) =>
+          popupType === 'new'
+            ? handleAddWorkout(values, actions)
+            : handleEditWorkout(values, actions)
+        }
         validationSchema={schema}
       >
         {({

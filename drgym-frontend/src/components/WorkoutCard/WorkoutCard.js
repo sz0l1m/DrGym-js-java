@@ -55,7 +55,7 @@ const ExpandMore = styled((props) => {
   ],
 }));
 
-export default function WorkoutCard({ workout, onDelete }) {
+export default function WorkoutCard({ workout, onDelete, showAppMessage }) {
   const [expanded, setExpanded] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
@@ -78,6 +78,11 @@ export default function WorkoutCard({ workout, onDelete }) {
   };
 
   const deleteWorkout = async () => {
+    showAppMessage({
+      status: true,
+      text: 'Workout deletion is commented out',
+      type: 'warning',
+    });
     // try {
     //   setLoading(true);
     //   await axios.delete(
@@ -86,7 +91,11 @@ export default function WorkoutCard({ workout, onDelete }) {
     //   onDelete(workout.workoutId);
     // } catch (error) {
     //   console.error('Error deleting workout:', error);
-    //   alert('Failed to delete workout. Please try again.');
+    //   showAppMessage({
+    //     status: true,
+    //     text: 'Error deleting workout',
+    //     type: 'error',
+    //   });
     // } finally {
     //   setLoading(false);
     //   setOpenDeleteConfirmation(false);
@@ -179,6 +188,7 @@ export default function WorkoutCard({ workout, onDelete }) {
           popupStatus={openDialog}
           togglePopup={setOpenDialog}
           workout={workout}
+          showAppMessage={showAppMessage}
         />
         <DeleteConfirmation
           message="Are you sure you want to delete this workout?"

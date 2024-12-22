@@ -6,9 +6,10 @@ import axios from 'axios';
 import WorkoutCard from '@/components/WorkoutCard';
 import AddIcon from '@mui/icons-material/Add';
 import WorkoutForm from '@/components/WorkoutForm';
+import { withSnackbar } from '@/utils/snackbarProvider';
 import style from './workouts.module.css';
 
-export default function HomePage() {
+const Workouts = ({ showAppMessage }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [workoutsData, setWorkoutsData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,15 +24,19 @@ export default function HomePage() {
         );
         setWorkoutsData(response.data);
       } catch (err) {
-        console.error('Error fetching workouts:', err);
         setError(err.message);
+        showAppMessage({
+          status: true,
+          text: 'Error fetching workouts',
+          type: 'error',
+        });
       } finally {
         setLoading(false);
       }
     };
 
     fetchWorkouts();
-  }, []);
+  }, [showAppMessage]);
 
   const handleDeleteWorkout = (workoutId) => {
     setWorkoutsData((prev) =>
@@ -61,6 +66,7 @@ export default function HomePage() {
             key={workout.workoutId}
             workout={workout}
             onDelete={handleDeleteWorkout}
+            showAppMessage={showAppMessage}
           />
         ))}
       </Box>
@@ -69,7 +75,10 @@ export default function HomePage() {
         popupType="new"
         popupStatus={dialogOpen}
         togglePopup={setDialogOpen}
+        showAppMessage={showAppMessage}
       />
     </>
   );
-}
+};
+
+export default withSnackbar(Workouts);
