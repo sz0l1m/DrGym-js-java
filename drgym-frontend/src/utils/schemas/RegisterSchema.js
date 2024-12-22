@@ -5,6 +5,11 @@ YupPassword(yup);
 
 const RegisterSchema = () => {
   return yup.object().shape({
+    username: yup
+      .string()
+      .max(20, 'maximum 20 characters')
+      .min(2, 'minimum 2 characters')
+      .required("it's required"),
     firstName: yup
       .string()
       .max(20, 'maximum 20 characters')
@@ -15,7 +20,7 @@ const RegisterSchema = () => {
       .max(30, 'maximum 30 characters')
       .min(2, 'minimum 2 characters')
       .required("it's required"),
-    username: yup
+    email: yup
       .string()
       .email("it's not an email")
       .max(50, 'maximum 50 characters')
@@ -39,9 +44,10 @@ const RegisterSchema = () => {
 
 const RegisterDefaultValues = () => {
   return {
+    username: '',
     firstName: '',
     lastName: '',
-    username: '',
+    email: '',
     password: '',
     confirmPassword: '',
   };
