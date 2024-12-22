@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import {
   Box,
@@ -52,11 +52,19 @@ export default function WorkoutForm({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activityList, setActivityList] = useState([]);
 
+  useEffect(() => {
+    if (popupType !== 'new' && workout.activities) {
+      setActivityList(workout.activities);
+    } else {
+      setActivityList([]);
+    }
+  }, [popupType, workout.activities]);
+
   const handleAddWorkout = (values, actions) => {
     actions.setSubmitting(true);
     setTimeout(() => {
       alert(JSON.stringify({ ...values, activities: activityList }, null, 2));
-      setActivityList([]);
+      popupType === 'new' && setActivityList([]);
       actions.setSubmitting(false);
       handleClose();
     }, 1000);
@@ -94,8 +102,8 @@ export default function WorkoutForm({
                 startDate: new Date(workout.startDate),
                 endDate: new Date(workout.endDate),
                 description: workout.description,
-                exerciseType: workout.exerciseType || '',
-                exercise: workout.exercise || '',
+                exerciseType: '',
+                exercise: '',
                 reps: '',
                 weight: '',
                 duration: null,
