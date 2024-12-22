@@ -36,7 +36,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WorkoutFormTitle from './WorkoutFormTitle';
-import ExerciseInfo from '@/components/WorkoutCard/ExerciseInfo';
+import ActivityInfo from '@/components/WorkoutCard/ActivityInfo';
 import { schema, strengthExerciseSchema, cardioExerciseSchema } from './schema';
 import { formatDate } from '@/utils/dateUtils';
 import { cardioExercises, strengthExercises } from '@/utils/mockData';
@@ -369,7 +369,7 @@ export default function WorkoutForm({
                     }}
                   >
                     <Box sx={{ flexGrow: 1 }}>
-                      <ExerciseInfo activity={exercise} />
+                      <ActivityInfo activity={exercise} />
                     </Box>
                     <Tooltip title="Delete exercise">
                       <IconButton

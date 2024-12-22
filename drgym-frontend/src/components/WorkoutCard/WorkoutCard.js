@@ -20,7 +20,7 @@ import MenuItem from '@mui/material/MenuItem';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Tooltip from '@mui/material/Tooltip';
-import ExerciseInfo from './ExerciseInfo';
+import ActivityInfo from './ActivityInfo';
 import WorkoutForm from '@/components/WorkoutForm';
 import axios from 'axios';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
@@ -167,7 +167,7 @@ export default function WorkoutCard({ workout, onDelete }) {
               {workout.activities.map((activity) => (
                 <Box key={activity.activityId}>
                   <Divider sx={{ mb: 3 }} />
-                  <ExerciseInfo activity={activity} />
+                  <ActivityInfo activity={activity} />
                 </Box>
               ))}
             </CardContent>

@@ -1,4 +1,4 @@
-.exercise {
+.activity {
   display: flex;
   justify-content: space-between;
   max-width: 600px;
@@ -6,7 +6,7 @@
   margin-right: 24px;
 }
 
-.exerciseElement {
+.activityElement {
   display: flex;
   gap: 16px;
 }

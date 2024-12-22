@@ -5,45 +5,45 @@ import BalanceIcon from '@mui/icons-material/Balance';
 import LoopIcon from '@mui/icons-material/Loop';
 import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
-import style from './ExerciseInfo.module.css';
+import style from './ActivityInfo.module.css';
 
-export default function ExerciseInfo({ activity }) {
+export default function ActivityInfo({ activity }) {
   return (
-    <Box className={style.exercise}>
+    <Box className={style.activity}>
       {activity.duration !== '00:00:00' ? (
         <>
-          <Box sx={{ width: '200px' }} className={style.exerciseElement}>
+          <Box sx={{ width: '200px' }} className={style.activityElement}>
             <Tooltip title="Cardio exercise">
               <MonitorHeartOutlinedIcon />
             </Tooltip>
             {activity.exerciseName}
           </Box>
 
-          <Box sx={{ width: '100px' }} className={style.exerciseElement}>
+          <Box sx={{ width: '100px' }} className={style.activityElement}>
             <Tooltip title="Duration">
               <TimerOutlinedIcon />
             </Tooltip>
             {activity.duration}
           </Box>
-          <Box sx={{ width: '100px' }} className={style.exerciseElement}></Box>
+          <Box sx={{ width: '100px' }} className={style.activityElement}></Box>
         </>
       ) : (
         <>
-          <Box sx={{ width: '200px' }} className={style.exerciseElement}>
+          <Box sx={{ width: '200px' }} className={style.activityElement}>
             <Tooltip title="Strength exercise">
               <FitnessCenterIcon />
             </Tooltip>
             {activity.exerciseName}
           </Box>
 
-          <Box sx={{ width: '100px' }} className={style.exerciseElement}>
+          <Box sx={{ width: '100px' }} className={style.activityElement}>
             <Tooltip title="Number of reps">
               <LoopIcon />
             </Tooltip>
             {activity.reps}
           </Box>
 
-          <Box sx={{ width: '100px' }} className={style.exerciseElement}>
+          <Box sx={{ width: '100px' }} className={style.activityElement}>
             <Tooltip title="Weight [kg]">
               <BalanceIcon sx={{ ml: 4 }} />
             </Tooltip>
