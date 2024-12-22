@@ -43,17 +43,10 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
   };
 
   const handleLogin = async (formData, form) => {
-    console.log('formData:', formData);
-    console.log('form:', form);
     setLoading(true);
     if (formData.password === 'Password1!') {
       setLoading(false);
       router.push(`/user/posts?message=You have been logged in.&type=success`);
-      showAppMessage({
-        status: true,
-        text: 'You have been logged in.',
-        type: 'success',
-      });
     } else {
       setLoading(false);
       form.resetForm();
