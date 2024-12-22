@@ -6,19 +6,17 @@ import { styled } from '@mui/material/styles';
 import {
   Button,
   Divider,
-  FormControl,
   IconButton,
   InputAdornment,
-  InputLabel,
-  OutlinedInput,
+  CircularProgress,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Formik, Form } from 'formik';
 import { LoginSchema, LoginDefaultValues } from '@/utils/schemas/LoginSchema';
 import Link from 'next/link';
-import { CircularProgress } from '@mui/material';
 import { withSnackbar } from '@/utils/snackbarProvider';
+import CustomInput from '@/components/CustomInput';
 
 const Root = styled('div')(({ theme }) => ({
   width: '100%',
@@ -87,69 +85,45 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
                   type="hidden"
                   defaultValue={csrfToken}
                 />
-                <Grid container direction={'column'}>
-                  <Grid xs={12} sx={{ width: '100%', mb: 2 }}>
-                    <FormControl fullWidth>
-                      <InputLabel>
-                        {!!errors.username && !!touched.username
-                          ? `E-mail address - ${errors.username}`
-                          : 'E-mail address'}
-                      </InputLabel>
-                      <OutlinedInput
-                        error={!!errors.username && !!touched.username}
-                        label={
-                          !!errors.username && !!touched.username
-                            ? `E-mail address - ${errors.username}`
-                            : 'E-mail address'
-                        }
-                        name="username"
-                        onBlur={(event) => handleBlur(event)}
-                        onChange={(event) => handleChange(event)}
-                        type="email"
-                        value={values.username}
-                        inputProps={{ tabIndex: '1', autoFocus: true }}
-                      />
-                    </FormControl>
+                <Grid container direction="column" gap={2}>
+                  <Grid xs={12}>
+                    <CustomInput
+                      label="E-mail address"
+                      name="username"
+                      type="email"
+                      value={values.username}
+                      error={errors.username}
+                      touched={touched.username}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      tabIndex={1}
+                    />
                   </Grid>
-                  <Grid xs={12} sx={{ mb: 2 }}>
-                    <FormControl fullWidth>
-                      <InputLabel>
-                        {!!errors.password && !!touched.password
-                          ? `Password - ${errors.password}`
-                          : 'Password'}
-                      </InputLabel>
-                      <OutlinedInput
-                        endAdornment={
-                          <InputAdornment position="end">
-                            <IconButton
-                              aria-label="toggle password visibility"
-                              edge="end"
-                              color="primary"
-                              onClick={handleTogglePassword}
-                              onMouseDown={handleMouseDownPassword}
-                            >
-                              {showPassword ? (
-                                <VisibilityOff />
-                              ) : (
-                                <Visibility />
-                              )}
-                            </IconButton>
-                          </InputAdornment>
-                        }
-                        error={!!errors.password && !!touched.password}
-                        label={
-                          !!errors.password && !!touched.password
-                            ? `Password - ${errors.password}`
-                            : 'Password'
-                        }
-                        name="password"
-                        onBlur={(event) => handleBlur(event)}
-                        onChange={(event) => handleChange(event)}
-                        type={showPassword ? 'text' : 'password'}
-                        value={values.password}
-                        inputProps={{ tabIndex: '2' }}
-                      />
-                    </FormControl>
+                  <Grid xs={12}>
+                    <CustomInput
+                      label="Password"
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={values.password}
+                      error={errors.password}
+                      touched={touched.password}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      tabIndex={2}
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            edge="end"
+                            color="primary"
+                            onClick={handleTogglePassword}
+                            onMouseDown={handleMouseDownPassword}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
                   </Grid>
                   <Grid xs={12}>
                     <Button
