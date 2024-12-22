@@ -6,20 +6,14 @@ import PersonIcon from '@mui/icons-material/Person';
 import { CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Formik, Form } from 'formik';
-import {
-  Button,
-  FormControl,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-} from '@mui/material';
+import { Button, InputAdornment, IconButton } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import {
   ForogtPasswordSchema,
   ForogtPasswordDefaultValues,
 } from '@/utils/schemas/ForgotPasswordSchema';
 import { withSnackbar } from '@/utils/snackbarProvider';
+import CustomInput from '@/components/CustomInput';
 
 const ResetPassword = ({ csrfToken, showAppMessage }) => {
   const [loading, setLoading] = useState(false);
@@ -104,45 +98,31 @@ const ResetPassword = ({ csrfToken, showAppMessage }) => {
                     />
                     <Grid container direction="column" gap={2}>
                       <Grid xs={12}>
-                        <FormControl fullWidth>
-                          <InputLabel>
-                            {!!errors['email']
-                              ? `E-mail address - ${errors['email']}`
-                              : 'E-mail address'}
-                          </InputLabel>
-                          <OutlinedInput
-                            error={!!errors['email']}
-                            label={
-                              !!errors['email']
-                                ? `E-mail address - ${errors['email']}`
-                                : 'E-mail address'
-                            }
-                            name="email"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            type="email"
-                            value={values['email']}
-                            startAdornment={
-                              <InputAdornment position="start">
-                                <PersonIcon color="accent" />
+                        <CustomInput
+                          label="E-mail address"
+                          name="email"
+                          type="email"
+                          value={values.email}
+                          error={errors.email}
+                          touched={touched.email}
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          tabIndex={1}
+                          endAdornment={
+                            values.email && (
+                              <InputAdornment position="end">
+                                <IconButton
+                                  onClick={() => {
+                                    setFieldValue('email', '', false);
+                                    setFieldError('email', null);
+                                  }}
+                                >
+                                  <CloseIcon color="accent" />
+                                </IconButton>
                               </InputAdornment>
-                            }
-                            endAdornment={
-                              values['email'] && (
-                                <InputAdornment position="end">
-                                  <IconButton
-                                    onClick={() => {
-                                      setFieldValue('email', '', false);
-                                      setFieldError('email', null);
-                                    }}
-                                  >
-                                    <CloseIcon color="accent" />
-                                  </IconButton>
-                                </InputAdornment>
-                              )
-                            }
-                          />
-                        </FormControl>
+                            )
+                          }
+                        />
                       </Grid>
                       <Grid xs={12}>
                         <Button

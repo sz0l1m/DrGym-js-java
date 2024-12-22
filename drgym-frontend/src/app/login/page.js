@@ -141,7 +141,7 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
                     >
                       {loading ? 'Please wait...' : 'LOGIN'}
                     </Button>
-                    <Link href="/reset-password">
+                    <Link href="/auth/forgot-password">
                       <Button
                         fullWidth
                         variant="outlined"
