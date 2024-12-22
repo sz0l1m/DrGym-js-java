@@ -52,7 +52,7 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
 
   const handleRegister = async (formData, form) => {
     setLoading(true);
-    if (formData.username === 'drgym@admin') {
+    if (formData.email === 'drgym@admin') {
       setLoading(false);
       router.push(`/user/posts?message=You have been registered.&type=success`);
     } else {
@@ -99,6 +99,29 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                   <Grid xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>
+                        {!!errors.username && !!touched.username
+                          ? `Username - ${errors.username}`
+                          : 'Username'}
+                      </InputLabel>
+                      <OutlinedInput
+                        error={!!errors.username && !!touched.username}
+                        label={
+                          !!errors.username && !!touched.username
+                            ? `Username - ${errors.username}`
+                            : 'Username'
+                        }
+                        name="username"
+                        onBlur={(event) => handleBlur(event)}
+                        onChange={(event) => handleChange(event)}
+                        type="text"
+                        value={values.username}
+                        inputProps={{ tabIndex: '1', autoFocus: true }}
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid xs={12}>
+                    <FormControl fullWidth>
+                      <InputLabel>
                         {!!errors.firstName && !!touched.firstName
                           ? `First name - ${errors.firstName}`
                           : 'First name'}
@@ -115,7 +138,7 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                         onChange={(event) => handleChange(event)}
                         type="text"
                         value={values.firstName}
-                        inputProps={{ tabIndex: '1', autoFocus: true }}
+                        inputProps={{ tabIndex: '2' }}
                       />
                     </FormControl>
                   </Grid>
@@ -138,30 +161,30 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                         onChange={(event) => handleChange(event)}
                         type="text"
                         value={values.lastName}
-                        inputProps={{ tabIndex: '2' }}
+                        inputProps={{ tabIndex: '3' }}
                       />
                     </FormControl>
                   </Grid>
                   <Grid xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>
-                        {!!errors.username && !!touched.username
-                          ? `E-mail address - ${errors.username}`
+                        {!!errors.email && !!touched.email
+                          ? `E-mail address - ${errors.email}`
                           : 'E-mail address'}
                       </InputLabel>
                       <OutlinedInput
-                        error={!!errors.username && !!touched.username}
+                        error={!!errors.email && !!touched.email}
                         label={
-                          !!errors.username && !!touched.username
-                            ? `E-mail address - ${errors.username}`
+                          !!errors.email && !!touched.email
+                            ? `E-mail address - ${errors.email}`
                             : 'E-mail address'
                         }
-                        name="username"
+                        name="email"
                         onBlur={(event) => handleBlur(event)}
                         onChange={(event) => handleChange(event)}
                         type="email"
-                        value={values.username}
-                        inputProps={{ tabIndex: '3' }}
+                        value={values.email}
+                        inputProps={{ tabIndex: '4' }}
                       />
                     </FormControl>
                   </Grid>
@@ -201,14 +224,15 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                         onChange={(event) => handleChange(event)}
                         type={showPassword ? 'text' : 'password'}
                         value={values.password}
-                        inputProps={{ tabIndex: '4' }}
+                        inputProps={{ tabIndex: '5' }}
                       />
                     </FormControl>
                   </Grid>
                   <Grid xs={12}>
                     <FormControl fullWidth>
                       <InputLabel>
-                        {!!errors.confirmPassword && !!touched.confirmPassword
+                        {!!errors.confirmPassword &&
+                        (!!touched.confirmPassword || values.confirmPassword)
                           ? `Confirm password - ${errors.confirmPassword}`
                           : 'Confirm password'}
                       </InputLabel>
@@ -231,10 +255,12 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                           </InputAdornment>
                         }
                         error={
-                          !!errors.confirmPassword && !!touched.confirmPassword
+                          !!errors.confirmPassword &&
+                          (!!touched.confirmPassword || values.confirmPassword)
                         }
                         label={
-                          !!errors.confirmPassword && !!touched.confirmPassword
+                          !!errors.confirmPassword &&
+                          (!!touched.confirmPassword || values.confirmPassword)
                             ? `Confirm password - ${errors.confirmPassword}`
                             : 'Confirm password'
                         }
@@ -243,7 +269,7 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                         onChange={(event) => handleChange(event)}
                         type={showConfirmPassword ? 'text' : 'password'}
                         value={values.confirmPassword}
-                        inputProps={{ tabIndex: '5' }}
+                        inputProps={{ tabIndex: '6' }}
                       />
                     </FormControl>
                   </Grid>
@@ -259,7 +285,7 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                         loading && <CircularProgress color="info" size={18} />
                       }
                       size="large"
-                      tabIndex={6}
+                      tabIndex={7}
                     >
                       {loading ? 'Please wait...' : 'CREATE ACCOUNT'}
                     </Button>
@@ -281,7 +307,7 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
             sx={{ mb: 4, lineHeight: '40px' }}
             color="primary"
             size="large"
-            tabIndex={7}
+            tabIndex={8}
           >
             LOGIN
           </Button>
