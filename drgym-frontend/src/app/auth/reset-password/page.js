@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { CircularProgress } from '@mui/material';
 import { Formik, Form } from 'formik';
@@ -21,9 +21,25 @@ const ResetPassword = ({ showAppMessage }) => {
   const [loading, setLoading] = useState(false);
   const [showPassword, toggleShowPassword] = useState(false);
   const [showConfirmPassword, toggleShowConfirmPassword] = useState(false);
+  const [message, setMessage] = useState('');
 
   const email = searchParams.get('email');
   const passwordResetToken = searchParams.get('passwordResetToken');
+
+  useEffect(() => {
+    if (!email || !passwordResetToken) {
+      setMessage(
+        'We are sorry but the reset password link seems to be broken. Please try again.'
+      );
+      showAppMessage({
+        status: true,
+        text: 'Wrong verification URL.',
+        type: 'error',
+      });
+    } else {
+      setMessage('');
+    }
+  }, [email, passwordResetToken, showAppMessage]);
 
   const handleTogglePassword = () => {
     toggleShowPassword(!showPassword);
@@ -37,6 +53,7 @@ const ResetPassword = ({ showAppMessage }) => {
     try {
       setLoading(true);
 
+      //   Unnecessary check (maybe)
       if (!email || !passwordResetToken) {
         showAppMessage({
           status: true,
@@ -57,7 +74,7 @@ const ResetPassword = ({ showAppMessage }) => {
         setLoading(false);
         setTimeout(() => {
           router.push('/login');
-        }, 3000);
+        }, 4000);
       } else {
         form.resetForm();
         showAppMessage({
@@ -95,102 +112,112 @@ const ResetPassword = ({ showAppMessage }) => {
       }}
     >
       <Grid sx={{ width: '100%' }}>
-        <Typography sx={{ mb: 3 }} variant="body1">
-          Please enter your new password
-        </Typography>
-        <Formik
-          initialValues={ResetPasswordDefaultValues()}
-          validationSchema={ResetPasswordSchema()}
-          onSubmit={handleResetPassword}
-        >
-          {({
-            errors,
-            handleBlur,
-            handleChange,
-            handleSubmit,
-            touched,
-            values,
-            setFieldError,
-            setFieldValue,
-          }) => {
-            return (
-              <Form>
-                <Grid container direction="column" gap={2}>
-                  <Grid xs={12}>
-                    <CustomInput
-                      label="Password"
-                      name="password"
-                      type={showPassword ? 'text' : 'password'}
-                      value={values.password}
-                      error={errors.password}
-                      touched={touched.password}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      tabIndex={1}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle password visibility"
-                            edge="end"
-                            color="primary"
-                            onClick={handleTogglePassword}
-                          >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
+        {message ? (
+          <Typography sx={{ mb: 3, textAlign: 'center' }} variant="body1">
+            {message}
+          </Typography>
+        ) : (
+          <>
+            <Typography sx={{ mb: 3 }} variant="body1">
+              Please enter your new password
+            </Typography>
+            <Formik
+              initialValues={ResetPasswordDefaultValues()}
+              validationSchema={ResetPasswordSchema()}
+              onSubmit={handleResetPassword}
+            >
+              {({
+                errors,
+                handleBlur,
+                handleChange,
+                handleSubmit,
+                touched,
+                values,
+                setFieldError,
+                setFieldValue,
+              }) => (
+                <Form>
+                  <Grid container direction="column" gap={2}>
+                    <Grid xs={12}>
+                      <CustomInput
+                        label="Password"
+                        name="password"
+                        type={showPassword ? 'text' : 'password'}
+                        value={values.password}
+                        error={errors.password}
+                        touched={touched.password}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        tabIndex={1}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              edge="end"
+                              color="primary"
+                              onClick={handleTogglePassword}
+                            >
+                              {showPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                    </Grid>
+                    <Grid xs={12}>
+                      <CustomInput
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        value={values.confirmPassword}
+                        error={errors.confirmPassword}
+                        touched={touched.confirmPassword}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        tabIndex={2}
+                        endAdornment={
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle confirm password visibility"
+                              edge="end"
+                              color="primary"
+                              onClick={handleToggleConfirmPassword}
+                            >
+                              {showConfirmPassword ? (
+                                <VisibilityOff />
+                              ) : (
+                                <Visibility />
+                              )}
+                            </IconButton>
+                          </InputAdornment>
+                        }
+                      />
+                    </Grid>
+                    <Grid xs={12}>
+                      <Button
+                        fullWidth
+                        onClick={handleSubmit}
+                        variant="contained"
+                        color="primary"
+                        disabled={loading}
+                        endIcon={
+                          loading && (
+                            <CircularProgress color="primary" size={18} />
+                          )
+                        }
+                      >
+                        Change Password
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid xs={12}>
-                    <CustomInput
-                      label="Confirm Password"
-                      name="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      value={values.confirmPassword}
-                      error={errors.confirmPassword}
-                      touched={touched.confirmPassword}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      tabIndex={2}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="toggle confirm password visibility"
-                            edge="end"
-                            color="primary"
-                            onClick={handleToggleConfirmPassword}
-                          >
-                            {showConfirmPassword ? (
-                              <VisibilityOff />
-                            ) : (
-                              <Visibility />
-                            )}
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                    />
-                  </Grid>
-                  <Grid xs={12}>
-                    <Button
-                      fullWidth
-                      onClick={handleSubmit}
-                      variant="contained"
-                      color="primary"
-                      disabled={loading}
-                      endIcon={
-                        loading && (
-                          <CircularProgress color="primary" size={18} />
-                        )
-                      }
-                    >
-                      Change Password
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Form>
-            );
-          }}
-        </Formik>
+                </Form>
+              )}
+            </Formik>
+          </>
+        )}
       </Grid>
     </Grid>
   );
