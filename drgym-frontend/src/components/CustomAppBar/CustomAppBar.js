@@ -1,4 +1,5 @@
 import { alpha, styled } from '@mui/material/styles';
+import { usePathname } from 'next/navigation';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -51,7 +52,7 @@ export default function CustomAppBar() {
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
               <Link href="/user/posts">
                 <Button
-                  variant="text"
+                  variant={usePathname() == '/user/posts' ? 'outlined' : 'text'}
                   color="secondary"
                   size="small"
                   startIcon={<EmojiPeopleIcon />}
@@ -62,7 +63,9 @@ export default function CustomAppBar() {
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
               <Link href="/user/workouts">
                 <Button
-                  variant="text"
+                  variant={
+                    usePathname() == '/user/workouts' ? 'outlined' : 'text'
+                  }
                   color="secondary"
                   size="small"
                   startIcon={<FitnessCenterIcon />}
@@ -73,7 +76,7 @@ export default function CustomAppBar() {
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
               <Link href="/user/stats">
                 <Button
-                  variant="text"
+                  variant={usePathname() == '/user/stats' ? 'outlined' : 'text'}
                   color="secondary"
                   size="small"
                   startIcon={<BarChartIcon />}
@@ -84,7 +87,9 @@ export default function CustomAppBar() {
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
               <Link href="/user/friends">
                 <Button
-                  variant="text"
+                  variant={
+                    usePathname() == '/user/friends' ? 'outlined' : 'text'
+                  }
                   color="secondary"
                   size="small"
                   startIcon={<GroupIcon />}
