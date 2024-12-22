@@ -37,7 +37,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WorkoutFormTitle from './WorkoutFormTitle';
 import ActivityInfo from '@/components/WorkoutCard/ActivityInfo';
-import { schema, strengthActivitySchema, cardioActivitySchema } from './schema';
+import {
+  schema,
+  strengthActivitySchema,
+  cardioActivitySchema,
+} from '@/utils/schemas/WorkoutSchema';
 import { formatDate } from '@/utils/dateUtils';
 import { cardioExercises, strengthExercises } from '@/utils/mockData';
 

@@ -15,7 +15,7 @@ import {
 import Grid from '@mui/material/Grid2';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { Formik, Form } from 'formik';
-import { LoginSchema, LoginDefaultValues } from './schema';
+import { LoginSchema, LoginDefaultValues } from '@/utils/schemas/LoginSchema';
 import Link from 'next/link';
 import { CircularProgress } from '@mui/material';
 import { withSnackbar } from '@/utils/snackbarProvider';
