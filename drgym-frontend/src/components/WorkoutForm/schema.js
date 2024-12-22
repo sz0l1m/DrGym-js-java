@@ -12,7 +12,7 @@ const schema = yup.object().shape({
   description: yup.string().max(50, 'Description is too long (max 50 chars)'),
 });
 
-const strengthExerciseSchema = yup.object().shape({
+const strengthActivitySchema = yup.object().shape({
   exerciseType: yup.string().required('Exercise Type is required'),
   exercise: yup.string().required('Exercise is required'),
   reps: yup
@@ -28,7 +28,7 @@ const strengthExerciseSchema = yup.object().shape({
   duration: yup.mixed().nullable(),
 });
 
-const cardioExerciseSchema = yup.object().shape({
+const cardioActivitySchema = yup.object().shape({
   exerciseType: yup.string().required('Exercise Type is required'),
   exercise: yup.string().required('Exercise is required'),
   reps: yup.number().nullable(),
@@ -39,4 +39,4 @@ const cardioExerciseSchema = yup.object().shape({
     .typeError('Duration is invalid'),
 });
 
-export { schema, strengthExerciseSchema, cardioExerciseSchema };
+export { schema, strengthActivitySchema, cardioActivitySchema };

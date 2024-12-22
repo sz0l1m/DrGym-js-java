@@ -37,7 +37,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WorkoutFormTitle from './WorkoutFormTitle';
 import ActivityInfo from '@/components/WorkoutCard/ActivityInfo';
-import { schema, strengthExerciseSchema, cardioExerciseSchema } from './schema';
+import { schema, strengthActivitySchema, cardioActivitySchema } from './schema';
 import { formatDate } from '@/utils/dateUtils';
 import { cardioExercises, strengthExercises } from '@/utils/mockData';
 
@@ -50,13 +50,13 @@ export default function WorkoutForm({
 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
-  const [exerciseList, setExerciseList] = useState([]);
+  const [activityList, setActivityList] = useState([]);
 
   const handleAddWorkout = (values, actions) => {
     actions.setSubmitting(true);
     setTimeout(() => {
-      alert(JSON.stringify({ ...values, exercises: exerciseList }, null, 2));
-      setExerciseList([]);
+      alert(JSON.stringify({ ...values, activities: activityList }, null, 2));
+      setActivityList([]);
       actions.setSubmitting(false);
       handleClose();
     }, 1000);
@@ -306,7 +306,7 @@ export default function WorkoutForm({
                 variant="contained"
                 color="secondary"
                 onClick={() => {
-                  const newExercise = {
+                  const newActivity = {
                     exerciseType: values.exerciseType,
                     exercise: values.exercise.exerciseName,
                     reps: String(values.reps) || null,
@@ -314,14 +314,14 @@ export default function WorkoutForm({
                     duration: values.duration,
                   };
 
-                  const exerciseSchema =
+                  const activitySchema =
                     values.exerciseType === 'strength'
-                      ? strengthExerciseSchema
-                      : cardioExerciseSchema;
-                  exerciseSchema
-                    .validate(newExercise, { abortEarly: false })
+                      ? strengthActivitySchema
+                      : cardioActivitySchema;
+                  activitySchema
+                    .validate(newActivity, { abortEarly: false })
                     .then(() => {
-                      setExerciseList((prev) => [
+                      setActivityList((prev) => [
                         ...prev,
                         {
                           exerciseId: values.exercise.exerciseId,
@@ -358,7 +358,7 @@ export default function WorkoutForm({
                 Add Exercise
               </Button>
 
-              {exerciseList.map(({ exerciseId, ...exercise }, index) => (
+              {activityList.map(({ exerciseId, ...activity }, index) => (
                 <Box key={index}>
                   <Box
                     sx={{
@@ -369,7 +369,7 @@ export default function WorkoutForm({
                     }}
                   >
                     <Box sx={{ flexGrow: 1 }}>
-                      <ActivityInfo activity={exercise} />
+                      <ActivityInfo activity={activity} />
                     </Box>
                     <Tooltip title="Delete exercise">
                       <IconButton
@@ -377,7 +377,7 @@ export default function WorkoutForm({
                         color="error"
                         sx={{ mr: 1 }}
                         onClick={() =>
-                          setExerciseList((prev) =>
+                          setActivityList((prev) =>
                             prev.filter((_, i) => i !== index)
                           )
                         }
