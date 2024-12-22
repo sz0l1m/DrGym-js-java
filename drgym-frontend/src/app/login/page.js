@@ -48,7 +48,7 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
     setLoading(true);
     if (formData.password === 'Password1!') {
       setLoading(false);
-      router.push('/user/workouts');
+      router.push(`/user/posts?message=You have been logged in.&type=success`);
       showAppMessage({
         status: true,
         text: 'You have been logged in.',

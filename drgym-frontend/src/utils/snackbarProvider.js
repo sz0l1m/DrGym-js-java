@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
 export const withSnackbar = (WrappedComponent) => {
   const WithSnackbar = (props) => {
-    const [appMessage, setAppMessage] = useState({
+    const [appMessage, setAppMessageState] = useState({
       status: false,
       text: null,
       type: null,
     });
+
+    const setAppMessage = useCallback((message) => {
+      setAppMessageState(message);
+    }, []);
 
     const handleCloseSnackbar = (event, reason) => {
       if (reason === 'clickaway') {
