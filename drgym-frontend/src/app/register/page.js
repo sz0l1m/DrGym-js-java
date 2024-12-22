@@ -48,7 +48,7 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
     // Register endpoint
     if (formData.email === 'drgym@admin') {
       setLoading(false);
-      router.replace('/verification?account=welcome');
+      router.replace('/auth/verification?account=welcome');
     } else {
       setLoading(false);
       form.resetForm();
