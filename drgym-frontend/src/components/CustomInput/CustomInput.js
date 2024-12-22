@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  FormControl,
-  InputLabel,
-  OutlinedInput,
-  InputAdornment,
-  IconButton,
-} from '@mui/material';
+import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
 
 const CustomInput = ({
   label,
@@ -32,7 +26,10 @@ const CustomInput = ({
         value={value}
         onBlur={onBlur}
         onChange={onChange}
-        inputProps={{ tabIndex }}
+        inputProps={{
+          tabIndex,
+          ...(tabIndex === 1 && { autoFocus: true }),
+        }}
         endAdornment={endAdornment}
       />
     </FormControl>
