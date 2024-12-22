@@ -107,7 +107,7 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
                         onChange={(event) => handleChange(event)}
                         type="email"
                         value={values.username}
-                        inputProps={{ tabIndex: '1' }}
+                        inputProps={{ tabIndex: '1', autoFocus: true }}
                       />
                     </FormControl>
                   </Grid>

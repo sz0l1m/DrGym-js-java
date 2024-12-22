@@ -51,7 +51,6 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
   };
 
   const handleRegister = async (formData, form) => {
-    console.log('formData', formData);
     setLoading(true);
     if (formData.username === 'drgym@admin') {
       setLoading(false);
@@ -65,43 +64,6 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
         type: 'error',
       });
     }
-    // try {
-    //   setLoading(true);
-    //   const registerResponse = await fetch('/api/user/register', {
-    //     method: 'POST',
-    //     body: JSON.stringify({
-    //       firstName: formData.firstName,
-    //       lastName: formData.lastName,
-    //       email: formData.username,
-    //       password: formData.password,
-    //     }),
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //   });
-    //   const registerData = await registerResponse.json();
-    //   if (registerData.error) {
-    //     showAppMessage({
-    //       status: true,
-    //       text: registerData.error,
-    //       type: 'error',
-    //     });
-    //     setLoading(false);
-    //   } else {
-    //     showAppMessage({
-    //       status: true,
-    //       text: 'Account has been created. Please verify your e-mail.',
-    //       type: 'success',
-    //     });
-    //     setLoading(false);
-    //     setRedirection(true);
-    //     setTimeout(() => {
-    //       router.push('/verification?account=welcome');
-    //     }, 3000);
-    //   }
-    // } catch (error) {
-    //   console.error('handle register error', error);
-    // }
   };
 
   return (
