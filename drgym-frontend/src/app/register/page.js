@@ -45,9 +45,10 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
 
   const handleRegister = async (formData, form) => {
     setLoading(true);
+    // Register endpoint
     if (formData.email === 'drgym@admin') {
       setLoading(false);
-      router.push(`/user/posts?message=You have been registered.&type=success`);
+      router.replace('/verification?account=welcome');
     } else {
       setLoading(false);
       form.resetForm();
