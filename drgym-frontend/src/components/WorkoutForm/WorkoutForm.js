@@ -38,9 +38,7 @@ import WorkoutFormTitle from './WorkoutFormTitle';
 import ExerciseInfo from '@/components/WorkoutCard/ExerciseInfo';
 import { schema, strengthExerciseSchema, cardioExerciseSchema } from './schema';
 import { formatDate } from '@/utils/dateUtils';
-
-const cardioExercises = ['Running', 'Cycling', 'Swimming'];
-const strengthExercises = ['Weightlifting', 'Push-ups', 'Squats'];
+import { cardioExercises, strengthExercises } from '@/utils/mockData';
 
 export default function WorkoutForm({
   dialogTitle,
@@ -222,8 +220,11 @@ export default function WorkoutForm({
                     ? cardioExercises
                     : strengthExercises
                   ).map((exercise) => (
-                    <MenuItem key={exercise} value={exercise}>
-                      {exercise}
+                    <MenuItem
+                      key={exercise.exerciseId}
+                      value={exercise.exerciseName}
+                    >
+                      {exercise.exerciseName}
                     </MenuItem>
                   ))}
                 </Select>
