@@ -5,6 +5,7 @@ import { Box, CssBaseline, Container } from '@mui/material';
 import CustomAppBar from '@/components/CustomAppBar';
 import theme from '@/styles/theme';
 import '@/app/globals.css';
+import { AppProgressBar as ProgressBar } from 'next-nprogress-bar';
 
 export default function RootLayout({ children }) {
   return (
@@ -12,6 +13,12 @@ export default function RootLayout({ children }) {
       <body>
         <ThemeProvider theme={theme}>
           <CssBaseline />
+          <ProgressBar
+            height="4px"
+            color="#457b9d"
+            options={{ showSpinner: false }}
+            shallowRouting
+          />
           <CustomAppBar />
           <Container
             maxWidth="lg"
