@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import {
+  Autocomplete,
   Box,
   CircularProgress,
   FormControl,
@@ -257,29 +258,38 @@ export default function WorkoutForm({
                   />
                 </RadioGroup>
               </FormControl>
-
               <FormControl fullWidth sx={{ mt: 2 }} error={!!errors.exercise}>
-                <InputLabel id="exerciseSelect">
-                  {errors.exercise || 'Exercise'}
-                </InputLabel>
-                <Select
-                  labelId="exerciseSelect"
-                  name="exercise"
-                  label={errors.exercise || 'Exercise'}
-                  value={values.exercise}
-                  onChange={handleChange}
+                <Autocomplete
+                  options={
+                    values.exerciseType === 'cardio'
+                      ? cardioExercises
+                      : strengthExercises
+                  }
+                  getOptionLabel={(option) => option.exerciseName || ''}
+                  isOptionEqualToValue={(option, value) =>
+                    option.exerciseId === value.exerciseId
+                  }
                   disabled={!values.exerciseType}
+                  value={values.exercise || null}
+                  onChange={(event, newValue) => {
+                    handleChange({
+                      target: {
+                        name: 'exercise',
+                        value: newValue,
+                      },
+                    });
+                  }}
                   onBlur={handleBlur}
-                >
-                  {(values.exerciseType === 'cardio'
-                    ? cardioExercises
-                    : strengthExercises
-                  ).map((exercise) => (
-                    <MenuItem key={exercise.exerciseId} value={exercise}>
-                      {exercise.exerciseName}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={errors.exercise || 'Exercise'}
+                      error={!!errors.exercise}
+                      name="exercise"
+                      onBlur={handleBlur}
+                    />
+                  )}
+                />
               </FormControl>
 
               {values.exerciseType === 'strength' && (
@@ -362,7 +372,7 @@ export default function WorkoutForm({
                 onClick={() => {
                   const newActivity = {
                     exerciseType: values.exerciseType,
-                    exercise: values.exercise.exerciseName,
+                    exercise: values.exercise?.exerciseName,
                     reps: String(values.reps) || null,
                     weight: String(values.weight) || null,
                     duration: values.duration,
