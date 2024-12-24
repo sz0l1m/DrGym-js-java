@@ -37,7 +37,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WorkoutFormTitle from './WorkoutFormTitle';
-import ActivityInfo from '@/components/WorkoutCard/ActivityInfo';
+import ActivityInfo from '@/components/ActivityInfo';
 import {
   schema,
   strengthActivitySchema,

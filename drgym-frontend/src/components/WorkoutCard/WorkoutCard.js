@@ -20,7 +20,7 @@ import MenuItem from '@mui/material/MenuItem';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Tooltip from '@mui/material/Tooltip';
-import ActivityInfo from './ActivityInfo';
+import ActivityInfo from '@/components/ActivityInfo';
 import WorkoutForm from '@/components/WorkoutForm';
 import axios from 'axios';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
