@@ -12,6 +12,9 @@ import GroupIcon from '@mui/icons-material/Group';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import DrGymLogo from '@/components/DrGymLogo';
 import CustomDrawer from '@/components/CustomDrawer';
+import IconButton from '@mui/material/IconButton';
+import Avatar from '@mui/material/Avatar';
+import red from '@mui/material/colors/red';
 import Link from 'next/link';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
@@ -106,6 +109,17 @@ export default function CustomAppBar() {
               alignItems: 'center',
             }}
           >
+            <Link href="/user/account">
+              <IconButton aria-label="account">
+                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                  S
+                </Avatar>
+              </IconButton>
+            </Link>
+            <Button color="primary" variant="outlined" size="small">
+              Sign out
+            </Button>
+            <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
             <Link href="/login">
               <Button color="primary" variant="text" size="small">
                 Sign in
