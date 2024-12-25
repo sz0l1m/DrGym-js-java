@@ -6,9 +6,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import Post from '@/components/Post';
-import { Skeleton } from '@mui/material';
 import axios from 'axios';
 import style from './posts.module.css';
+import SkeletonCard from '@/components/SkeletonCard';
 
 const Posts = ({ showAppMessage }) => {
   const router = useRouter();
@@ -56,16 +56,17 @@ const Posts = ({ showAppMessage }) => {
     }
   }, [router, searchParams, showAppMessage]);
 
-  if (loading) return <Typography>Loading workouts...</Typography>;
   if (error) return <Typography>Error: {error}</Typography>;
   return (
-    <>
-      <Box className={style.postsWrapper}>
-        {workoutsData.map((workout) => (
-          <Post key={workout.workoutId} workout={workout} />
-        ))}
-      </Box>
-    </>
+    <Box className={style.postsWrapper}>
+      {loading
+        ? Array.from({ length: 3 }).map((_, index) => (
+            <SkeletonCard key={index} type="post" />
+          ))
+        : workoutsData.map((workout) => (
+            <Post key={workout.workoutId} workout={workout} />
+          ))}
+    </Box>
   );
 };
 

@@ -7,6 +7,7 @@ import WorkoutCard from '@/components/WorkoutCard';
 import AddIcon from '@mui/icons-material/Add';
 import WorkoutForm from '@/components/WorkoutForm';
 import { withSnackbar } from '@/utils/snackbarProvider';
+import SkeletonCard from '@/components/SkeletonCard';
 import style from './workouts.module.css';
 
 const Workouts = ({ showAppMessage }) => {
@@ -44,7 +45,6 @@ const Workouts = ({ showAppMessage }) => {
     );
   };
 
-  if (loading) return <Typography>Loading workouts...</Typography>;
   if (error) return <Typography>Error: {error}</Typography>;
   return (
     <>
@@ -61,14 +61,18 @@ const Workouts = ({ showAppMessage }) => {
         </Button>
       </Box>
       <Box className={style.workoutsWrapper}>
-        {workoutsData.map((workout) => (
-          <WorkoutCard
-            key={workout.workoutId}
-            workout={workout}
-            onDelete={handleDeleteWorkout}
-            showAppMessage={showAppMessage}
-          />
-        ))}
+        {loading
+          ? Array.from({ length: 3 }).map((_, index) => (
+              <SkeletonCard key={index} />
+            ))
+          : workoutsData.map((workout) => (
+              <WorkoutCard
+                key={workout.workoutId}
+                workout={workout}
+                onDelete={handleDeleteWorkout}
+                showAppMessage={showAppMessage}
+              />
+            ))}
       </Box>
       <WorkoutForm
         dialogTitle="Add new workout"
