@@ -1,14 +1,17 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
+import { Formik, Form } from 'formik';
 import { Box, Button, Avatar, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { useDropzone } from 'react-dropzone';
 import Grid from '@mui/material/Grid2';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
+import {
+  AccountSchema,
+  AccountDefaultValues,
+} from '@/utils/schemas/AccountSchema';
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   border: '2px dashed #ccc',
@@ -21,43 +24,18 @@ const DropzoneContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const AccountPage = ({ showAppMessage }) => {
-  const userData = {
-    username: 'john_doe',
-    name: 'John',
-    surname: 'Doe',
-    avatar: null,
-  };
+const userData = {
+  username: 'john_doe',
+  firstName: 'John',
+  surname: 'Doe',
+  avatar: null,
+};
 
+const AccountPage = ({ showAppMessage }) => {
   const [avatar, setAvatar] = useState(userData.avatar || null);
   const [hasChanges, setHasChanges] = useState(false);
 
-  const validationSchema = yup.object({
-    username: yup.string().required('Username is required'),
-    name: yup.string().required('Name is required'),
-    surname: yup.string().required('Surname is required'),
-  });
-
-  const formik = useFormik({
-    initialValues: {
-      username: userData.username || '',
-      name: userData.name || '',
-      surname: userData.surname || '',
-    },
-    validationSchema,
-    onSubmit: (values) => {
-      console.log('Form submitted:', { ...values, avatar });
-      showAppMessage({
-        status: true,
-        text: 'Profile updated successfully!',
-        type: 'success',
-      });
-      setHasChanges(false);
-    },
-    onChange: () => setHasChanges(true),
-  });
-
-  const onDrop = (acceptedFiles) => {
+  const handleAvatarChange = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
       const preview = URL.createObjectURL(file);
@@ -66,159 +44,178 @@ const AccountPage = ({ showAppMessage }) => {
     }
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: 'image/*',
-    maxFiles: 1,
-    onDrop,
-  });
-
-  const resetFields = () => {
-    formik.resetForm();
+  const handleResetFields = (resetForm) => {
+    resetForm();
     setAvatar(userData.avatar || null);
     setHasChanges(false);
   };
 
-  const deleteFile = () => {
+  const handleDeleteAvatar = () => {
     setAvatar(null);
     setHasChanges(true);
   };
 
-  const avatarFallback = (
-    <Avatar
-      sx={{
-        width: 100,
-        height: 100,
-        fontSize: 40,
-        backgroundColor: 'primary.main',
-      }}
-    >
-      {userData.username.charAt(0).toUpperCase()}
-    </Avatar>
-  );
+  const handleFormSubmit = (values, { resetForm }) => {
+    console.log('Form submitted:', { ...values, avatar });
+    showAppMessage({
+      status: true,
+      text: 'Profile updated successfully!',
+      type: 'success',
+    });
+    setHasChanges(false);
+    resetForm();
+  };
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: 'image/*',
+    maxFiles: 1,
+    onDrop: handleAvatarChange,
+  });
 
   return (
-    <Grid
-      container
-      spacing={2}
-      direction="column"
-      alignItems="center"
-      sx={{
-        width: { xs: '100%', sm: '80%', md: '60%' },
-        maxWidth: '500px',
-        margin: '0 auto',
-      }}
-    >
+    <Grid container direction="column">
       <Typography variant="h5" sx={{ my: 2 }}>
         Account Settings
       </Typography>
-      <Box
-        component="form"
-        noValidate
-        onSubmit={formik.handleSubmit}
-        sx={{ width: '100%' }}
+      <Formik
+        validationSchema={AccountSchema}
+        initialValues={AccountDefaultValues(userData)}
+        onSubmit={handleFormSubmit}
       >
-        <Grid container spacing={2}>
-          <Grid xs={12} textAlign="center">
-            {avatar ? (
-              <Avatar
-                src={avatar}
-                alt="Avatar"
-                sx={{ width: 100, height: 100, margin: '0 auto' }}
-              />
-            ) : (
-              avatarFallback
-            )}
-            <DropzoneContainer {...getRootProps()} sx={{ mt: 2 }}>
-              <input {...getInputProps()} />
-              <Typography variant="body1">
-                Drag & drop your avatar here, or click to select
-              </Typography>
-              <Typography variant="caption">
-                (Only one image file is allowed)
-              </Typography>
-            </DropzoneContainer>
-            <Box
-              sx={{ display: 'flex', gap: 2, justifyContent: 'center', mt: 2 }}
-            >
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={deleteFile}
-                disabled={!avatar}
-              >
-                Delete Avatar
-              </Button>
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={resetFields}
-                disabled={!hasChanges}
-              >
-                Reset Changes
-              </Button>
-            </Box>
-          </Grid>
-
-          <Grid xs={12}>
-            <CustomInput
-              label="Username"
-              name="username"
-              value={formik.values.username}
-              error={formik.errors.username}
-              touched={formik.touched.username}
-              onBlur={formik.handleBlur}
-              onChange={(e) => {
-                formik.handleChange(e);
-                setHasChanges(true);
-              }}
-              tabIndex={1}
-            />
-          </Grid>
-          <Grid xs={12}>
-            <CustomInput
-              label="Name"
-              name="name"
-              value={formik.values.name}
-              error={formik.errors.name}
-              touched={formik.touched.name}
-              onBlur={formik.handleBlur}
-              onChange={(e) => {
-                formik.handleChange(e);
-                setHasChanges(true);
-              }}
-              tabIndex={2}
-            />
-          </Grid>
-          <Grid xs={12}>
-            <CustomInput
-              label="Surname"
-              name="surname"
-              value={formik.values.surname}
-              error={formik.errors.surname}
-              touched={formik.touched.surname}
-              onBlur={formik.handleBlur}
-              onChange={(e) => {
-                formik.handleChange(e);
-                setHasChanges(true);
-              }}
-              tabIndex={3}
-            />
-          </Grid>
-
-          <Grid xs={12}>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              color="primary"
+        {({ values, errors, touched, handleChange, handleBlur, resetForm }) => (
+          <Form>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              gap={6}
               sx={{ mt: 2 }}
-              disabled={!hasChanges}
             >
-              Save Changes
-            </Button>
-          </Grid>
-        </Grid>
-      </Box>
+              <Grid
+                sx={{
+                  width: {
+                    xs: '100%',
+                    sm: '80%',
+                    md: '50%',
+                  },
+                }}
+                textAlign="center"
+              >
+                <Avatar
+                  src={avatar || undefined}
+                  alt={values.username.charAt(0).toUpperCase()}
+                  sx={{
+                    width: 100,
+                    height: 100,
+                    fontSize: 40,
+                    backgroundColor: 'primary.main',
+                    margin: '0 auto',
+                  }}
+                >
+                  {!avatar && values.username.charAt(0).toUpperCase()}
+                </Avatar>
+                <DropzoneContainer {...getRootProps()} sx={{ mt: 2 }}>
+                  <input {...getInputProps()} />
+                  <Typography variant="body1">
+                    Drag & drop your avatar here, or click to select
+                  </Typography>
+                  <Typography variant="caption">
+                    (Only one image file is allowed)
+                  </Typography>
+                </DropzoneContainer>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleDeleteAvatar}
+                  disabled={!avatar}
+                  sx={{ mt: 2 }}
+                >
+                  Delete Avatar
+                </Button>
+              </Grid>
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 2,
+                  mt: 2,
+                  maxWidth: {
+                    xs: '100%',
+                    sm: '80%',
+                    md: '50%',
+                  },
+                }}
+              >
+                <CustomInput
+                  label="Username"
+                  name="username"
+                  value={values.username}
+                  error={errors.username}
+                  touched={touched.username}
+                  onBlur={handleBlur}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setHasChanges(true);
+                  }}
+                  tabIndex={2}
+                />
+                <CustomInput
+                  label="First Name"
+                  name="firstName"
+                  value={values.firstName}
+                  error={errors.firstName}
+                  touched={touched.firstName}
+                  onBlur={handleBlur}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setHasChanges(true);
+                  }}
+                  tabIndex={3}
+                />
+                <CustomInput
+                  label="Surname"
+                  name="surname"
+                  value={values.surname}
+                  error={errors.surname}
+                  touched={touched.surname}
+                  onBlur={handleBlur}
+                  onChange={(e) => {
+                    handleChange(e);
+                    setHasChanges(true);
+                  }}
+                  tabIndex={4}
+                />
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 2,
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => handleResetFields(resetForm)}
+                    disabled={!hasChanges}
+                  >
+                    Reset Changes
+                  </Button>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                    disabled={!hasChanges}
+                  >
+                    Save Changes
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
     </Grid>
   );
 };
