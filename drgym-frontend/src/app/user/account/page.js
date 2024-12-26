@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { Box, Button, Avatar, Typography } from '@mui/material';
+import { Box, Button, Avatar, Typography, TextField } from '@mui/material';
 import { styled } from '@mui/system';
 import { useDropzone } from 'react-dropzone';
 import Grid from '@mui/material/Grid2';
@@ -12,6 +12,7 @@ import {
   AccountSchema,
   AccountDefaultValues,
 } from '@/utils/schemas/AccountSchema';
+import { set } from 'date-fns';
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   border: '2px dashed #ccc',
@@ -28,6 +29,8 @@ const userData = {
   username: 'john_doe',
   firstName: 'John',
   surname: 'Doe',
+  weight: 80,
+  height: 180,
   avatar: null,
 };
 
@@ -185,6 +188,56 @@ const AccountPage = ({ showAppMessage }) => {
                     setHasChanges(true);
                   }}
                   tabIndex={4}
+                />
+                <TextField
+                  label={errors.weight ? 'Weight - ' + errors.weight : 'Weight'}
+                  name="weight"
+                  type="number"
+                  value={values.weight}
+                  onBlur={handleBlur}
+                  error={!!errors.weight}
+                  onChange={(e) => {
+                    setHasChanges(true);
+                    const value = e.target.value;
+                    if (!value || parseInt(value, 10) >= 0) {
+                      handleChange(e);
+                    }
+                  }}
+                  slotProps={{
+                    input: {
+                      min: 0,
+                      onKeyDown: (e) => {
+                        if (e.key === '-' || e.key === 'e') {
+                          e.preventDefault();
+                        }
+                      },
+                    },
+                  }}
+                />
+                <TextField
+                  label={errors.height ? 'Height - ' + errors.height : 'Height'}
+                  name="height"
+                  type="number"
+                  value={values.height}
+                  onBlur={handleBlur}
+                  error={!!errors.height}
+                  onChange={(e) => {
+                    setHasChanges(true);
+                    const value = e.target.value;
+                    if (!value || parseInt(value, 10) >= 0) {
+                      handleChange(e);
+                    }
+                  }}
+                  slotProps={{
+                    input: {
+                      min: 0,
+                      onKeyDown: (e) => {
+                        if (e.key === '-' || e.key === 'e') {
+                          e.preventDefault();
+                        }
+                      },
+                    },
+                  }}
                 />
                 <Box
                   sx={{

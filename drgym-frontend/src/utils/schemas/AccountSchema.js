@@ -17,6 +17,14 @@ const AccountSchema = () => {
       .max(30, 'maximum 30 characters')
       .min(2, 'minimum 2 characters')
       .required("it's required"),
+    weight: yup
+      .number()
+      .typeError('must be a number')
+      .min(0, 'cannot be negative'),
+    height: yup
+      .number()
+      .typeError('must be a number')
+      .min(0, 'cannot be negative'),
   });
 };
 
@@ -25,6 +33,8 @@ const AccountDefaultValues = (userData) => {
     username: userData.username || '',
     firstName: userData.firstName || '',
     surname: userData.surname || '',
+    weight: userData.weight || '',
+    height: userData.height || '',
   };
 };
 
