@@ -21,7 +21,7 @@ const Workouts = ({ showAppMessage }) => {
       try {
         setLoading(true);
         const response = await axios.get(
-          'http://localhost:8080/api/users/skuter/workouts'
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/skuter/workouts`
         );
         setWorkoutsData(response.data);
       } catch (err) {
