@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import { Box, Button, Avatar, Typography, TextField } from '@mui/material';
 import { styled } from '@mui/system';
@@ -8,6 +8,7 @@ import { useDropzone } from 'react-dropzone';
 import Grid from '@mui/material/Grid2';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
+import axios from 'axios';
 import {
   AccountSchema,
   AccountDefaultValues,
@@ -25,18 +26,40 @@ const DropzoneContainer = styled(Box)(({ theme }) => ({
   },
 }));
 
-const userData = {
-  username: 'john_doe',
-  firstName: 'John',
-  surname: 'Doe',
-  weight: 80,
-  height: 180,
-  avatar: null,
-};
-
 const AccountPage = ({ showAppMessage }) => {
-  const [avatar, setAvatar] = useState(userData.avatar || null);
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [avatar, setAvatar] = useState(userData?.avatar || null);
   const [hasChanges, setHasChanges] = useState(false);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim`
+        );
+        setUserData({
+          ...response.data,
+          firstName: response.data.name,
+          avatar: null,
+        });
+        setAvatar(response.data.avatar || null);
+      } catch (err) {
+        setError(err.message);
+        showAppMessage({
+          status: true,
+          text: 'Error fetching user data',
+          type: 'error',
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, [showAppMessage]);
 
   const handleAvatarChange = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
@@ -75,6 +98,8 @@ const AccountPage = ({ showAppMessage }) => {
     onDrop: handleAvatarChange,
   });
 
+  if (loading) return <Typography>Loading...</Typography>;
+  if (error) return <Typography>Error: {error}</Typography>;
   return (
     <Grid container direction="column">
       <Typography variant="h5" sx={{ my: 2 }}>
