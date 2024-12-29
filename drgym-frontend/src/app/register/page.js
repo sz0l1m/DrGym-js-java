@@ -92,18 +92,6 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                 <Grid container direction="column" gap={2}>
                   <Grid xs={12}>
                     <CustomInput
-                      label="Username"
-                      name="username"
-                      value={values.username}
-                      error={errors.username}
-                      touched={touched.username}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      tabIndex={1}
-                    />
-                  </Grid>
-                  <Grid xs={12}>
-                    <CustomInput
                       label="First name"
                       name="firstName"
                       value={values.firstName}
@@ -111,7 +99,7 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                       touched={touched.firstName}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      tabIndex={2}
+                      tabIndex={1}
                     />
                   </Grid>
                   <Grid xs={12}>
@@ -121,6 +109,18 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
                       value={values.lastName}
                       error={errors.lastName}
                       touched={touched.lastName}
+                      onBlur={handleBlur}
+                      onChange={handleChange}
+                      tabIndex={2}
+                    />
+                  </Grid>
+                  <Grid xs={12}>
+                    <CustomInput
+                      label="Username"
+                      name="username"
+                      value={values.username}
+                      error={errors.username}
+                      touched={touched.username}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       tabIndex={3}
