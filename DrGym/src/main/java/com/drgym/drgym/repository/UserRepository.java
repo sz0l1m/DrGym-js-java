@@ -11,21 +11,5 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByEmail(String email);
 
-    @Transactional
-    default void verifyEmail(String email) {
-        Optional<User> user = findByEmail(email);
-        user.ifPresent(u -> {
-            u.setVerified(true);
-            save(u);
-        });
-    }
-
-    @Transactional
-    default void resetPassword(String email, String newPassword) {
-        Optional<User> user = findByEmail(email);
-        user.ifPresent(u -> {
-            u.setPassword(newPassword);
-            save(u);
-        });
-    }
+    boolean existsByEmail(String email);
 }
