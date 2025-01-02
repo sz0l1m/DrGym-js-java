@@ -22,6 +22,11 @@ public class AuthController {
         return authService.login(request.getIdentifier(), request.getPassword(), response);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        return authService.logout(response);
+    }
+
     @GetMapping("/verification")
     public ResponseEntity<?> verify(@RequestParam String email, @RequestParam String token) {
         return authService.verify(email, token);
