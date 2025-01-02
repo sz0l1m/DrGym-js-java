@@ -2,37 +2,45 @@ package com.drgym.drgym.controller;
 
 import com.drgym.drgym.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
     private AuthService authService;
 
-    @GetMapping("/auth/verification")
-    public String verifyEmail(@RequestParam String email, @RequestParam String token) {
-        boolean isVerified = authService.verifyEmail(email, token);
-        return isVerified ? "Email verified for " + email : "Verification failed";
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+        return authService.login(email, password);
     }
 
-    @GetMapping("/auth/reset-password")
-    public String resetPassword(@RequestParam String email, @RequestParam String token, @RequestParam String newPassword) {
-        boolean isReset = authService.resetPassword(email, token, newPassword);
-        return isReset ? "Password reset for " + email : "Reset password failed";
+    @PostMapping("/register")
+    public ResponseEntity<?> register(
+            @RequestParam String username,
+            @RequestParam String name,
+            @RequestParam String surname,
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam Double weight,
+            @RequestParam Double height) {
+        return authService.register(username, name, surname, email, password, weight, height);
     }
 
-    @GetMapping("/auth/generate-token")
-    public String generateToken(@RequestParam String email) {
-        authService.generateToken(email);
-        return "Token generated and email sent";
+    @GetMapping("/verification")
+    public ResponseEntity<?> verify(@RequestParam String email, @RequestParam String token) {
+        return authService.verify(email, token);
     }
 
-    @GetMapping("/auth/send-password-reset-token")
-    public String sendPasswordResetToken(@RequestParam String email) {
-        authService.sendPasswordResetToken(email);
-        return "Password reset token sent to " + email;
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        return authService.forgotPassword(email);
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam String email, @RequestParam String newPassword, @RequestParam String token) {
+        return authService.resetPassword(email, newPassword, token);
     }
 }
