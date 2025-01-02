@@ -2,6 +2,7 @@ package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.Token;
 import com.drgym.drgym.model.User;
+import com.drgym.drgym.model.UserRegistrationRequest;
 import com.drgym.drgym.repository.TokenRepository;
 import com.drgym.drgym.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.Key;
 import java.util.Date;
@@ -50,21 +52,22 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<?> register(String username, String name, String surname, String email, String password, Double weight, Double height) {
-        if (userRepository.existsByEmail(email)) {
+    public ResponseEntity<?> register(@RequestBody UserRegistrationRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
             return ResponseEntity.status(400).body("User already exists");
         }
-        User user = new User(username, name, surname, email, passwordEncoder.encode(password), weight, height);
+        User user = new User(request.getUsername(), request.getName(), request.getSurname(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getWeight(), request.getHeight());
         userRepository.save(user);
-        String token = UUID.randomUUID().toString();
-        tokenRepository.save(new Token(email, token));
-        String link = "http://localhost:3000/auth/verification?email=" + email + "&token=" + token;
-        emailService.sendVerificationEmail(email, link);
+        String verificationToken = UUID.randomUUID().toString();
+        Token token = new Token(request.getEmail(), verificationToken);
+        tokenRepository.save(token);
+        String link = "http://localhost:8080/auth/verification?email=" + request.getEmail() + "&token=" + verificationToken;
+        emailService.sendVerificationEmail(request.getEmail(), link);
         return ResponseEntity.ok("User registered successfully");
     }
 
     public ResponseEntity<?> verify(String email, String token) {
-        Token verificationToken = tokenRepository.findByEmailAndToken(email, token);
+        Token verificationToken = tokenRepository.findByEmailAndVerificationToken(email, token);
         if (verificationToken == null) {
             return ResponseEntity.status(400).body("Invalid token");
         }
@@ -78,7 +81,8 @@ public class AuthService {
         }
         user.setVerified(true);
         userRepository.save(user);
-        tokenRepository.delete(verificationToken);
+        verificationToken.setVerificationToken(null);
+        tokenRepository.save(verificationToken);
         return ResponseEntity.ok("User verified successfully");
     }
 
@@ -87,15 +91,18 @@ public class AuthService {
         if (!userOptional.isPresent()) {
             return ResponseEntity.status(400).body("User does not exist");
         }
-        String token = UUID.randomUUID().toString();
-        tokenRepository.save(new Token(email, token));
-        String link = "http://localhost:3000/auth/reset-password?email=" + email + "&token=" + token;
+        String resetToken = UUID.randomUUID().toString();
+        Token token = tokenRepository.findById(email).orElse(new Token(email, null, resetToken, new Date(System.currentTimeMillis() + 3600000))); // 1 hour expiry
+        token.setResetToken(resetToken);
+        token.setResetTokenExpiry(new Date(System.currentTimeMillis() + 300000));
+        tokenRepository.save(token);
+        String link = "http://localhost:8080/auth/reset-password?email=" + email + "&token=" + resetToken;
         emailService.sendPasswordResetEmail(email, link);
         return ResponseEntity.ok("Reset password email sent");
     }
 
     public ResponseEntity<?> resetPassword(String email, String newPassword, String token) {
-        Token resetToken = tokenRepository.findByEmailAndToken(email, token);
+        Token resetToken = tokenRepository.findByEmailAndResetToken(email, token);
         if (resetToken == null) {
             return ResponseEntity.status(400).body("Invalid token");
         }
@@ -106,7 +113,9 @@ public class AuthService {
         User user = userOptional.get();
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-        tokenRepository.delete(resetToken);
+        resetToken.setResetToken(null);
+        resetToken.setResetTokenExpiry(null);
+        tokenRepository.save(resetToken);
         return ResponseEntity.ok("Password reset successfully");
     }
 }

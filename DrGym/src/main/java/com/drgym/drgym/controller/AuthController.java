@@ -1,5 +1,9 @@
 package com.drgym.drgym.controller;
 
+import com.drgym.drgym.model.UserLoginRequest;
+import com.drgym.drgym.model.UserForgotPasswordRequest;
+import com.drgym.drgym.model.UserResetPasswordRequest;
+import com.drgym.drgym.model.UserRegistrationRequest;
 import com.drgym.drgym.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,34 +17,22 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
-        return authService.login(email, password);
+    public ResponseEntity<?> login(@RequestBody UserLoginRequest request) {
+        return authService.login(request.getEmail(), request.getPassword());
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(
-            @RequestParam String username,
-            @RequestParam String name,
-            @RequestParam String surname,
-            @RequestParam String email,
-            @RequestParam String password,
-            @RequestParam Double weight,
-            @RequestParam Double height) {
-        return authService.register(username, name, surname, email, password, weight, height);
-    }
-
-    @GetMapping("/verification")
-    public ResponseEntity<?> verify(@RequestParam String email, @RequestParam String token) {
-        return authService.verify(email, token);
+    public ResponseEntity<?> register(@RequestBody UserRegistrationRequest request) {
+        return authService.register(request);
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
-        return authService.forgotPassword(email);
+    public ResponseEntity<?> forgotPassword(@RequestBody UserForgotPasswordRequest request) {
+        return authService.forgotPassword(request.getEmail());
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestParam String email, @RequestParam String newPassword, @RequestParam String token) {
-        return authService.resetPassword(email, newPassword, token);
+    public ResponseEntity<?> resetPassword(@RequestBody UserResetPasswordRequest request) {
+        return authService.resetPassword(request.getEmail(), request.getNewPassword(), request.getToken());
     }
 }
