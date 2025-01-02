@@ -1,34 +1,39 @@
 package com.drgym.drgym.model;
 
 import jakarta.persistence.*;
+import java.util.Date;
 
 @Entity
+@Table(name = "Token")
 public class Token {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_seq")
-    @SequenceGenerator(name = "token_seq", sequenceName = "token_sequence", allocationSize = 1)
-    @Column(name = "id")
-    private Long id;
 
-    @Column(name = "email")
+    @Id
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "token")
-    private String token;
+    @Column(name = "verification_token", nullable = true)
+    private String verificationToken;
+
+    @Column(name = "reset_token", nullable = true)
+    private String resetToken;
+
+    @Column(name = "reset_expiry", nullable = true)
+    private Date resetTokenExpiry;
 
     public Token() {}
 
-    public Token(String email, String token) {
+    public Token(String email, String verificationToken) {
         this.email = email;
-        this.token = token;
+        this.verificationToken = verificationToken;
+        this.resetToken = null;
+        this.resetTokenExpiry = null;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Token(String email, String verificationToken, String resetToken, Date resetTokenExpiry) {
+        this.email = email;
+        this.verificationToken = verificationToken;
+        this.resetToken = resetToken;
+        this.resetTokenExpiry = resetTokenExpiry;
     }
 
     public String getEmail() {
@@ -39,11 +44,27 @@ public class Token {
         this.email = email;
     }
 
-    public String getToken() {
-        return token;
+    public String getVerificationToken() {
+        return verificationToken;
     }
 
-    public void setToken(String token) {
-        this.token = token;
+    public void setVerificationToken(String verificationToken) {
+        this.verificationToken = verificationToken;
+    }
+
+    public String getResetToken() {
+        return resetToken;
+    }
+
+    public void setResetToken(String resetToken) {
+        this.resetToken = resetToken;
+    }
+
+    public Date getResetTokenExpiry() {
+        return resetTokenExpiry;
+    }
+
+    public void setResetTokenExpiry(Date resetTokenExpiry) {
+        this.resetTokenExpiry = resetTokenExpiry;
     }
 }
