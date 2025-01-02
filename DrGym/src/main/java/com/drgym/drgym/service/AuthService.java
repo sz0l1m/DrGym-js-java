@@ -8,6 +8,8 @@ import com.drgym.drgym.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +20,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
-
+import java.util.logging.Logger;
 
 @Service
 public class AuthService {
@@ -37,16 +39,28 @@ public class AuthService {
 
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public ResponseEntity<?> login(String email, String password) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
+    public ResponseEntity<?> login(String identifier, String password, HttpServletResponse response) {
+        Optional<User> userOptional = userRepository.findByEmail(identifier);
+        if (!userOptional.isPresent()) {
+            userOptional = userRepository.findByUsername(identifier);
+        }
         if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
             String token = Jwts.builder()
-                    .setSubject(email)
+                    .setSubject(userOptional.get().getEmail())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                     .signWith(SECRET_KEY)
                     .compact();
-            return ResponseEntity.ok(token);
+
+            Cookie cookie = new Cookie("token", token);
+            cookie.setHttpOnly(true);
+            cookie.setSecure(true);
+            cookie.setPath("/");
+            cookie.setMaxAge(3600);
+
+            response.addCookie(cookie);
+
+            return ResponseEntity.ok("Login successful");
         } else {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
