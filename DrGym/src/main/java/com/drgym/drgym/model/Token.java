@@ -16,6 +16,13 @@ public class Token {
     @Column(name = "token")
     private String token;
 
+    public Token() {}
+
+    public Token(String email, String token) {
+        this.email = email;
+        this.token = token;
+    }
+
     public Long getId() {
         return id;
     }
