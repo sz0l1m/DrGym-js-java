@@ -20,7 +20,7 @@ import java.security.Key;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.logging.Logger;
+
 
 @Service
 public class AuthService {
@@ -45,8 +45,9 @@ public class AuthService {
             userOptional = userRepository.findByUsername(identifier);
         }
         if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
+            User user = userOptional.get();
             String token = Jwts.builder()
-                    .setSubject(userOptional.get().getEmail())
+                    .setSubject(user.getEmail())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                     .signWith(SECRET_KEY)
@@ -56,13 +57,41 @@ public class AuthService {
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             cookie.setPath("/");
-            cookie.setMaxAge(3600);
+            cookie.setMaxAge(86400);
 
             response.addCookie(cookie);
 
-            return ResponseEntity.ok("Login successful");
+            return ResponseEntity.ok(new LoginResponse(user.getUsername()));
         } else {
             return ResponseEntity.status(401).body("Invalid credentials");
+        }
+    }
+
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("token", null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
+    public static class LoginResponse {
+        private String username;
+
+        public LoginResponse(String username) {
+            this.username = username;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
         }
     }
 
