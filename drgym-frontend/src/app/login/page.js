@@ -17,6 +17,7 @@ import { LoginSchema, LoginDefaultValues } from '@/utils/schemas/LoginSchema';
 import Link from 'next/link';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
+import { signIn } from 'next-auth/react';
 
 const Root = styled('div')(({ theme }) => ({
   width: '100%',
@@ -41,18 +42,36 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
   };
 
   const handleLogin = async (formData, form) => {
-    setLoading(true);
-    if (formData.password === 'Password1!') {
-      setLoading(false);
-      router.push(`/user/posts?message=You have been logged in.&type=success`);
-    } else {
-      setLoading(false);
-      form.resetForm();
+    try {
+      setLoading(true);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            identifier: formData.email,
+            password: formData.password,
+          }),
+          credentials: 'include',
+        }
+      );
+      const user = await res.json();
+      await signIn('credentials', {
+        username: user.username,
+        avatar: user.avatar || null,
+        callbackUrl: '/user/workouts',
+        redirect: false,
+      });
+    } catch (err) {
+      console.error('Error in login page: ', err);
       showAppMessage({
         status: true,
-        text: 'Provided credentials are invalid.',
+        text: `Error: ${err.message}`,
         type: 'error',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,11 +108,11 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
                   <Grid xs={12}>
                     <CustomInput
                       label="E-mail address"
-                      name="username"
+                      name="email"
                       type="email"
-                      value={values.username}
-                      error={errors.username}
-                      touched={touched.username}
+                      value={values.email}
+                      error={errors.email}
+                      touched={touched.email}
                       onBlur={handleBlur}
                       onChange={handleChange}
                       tabIndex={1}
