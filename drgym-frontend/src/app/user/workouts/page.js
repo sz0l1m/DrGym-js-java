@@ -9,19 +9,22 @@ import WorkoutForm from '@/components/WorkoutForm';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import SkeletonCard from '@/components/SkeletonCard';
 import style from './workouts.module.css';
+import { useSession } from 'next-auth/react';
 
 const Workouts = ({ showAppMessage }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [workoutsData, setWorkoutsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { data: session, status } = useSession();
+  console.log('session', session, status);
 
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/skuter/workouts`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
         );
         setWorkoutsData(response.data);
       } catch (err) {

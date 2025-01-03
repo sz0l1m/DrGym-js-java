@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
 import { signIn } from 'next-auth/react';
+import axios from 'axios';
 
 const Root = styled('div')(({ theme }) => ({
   width: '100%',
@@ -44,32 +45,44 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
   const handleLogin = async (formData, form) => {
     try {
       setLoading(true);
-      const res = await fetch(
+      const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
         {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            identifier: formData.email,
-            password: formData.password,
-          }),
-          credentials: 'include',
+          identifier: formData.email,
+          password: formData.password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
         }
       );
-      const user = await res.json();
+      const { username, avatar } = await res.data;
+      if (!username) {
+        throw new Error('Missing username');
+      }
       await signIn('credentials', {
-        username: user.username,
-        avatar: user.avatar || null,
+        username: username,
+        avatar: avatar || null,
         callbackUrl: '/user/workouts',
         redirect: false,
       });
     } catch (err) {
-      console.error('Error in login page: ', err);
-      showAppMessage({
-        status: true,
-        text: `Error: ${err.message}`,
-        type: 'error',
-      });
+      form.resetForm();
+      if (err.response?.status === 401) {
+        showAppMessage({
+          status: true,
+          text: `${err.response.data}`,
+          type: 'error',
+        });
+      } else {
+        showAppMessage({
+          status: true,
+          text: 'Something went wrong. Please try again later.',
+          type: 'error',
+        });
+      }
     } finally {
       setLoading(false);
     }
