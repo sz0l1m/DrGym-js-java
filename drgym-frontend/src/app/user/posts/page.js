@@ -22,10 +22,10 @@ const Posts = ({ showAppMessage }) => {
       try {
         setLoading(true);
         const response1 = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/skuter/workouts`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
         );
         const response2 = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/pedziwiatr/workouts`
         );
         setWorkoutsData([...response1.data, ...response2.data]);
       } catch (err) {

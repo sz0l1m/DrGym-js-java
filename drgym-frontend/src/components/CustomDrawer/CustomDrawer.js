@@ -85,14 +85,14 @@ export default function CustomDrawer() {
             </MenuItem>
           </Link>
           <Divider />
-          <Link href="/login">
+          <Link href="/register">
             <MenuItem sx={{ mt: 2 }}>
               <Button color="primary" variant="contained" fullWidth>
                 Sign up
               </Button>
             </MenuItem>
           </Link>
-          <Link href="/register">
+          <Link href="/login">
             <MenuItem>
               <Button color="primary" variant="outlined" fullWidth>
                 Sign in

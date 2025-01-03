@@ -5,7 +5,7 @@ YupPassword(yup);
 
 const LoginSchema = () => {
   return yup.object().shape({
-    username: yup
+    email: yup
       .string()
       .email("it's not an email")
       .max(50, 'maximum 50 characters')
@@ -25,7 +25,7 @@ const LoginSchema = () => {
 
 const LoginDefaultValues = () => {
   return {
-    username: '',
+    email: '',
     password: '',
   };
 };
