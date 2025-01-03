@@ -16,7 +16,7 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import DrGymLogo from '@/components/DrGymLogo';
 import Link from 'next/link';
 
-export default function CustomDrawer() {
+export default function CustomDrawer({ handleLogout }) {
   const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -53,7 +53,7 @@ export default function CustomDrawer() {
           </Box>
           <Divider sx={{ my: 2 }} />
           <Link href="/user/posts">
-            <MenuItem>
+            <MenuItem onClick={toggleDrawer(false)}>
               <ListItemIcon>
                 <EmojiPeopleIcon fontSize="small" />
               </ListItemIcon>
@@ -61,7 +61,7 @@ export default function CustomDrawer() {
             </MenuItem>
           </Link>
           <Link href="/user/workouts">
-            <MenuItem>
+            <MenuItem onClick={toggleDrawer(false)}>
               <ListItemIcon>
                 <FitnessCenterIcon fontSize="small" />
               </ListItemIcon>
@@ -69,7 +69,7 @@ export default function CustomDrawer() {
             </MenuItem>
           </Link>
           <Link href="/user/stats">
-            <MenuItem>
+            <MenuItem onClick={toggleDrawer(false)}>
               <ListItemIcon>
                 <BarChartIcon fontSize="small" />
               </ListItemIcon>
@@ -77,7 +77,7 @@ export default function CustomDrawer() {
             </MenuItem>
           </Link>
           <Link href="/user/friends">
-            <MenuItem sx={{ mb: 2 }}>
+            <MenuItem onClick={toggleDrawer(false)} sx={{ mb: 2 }}>
               <ListItemIcon>
                 <GroupIcon fontSize="small" />
               </ListItemIcon>
@@ -86,19 +86,30 @@ export default function CustomDrawer() {
           </Link>
           <Divider />
           <Link href="/register">
-            <MenuItem sx={{ mt: 2 }}>
+            <MenuItem onClick={toggleDrawer(false)} sx={{ mt: 2 }}>
               <Button color="primary" variant="contained" fullWidth>
                 Sign up
               </Button>
             </MenuItem>
           </Link>
           <Link href="/login">
-            <MenuItem>
+            <MenuItem onClick={toggleDrawer(false)}>
               <Button color="primary" variant="outlined" fullWidth>
                 Sign in
               </Button>
             </MenuItem>
           </Link>
+          <Divider />
+          <MenuItem
+            onClick={() => {
+              handleLogout();
+              toggleDrawer(false);
+            }}
+          >
+            <Button color="primary" variant="outlined" fullWidth>
+              Sign out
+            </Button>
+          </MenuItem>
         </Box>
       </Drawer>
     </Box>

@@ -160,7 +160,7 @@ export default function CustomAppBar({ showAppMessage }) {
               </Button>
             </Link>
           </Box>
-          <CustomDrawer />
+          <CustomDrawer handleLogout={handleLogout} />
         </StyledToolbar>
       </Container>
     </AppBar>
