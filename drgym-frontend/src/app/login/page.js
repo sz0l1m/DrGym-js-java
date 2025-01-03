@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { styled } from '@mui/material/styles';
 import {
   Button,
@@ -34,9 +35,24 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 const Login = ({ csrfToken = null, showAppMessage }) => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [loginType, setLoginType] = useState('username');
   const [showPassword, toggleShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const message = searchParams.get('message');
+    const type = searchParams.get('type');
+    if (message) {
+      router.replace('/login', undefined, { shallow: true });
+      showAppMessage({
+        status: true,
+        text: message,
+        type: type || 'info',
+      });
+    }
+  }, [router, searchParams, showAppMessage]);
 
   const handleTogglePassword = () => {
     toggleShowPassword(!showPassword);
