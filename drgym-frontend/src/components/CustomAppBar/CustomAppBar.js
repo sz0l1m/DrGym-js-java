@@ -1,5 +1,5 @@
 import { alpha, styled } from '@mui/material/styles';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,6 +16,8 @@ import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
 import red from '@mui/material/colors/red';
 import Link from 'next/link';
+import { signOut } from 'next-auth/react';
+import axios from 'axios';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -33,7 +35,29 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   padding: '8px 12px',
 }));
 
-export default function CustomAppBar() {
+export default function CustomAppBar({ showAppMessage }) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      console.log('res', res);
+      signOut({
+        callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/login?message=You have been signed out&type=info`,
+      });
+    } catch (error) {
+      router.push(
+        '/user/posts?message=Failed to sign out. Please try again.&type=error'
+      );
+    }
+  };
+
   return (
     <AppBar
       position="fixed"
@@ -116,7 +140,12 @@ export default function CustomAppBar() {
                 </Avatar>
               </IconButton>
             </Link>
-            <Button color="primary" variant="outlined" size="small">
+            <Button
+              onClick={handleLogout}
+              color="primary"
+              variant="outlined"
+              size="small"
+            >
               Sign out
             </Button>
             <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
