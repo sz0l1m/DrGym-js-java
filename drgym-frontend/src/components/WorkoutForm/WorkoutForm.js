@@ -31,7 +31,7 @@ import { useTheme } from '@mui/material/styles';
 import { DateTimePicker, TimeField } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
-
+import axios from 'axios';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -66,7 +66,7 @@ export default function WorkoutForm({
     }
   }, [popupType, workout.activities]);
 
-  const handleAddWorkout = (values, actions) => {
+  const handleAddWorkout = async (values, actions) => {
     if (!activityList.length) {
       showAppMessage({
         status: true,
@@ -76,7 +76,27 @@ export default function WorkoutForm({
       actions.setSubmitting(false);
       return;
     }
-    actions.setSubmitting(true);
+    try {
+      actions.setSubmitting(true);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`,
+        {
+          ...values,
+          activities: activityList,
+        },
+        {
+          withCredentials: true,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    } catch (error) {
+      console.error('Error adding workout', error);
+      showAppMessage({
+        status: true,
+        text: 'Error adding workout',
+        type: 'error',
+      });
+    }
     setTimeout(() => {
       alert(JSON.stringify({ ...values, activities: activityList }, null, 2));
       setActivityList([]);
