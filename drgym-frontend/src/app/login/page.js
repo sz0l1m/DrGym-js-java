@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { styled } from '@mui/material/styles';
 import {
   Button,
@@ -9,6 +8,11 @@ import {
   IconButton,
   InputAdornment,
   CircularProgress,
+  FormControl,
+  FormLabel,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -30,7 +34,7 @@ const Root = styled('div')(({ theme }) => ({
 }));
 
 const Login = ({ csrfToken = null, showAppMessage }) => {
-  const router = useRouter();
+  const [loginType, setLoginType] = useState('username');
   const [showPassword, toggleShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -48,7 +52,8 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
         {
-          identifier: formData.email,
+          identifier:
+            loginType === 'username' ? formData.username : formData.email,
           password: formData.password,
         },
         {
@@ -69,7 +74,8 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
         redirect: true,
       });
     } catch (err) {
-      form.resetForm();
+      form.setValues({ ...formData, password: '' });
+      form.setTouched({});
       if (err.response?.status === 401) {
         showAppMessage({
           status: true,
@@ -106,10 +112,18 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
       <Grid sx={{ width: '100%' }}>
         <Formik
           initialValues={LoginDefaultValues()}
-          validationSchema={LoginSchema()}
+          validationSchema={LoginSchema(loginType)}
           onSubmit={handleLogin}
         >
-          {({ values, touched, errors, handleBlur, handleChange }) => {
+          {({
+            values,
+            touched,
+            errors,
+            handleBlur,
+            handleChange,
+            setValues,
+            setErrors,
+          }) => {
             return (
               <Form>
                 <input
@@ -119,17 +133,59 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
                 />
                 <Grid container direction="column" gap={2}>
                   <Grid xs={12}>
-                    <CustomInput
-                      label="E-mail address"
-                      name="email"
-                      type="email"
-                      value={values.email}
-                      error={errors.email}
-                      touched={touched.email}
-                      onBlur={handleBlur}
-                      onChange={handleChange}
-                      tabIndex={1}
-                    />
+                    <FormControl fullWidth>
+                      <FormLabel focused component="legend">
+                        Login with
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        name="loginType"
+                        value={loginType}
+                        onChange={(e) => {
+                          setLoginType(e.target.value);
+                          setValues({ ...values, username: '', email: '' });
+                          setErrors({});
+                        }}
+                      >
+                        <FormControlLabel
+                          value="username"
+                          control={<Radio />}
+                          label="username"
+                        />
+                        <FormControlLabel
+                          value="email"
+                          control={<Radio />}
+                          label="e-mail"
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
+                  <Grid xs={12}>
+                    {loginType === 'username' ? (
+                      <CustomInput
+                        label="Username"
+                        name="username"
+                        type="text"
+                        value={values.username}
+                        error={errors.username}
+                        touched={touched.username}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        tabIndex={1}
+                      />
+                    ) : (
+                      <CustomInput
+                        label="E-mail address"
+                        name="email"
+                        type="email"
+                        value={values.email}
+                        error={errors.email}
+                        touched={touched.email}
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        tabIndex={1}
+                      />
+                    )}
                   </Grid>
                   <Grid xs={12}>
                     <CustomInput
