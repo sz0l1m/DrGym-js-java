@@ -53,11 +53,12 @@ public class AuthService {
                     .signWith(SECRET_KEY)
                     .compact();
 
-            Cookie cookie = new Cookie("token", token);
+            Cookie cookie = new Cookie("jwt", token);
             cookie.setHttpOnly(true);
             cookie.setSecure(true);
             cookie.setPath("/");
             cookie.setMaxAge(86400);
+            cookie.setAttribute("SameSite", "Lax");
 
             response.addCookie(cookie);
 
