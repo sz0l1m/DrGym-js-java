@@ -4,6 +4,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import { Typography } from '@mui/material';
+import { CircularProgress } from '@mui/material';
+import axios from 'axios';
 
 const VerificationPage = ({ showAppMessage }) => {
   const searchParams = useSearchParams();
@@ -15,7 +17,43 @@ const VerificationPage = ({ showAppMessage }) => {
   useEffect(() => {
     const account = searchParams.get('account');
     const email = searchParams.get('email');
-    const verificationCode = searchParams.get('verificationCode');
+    const token = searchParams.get('token');
+
+    const handleVerification = async () => {
+      try {
+        setLoading(true);
+        setMessage('Verifying your account...');
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/verification?email=${email}&token=${token}`
+        );
+        setTimeout(() => {
+          router.replace(
+            '/login?message=Account has been verified&type=success'
+          );
+        }, 5000);
+      } catch (error) {
+        console.log('error', error);
+        const errMessage = error.response?.data;
+        if (errMessage === 'User does not exist') {
+          router.replace(`/login?message=${errMessage}&type=error`);
+        } else if (errMessage === 'User is already verified') {
+          router.replace(
+            `/login?message=Your account has been already verified&type=info`
+          );
+        } else {
+          setMessage(
+            'Oops! There seems to be a problem. Please try using the verification link again.'
+          );
+          showAppMessage({
+            status: true,
+            text: 'Something went wrong.',
+            type: 'error',
+          });
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
 
     if (account === 'welcome') {
       setLoading(false);
@@ -25,9 +63,9 @@ const VerificationPage = ({ showAppMessage }) => {
       showAppMessage({
         status: true,
         text: 'Account has been created.',
-        type: 'info',
+        type: 'success',
       });
-    } else if (!email || !verificationCode) {
+    } else if (!email || !token) {
       setLoading(false);
       setMessage(
         'We are sorry but the verification link seems to be broken. Please try again.'
@@ -38,27 +76,18 @@ const VerificationPage = ({ showAppMessage }) => {
         type: 'error',
       });
     } else {
-      // Verification endpoint
-      setLoading(false);
-      setMessage(
-        'Your account has been verified. Please wait to be redirected to the login page.'
-      );
-      showAppMessage({
-        status: true,
-        text: 'Account has been verified.',
-        type: 'success',
-      });
-      setTimeout(() => {
-        router.replace('/login');
-      }, 5000);
+      handleVerification();
     }
   }, [router, searchParams, showAppMessage]);
 
   return (
     <>
-      {!loading && (
-        <Typography style={{ textAlign: 'center' }}>{message}</Typography>
-      )}
+      <Typography style={{ textAlign: 'center' }}>
+        {loading && (
+          <CircularProgress color="priamry" sx={{ mr: 2 }} size="20px" />
+        )}
+        {message}
+      </Typography>
     </>
   );
 };
