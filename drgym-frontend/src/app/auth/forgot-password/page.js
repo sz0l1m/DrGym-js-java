@@ -26,7 +26,7 @@ const ForgotPassword = ({ csrfToken, showAppMessage }) => {
     try {
       setLoading(true);
       const respone = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/forgot-1password`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/forgot-password`,
         {
           email: formData.email,
         }

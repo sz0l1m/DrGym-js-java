@@ -35,13 +35,13 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   padding: '8px 12px',
 }));
 
-export default function CustomAppBar({ showAppMessage }) {
+export default function CustomAppBar() {
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/logout`,
         {},
         {
           withCredentials: true,

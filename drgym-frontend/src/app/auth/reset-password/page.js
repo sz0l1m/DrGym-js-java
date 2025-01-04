@@ -14,32 +14,69 @@ import {
 } from '@/utils/schemas/ResetPasswordSchema';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
+import axios from 'axios';
 
 const ResetPassword = ({ showAppMessage }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
   const [showPassword, toggleShowPassword] = useState(false);
   const [showConfirmPassword, toggleShowConfirmPassword] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState('Loading...');
 
   const email = searchParams.get('email');
-  const passwordResetToken = searchParams.get('passwordResetToken');
+  const token = searchParams.get('token');
 
   useEffect(() => {
-    if (!email || !passwordResetToken) {
+    if (!email || !token) {
       setMessage(
-        'We are sorry but the reset password link seems to be broken. Please try again.'
+        'We are sorry but the reset password link seems to be broken. Please try using the link again.'
       );
       showAppMessage({
         status: true,
-        text: 'Wrong verification URL.',
+        text: 'Wrong reset password URL.',
         type: 'error',
       });
     } else {
       setMessage('');
     }
-  }, [email, passwordResetToken, showAppMessage]);
+  }, [router, email, token, showAppMessage]);
+
+  const handleResetPassword = async (formData, form) => {
+    try {
+      setLoading(true);
+      setMessage('');
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/reset-password`,
+        {
+          email,
+          token,
+          newPassword: formData.password,
+        }
+      );
+      router.push(
+        '/login?message=Your password has been successfully changed.&type=success'
+      );
+    } catch (error) {
+      const errMessage = error.response?.data;
+      if (typeof errMessage === 'string') {
+        showAppMessage({
+          status: true,
+          text: 'Invalid token. Please try again or request a new link.',
+          type: 'error',
+        });
+      } else {
+        showAppMessage({
+          status: true,
+          text: 'Something went wrong.',
+          type: 'error',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleTogglePassword = () => {
     toggleShowPassword(!showPassword);
@@ -47,53 +84,6 @@ const ResetPassword = ({ showAppMessage }) => {
 
   const handleToggleConfirmPassword = () => {
     toggleShowConfirmPassword(!showConfirmPassword);
-  };
-
-  const handleResetPassword = async (formData, form) => {
-    try {
-      setLoading(true);
-
-      //   Unnecessary check (maybe)
-      if (!email || !passwordResetToken) {
-        showAppMessage({
-          status: true,
-          text: 'Invalid reset password link.',
-          type: 'error',
-        });
-        setLoading(false);
-        return;
-      }
-
-      // Reset password endpoint
-      if (formData.password === 'Password1!') {
-        showAppMessage({
-          status: true,
-          text: 'Your password has been successfully changed. Redirecting...',
-          type: 'success',
-        });
-        setLoading(false);
-        setTimeout(() => {
-          router.push('/login');
-        }, 4000);
-      } else {
-        form.resetForm();
-        showAppMessage({
-          status: true,
-          text: 'An error occurred. Please try again later.',
-          type: 'error',
-        });
-        setLoading(false);
-      }
-    } catch (error) {
-      form.resetForm();
-      console.error('Error during password reset:', error);
-      showAppMessage({
-        status: true,
-        text: 'Something went wrong. Please try again later.',
-        type: 'error',
-      });
-      setLoading(false);
-    }
   };
 
   return (
@@ -133,8 +123,6 @@ const ResetPassword = ({ showAppMessage }) => {
                 handleSubmit,
                 touched,
                 values,
-                setFieldError,
-                setFieldValue,
               }) => (
                 <Form>
                   <Grid container direction="column" gap={2}>
