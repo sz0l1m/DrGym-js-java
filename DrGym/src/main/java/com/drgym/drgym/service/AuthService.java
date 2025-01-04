@@ -69,7 +69,7 @@ public class AuthService {
     }
 
     public ResponseEntity<?> logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("token", null);
+        Cookie cookie = new Cookie("jwt", null);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
@@ -98,7 +98,10 @@ public class AuthService {
 
     public ResponseEntity<?> register(@RequestBody UserRegistrationRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            return ResponseEntity.status(400).body("User already exists");
+            return ResponseEntity.status(400).body("E-mail is already taken");
+        }
+        if (userRepository.existsByUsername(request.getUsername())) {
+            return ResponseEntity.status(400).body("Username is already taken");
         }
         User user = new User(request.getUsername(), request.getName(), request.getSurname(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getWeight(), request.getHeight());
         userRepository.save(user);
