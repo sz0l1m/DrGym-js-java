@@ -47,7 +47,6 @@ export default function CustomAppBar({ showAppMessage }) {
           withCredentials: true,
         }
       );
-      console.log('res', res);
       signOut({
         callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/login?message=You have been signed out&type=info`,
       });

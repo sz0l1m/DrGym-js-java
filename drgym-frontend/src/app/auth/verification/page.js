@@ -32,7 +32,6 @@ const VerificationPage = ({ showAppMessage }) => {
           );
         }, 5000);
       } catch (error) {
-        console.log('error', error);
         const errMessage = error.response?.data;
         if (errMessage === 'User does not exist') {
           router.replace(`/login?message=${errMessage}&type=error`);

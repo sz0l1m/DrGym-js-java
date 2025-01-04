@@ -14,6 +14,7 @@ import {
 } from '@/utils/schemas/ForgotPasswordSchema';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
+import axios from 'axios';
 
 const ForgotPassword = ({ csrfToken, showAppMessage }) => {
   const [loading, setLoading] = useState(false);
@@ -23,26 +24,38 @@ const ForgotPassword = ({ csrfToken, showAppMessage }) => {
 
   const handleForgotPassword = async (formData, form) => {
     try {
-      // Forgot password endpoint
-      if (formData.email === 'drgym@admin') {
+      setLoading(true);
+      const respone = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/forgot-1password`,
+        {
+          email: formData.email,
+        }
+      );
+      showAppMessage({
+        status: true,
+        text: 'Request successfully sent.',
+        type: 'success',
+      });
+      setMessage(
+        'We have sent you a link. Please check your inbox and follow the instructions.'
+      );
+    } catch (error) {
+      if (error.response?.data == 'User does not exist') {
+        form.setFieldError('email', 'no account found');
         showAppMessage({
           status: true,
-          text: 'Request successfully sent.',
-          type: 'success',
+          text: 'There is no account associated with this e-mail.',
+          type: 'error',
         });
-        setMessage(
-          'We have sent you a link. Please check your inbox and follow the instructions.'
-        );
       } else {
-        form.resetForm();
         showAppMessage({
           status: true,
-          text: 'User not found (example error).',
+          text: 'Something went wrong.',
           type: 'error',
         });
       }
-    } catch (error) {
-      console.error('forgot password error', error);
+    } finally {
+      setLoading(false);
     }
   };
 
