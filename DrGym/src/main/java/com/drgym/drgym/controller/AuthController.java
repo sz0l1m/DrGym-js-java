@@ -27,7 +27,7 @@ public class AuthController {
         return authService.logout(response);
     }
 
-    @GetMapping("/verification")
+    @PostMapping("/verification")
     public ResponseEntity<?> verify(@RequestParam String email, @RequestParam String token) {
         return authService.verify(email, token);
     }

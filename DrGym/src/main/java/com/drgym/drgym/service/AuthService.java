@@ -108,16 +108,12 @@ public class AuthService {
         String verificationToken = UUID.randomUUID().toString();
         Token token = new Token(request.getEmail(), verificationToken);
         tokenRepository.save(token);
-        String link = "http://localhost:8080/auth/verification?email=" + request.getEmail() + "&token=" + verificationToken;
+        String link = "http://localhost:3000/auth/verification?email=" + request.getEmail() + "&token=" + verificationToken;
         emailService.sendVerificationEmail(request.getEmail(), link);
         return ResponseEntity.ok("User registered successfully");
     }
 
     public ResponseEntity<?> verify(String email, String token) {
-        Token verificationToken = tokenRepository.findByEmailAndVerificationToken(email, token);
-        if (verificationToken == null) {
-            return ResponseEntity.status(400).body("Invalid token");
-        }
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (!userOptional.isPresent()) {
             return ResponseEntity.status(400).body("User does not exist");
@@ -125,6 +121,10 @@ public class AuthService {
         User user = userOptional.get();
         if (user.isVerified()) {
             return ResponseEntity.status(400).body("User is already verified");
+        }
+        Token verificationToken = tokenRepository.findByEmailAndVerificationToken(email, token);
+        if (verificationToken == null) {
+            return ResponseEntity.status(400).body("Invalid token");
         }
         user.setVerified(true);
         userRepository.save(user);
@@ -143,7 +143,7 @@ public class AuthService {
         token.setResetToken(resetToken);
         token.setResetTokenExpiry(new Date(System.currentTimeMillis() + 300000));
         tokenRepository.save(token);
-        String link = "http://localhost:8080/auth/reset-password?email=" + email + "&token=" + resetToken;
+        String link = "http://localhost:3000/auth/reset-password?email=" + email + "&token=" + resetToken;
         emailService.sendPasswordResetEmail(email, link);
         return ResponseEntity.ok("Reset password email sent");
     }
@@ -163,6 +163,6 @@ public class AuthService {
         resetToken.setResetToken(null);
         resetToken.setResetTokenExpiry(null);
         tokenRepository.save(resetToken);
-        return ResponseEntity.ok("Password reset successfully");
+        return ResponseEntity.ok("Password reset successful");
     }
 }
