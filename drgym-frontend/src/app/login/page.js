@@ -66,7 +66,7 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
     try {
       setLoading(true);
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/login`,
         {
           identifier:
             loginType === 'username' ? formData.username : formData.email,

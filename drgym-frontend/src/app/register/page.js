@@ -15,6 +15,8 @@ import Link from 'next/link';
 import { CircularProgress } from '@mui/material';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
+import axios from 'axios';
+import { isString } from '@/utils/functions';
 
 const Root = styled('div')(({ theme }) => ({
   width: '100%',
@@ -44,19 +46,40 @@ const Register = ({ csrfToken = null, showAppMessage }) => {
   };
 
   const handleRegister = async (formData, form) => {
-    setLoading(true);
-    // Register endpoint
-    if (formData.email === 'drgym@admin') {
-      setLoading(false);
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/register`,
+        {
+          name: formData.firstName,
+          surname: formData.lastName,
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        }
+      );
       router.replace('/auth/verification?account=welcome');
-    } else {
-      setLoading(false);
-      form.resetForm();
+    } catch (error) {
+      const message = error.response?.data;
+      if (message === 'E-mail is already taken') {
+        form.setFieldError('email', 'already taken');
+      } else if (message === 'Username is already taken') {
+        form.setFieldError('username', 'already taken');
+      } else {
+        showAppMessage({
+          status: true,
+          text: 'Something went wrong. Please try again later.',
+          type: 'error',
+        });
+        return;
+      }
       showAppMessage({
         status: true,
-        text: 'User already exists (example error).',
+        text: message,
         type: 'error',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
