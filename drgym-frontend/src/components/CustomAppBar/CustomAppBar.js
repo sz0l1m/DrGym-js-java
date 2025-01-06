@@ -18,6 +18,7 @@ import red from '@mui/material/colors/red';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -36,12 +37,14 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 export default function CustomAppBar() {
+  const { data: session, status } = useSession();
+  const username = session?.user?.username;
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/logout`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/l1ogout`,
         {},
         {
           withCredentials: true,
@@ -52,7 +55,7 @@ export default function CustomAppBar() {
       });
     } catch (error) {
       router.push(
-        '/user/posts?message=Failed to sign out. Please try again.&type=error'
+        `/user/${username}/posts?message=Failed to sign out. Please try again.&type=error`
       );
     }
   };
@@ -76,9 +79,13 @@ export default function CustomAppBar() {
             <DrGymLogo />
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Link href="/user/posts">
+              <Link href={`/user/${username}/posts`}>
                 <Button
-                  variant={usePathname() == '/user/posts' ? 'outlined' : 'text'}
+                  variant={
+                    usePathname() == `/user/${username}/posts`
+                      ? 'outlined'
+                      : 'text'
+                  }
                   color="secondary"
                   size="small"
                   startIcon={<EmojiPeopleIcon />}
@@ -87,10 +94,12 @@ export default function CustomAppBar() {
                 </Button>
               </Link>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Link href="/user/workouts">
+              <Link href={`/user/${username}/workouts`}>
                 <Button
                   variant={
-                    usePathname() == '/user/workouts' ? 'outlined' : 'text'
+                    usePathname() == `/user/${username}/workouts`
+                      ? 'outlined'
+                      : 'text'
                   }
                   color="secondary"
                   size="small"
@@ -100,9 +109,13 @@ export default function CustomAppBar() {
                 </Button>
               </Link>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Link href="/user/stats">
+              <Link href={`/user/${username}/stats`}>
                 <Button
-                  variant={usePathname() == '/user/stats' ? 'outlined' : 'text'}
+                  variant={
+                    usePathname() == `/user/${username}/stats`
+                      ? 'outlined'
+                      : 'text'
+                  }
                   color="secondary"
                   size="small"
                   startIcon={<BarChartIcon />}
@@ -111,10 +124,12 @@ export default function CustomAppBar() {
                 </Button>
               </Link>
               <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Link href="/user/friends">
+              <Link href={`/user/${username}/friends`}>
                 <Button
                   variant={
-                    usePathname() == '/user/friends' ? 'outlined' : 'text'
+                    usePathname() == `/user/${username}/friends`
+                      ? 'outlined'
+                      : 'text'
                   }
                   color="secondary"
                   size="small"
@@ -132,7 +147,7 @@ export default function CustomAppBar() {
               alignItems: 'center',
             }}
           >
-            <Link href="/user/account">
+            <Link href={`/user/${username}/account`}>
               <IconButton aria-label="account">
                 <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
                   S
@@ -159,7 +174,7 @@ export default function CustomAppBar() {
               </Button>
             </Link>
           </Box>
-          <CustomDrawer handleLogout={handleLogout} />
+          <CustomDrawer handleLogout={handleLogout} username={username} />
         </StyledToolbar>
       </Container>
     </AppBar>

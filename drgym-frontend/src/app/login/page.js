@@ -86,7 +86,7 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
       await signIn('credentials', {
         username: username,
         avatar: avatar || null,
-        callbackUrl: '/user/posts?message=Logged in successfully&type=success',
+        callbackUrl: `/user/${username}/posts?message=Logged in successfully&type=success`,
         redirect: true,
       });
     } catch (err) {

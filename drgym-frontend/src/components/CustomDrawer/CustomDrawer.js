@@ -16,7 +16,7 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import DrGymLogo from '@/components/DrGymLogo';
 import Link from 'next/link';
 
-export default function CustomDrawer({ handleLogout }) {
+export default function CustomDrawer({ handleLogout, username }) {
   const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -52,7 +52,7 @@ export default function CustomDrawer({ handleLogout }) {
             </IconButton>
           </Box>
           <Divider sx={{ my: 2 }} />
-          <Link href="/user/posts">
+          <Link href={`/user/${username}/posts`}>
             <MenuItem onClick={toggleDrawer(false)}>
               <ListItemIcon>
                 <EmojiPeopleIcon fontSize="small" />
@@ -60,7 +60,7 @@ export default function CustomDrawer({ handleLogout }) {
               <ListItemText>Posts</ListItemText>
             </MenuItem>
           </Link>
-          <Link href="/user/workouts">
+          <Link href={`/user/${username}/workouts`}>
             <MenuItem onClick={toggleDrawer(false)}>
               <ListItemIcon>
                 <FitnessCenterIcon fontSize="small" />
@@ -68,7 +68,7 @@ export default function CustomDrawer({ handleLogout }) {
               <ListItemText>Workouts</ListItemText>
             </MenuItem>
           </Link>
-          <Link href="/user/stats">
+          <Link href={`/user/${username}/stats`}>
             <MenuItem onClick={toggleDrawer(false)}>
               <ListItemIcon>
                 <BarChartIcon fontSize="small" />
@@ -76,7 +76,7 @@ export default function CustomDrawer({ handleLogout }) {
               <ListItemText>Statistics</ListItemText>
             </MenuItem>
           </Link>
-          <Link href="/user/friends">
+          <Link href={`/user/${username}/friends`}>
             <MenuItem onClick={toggleDrawer(false)} sx={{ mb: 2 }}>
               <ListItemIcon>
                 <GroupIcon fontSize="small" />

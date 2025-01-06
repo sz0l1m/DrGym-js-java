@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { withSnackbar } from '@/utils/snackbarProvider';
@@ -9,10 +9,14 @@ import Post from '@/components/Post';
 import axios from 'axios';
 import style from './posts.module.css';
 import SkeletonCard from '@/components/SkeletonCard';
+import { useSession } from 'next-auth/react';
 
 const Posts = ({ showAppMessage }) => {
+  const { data: session, status } = useSession();
+  const username = session?.user?.username;
   const router = useRouter();
   const searchParams = useSearchParams();
+  const pathname = usePathname();
   const [workoutsData, setWorkoutsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -47,14 +51,14 @@ const Posts = ({ showAppMessage }) => {
     const message = searchParams.get('message');
     const type = searchParams.get('type');
     if (message) {
-      router.replace('/user/posts', undefined, { shallow: true });
+      router.replace(`${pathname}`, undefined, { shallow: true });
       showAppMessage({
         status: true,
         text: message,
         type: type || 'info',
       });
     }
-  }, [router, searchParams, showAppMessage]);
+  }, [router, pathname, searchParams, showAppMessage]);
 
   if (error) return <Typography>Error: {error}</Typography>;
   return (
