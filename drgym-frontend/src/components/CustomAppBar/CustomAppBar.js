@@ -40,11 +40,12 @@ export default function CustomAppBar() {
   const { data: session, status } = useSession();
   const username = session?.user?.username;
   const router = useRouter();
+  const pathname = usePathname();
 
   const handleLogout = async () => {
     try {
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/l1ogout`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/logout`,
         {},
         {
           withCredentials: true,
@@ -77,102 +78,111 @@ export default function CustomAppBar() {
             sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}
           >
             <DrGymLogo />
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Link href={`/user/${username}/posts`}>
-                <Button
-                  variant={
-                    usePathname() == `/user/${username}/posts`
-                      ? 'outlined'
-                      : 'text'
-                  }
-                  color="secondary"
-                  size="small"
-                  startIcon={<EmojiPeopleIcon />}
-                >
-                  Posts
-                </Button>
-              </Link>
-              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Link href={`/user/${username}/workouts`}>
-                <Button
-                  variant={
-                    usePathname() == `/user/${username}/workouts`
-                      ? 'outlined'
-                      : 'text'
-                  }
-                  color="secondary"
-                  size="small"
-                  startIcon={<FitnessCenterIcon />}
-                >
-                  Workouts
-                </Button>
-              </Link>
-              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Link href={`/user/${username}/stats`}>
-                <Button
-                  variant={
-                    usePathname() == `/user/${username}/stats`
-                      ? 'outlined'
-                      : 'text'
-                  }
-                  color="secondary"
-                  size="small"
-                  startIcon={<BarChartIcon />}
-                >
-                  Statistics
-                </Button>
-              </Link>
-              <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-              <Link href={`/user/${username}/friends`}>
-                <Button
-                  variant={
-                    usePathname() == `/user/${username}/friends`
-                      ? 'outlined'
-                      : 'text'
-                  }
-                  color="secondary"
-                  size="small"
-                  startIcon={<GroupIcon />}
-                >
-                  Friends
-                </Button>
-              </Link>
-            </Box>
+            {status === 'authenticated' && (
+              <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+                <Link href={`/user/${username}/posts`}>
+                  <Button
+                    variant={
+                      pathname == `/user/${username}/posts`
+                        ? 'outlined'
+                        : 'text'
+                    }
+                    color="secondary"
+                    size="small"
+                    startIcon={<EmojiPeopleIcon />}
+                  >
+                    Posts
+                  </Button>
+                </Link>
+                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+                <Link href={`/user/${username}/workouts`}>
+                  <Button
+                    variant={
+                      pathname == `/user/${username}/workouts`
+                        ? 'outlined'
+                        : 'text'
+                    }
+                    color="secondary"
+                    size="small"
+                    startIcon={<FitnessCenterIcon />}
+                  >
+                    Workouts
+                  </Button>
+                </Link>
+                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+                <Link href={`/user/${username}/stats`}>
+                  <Button
+                    variant={
+                      pathname == `/user/${username}/stats`
+                        ? 'outlined'
+                        : 'text'
+                    }
+                    color="secondary"
+                    size="small"
+                    startIcon={<BarChartIcon />}
+                  >
+                    Statistics
+                  </Button>
+                </Link>
+                <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
+                <Link href={`/user/${username}/friends`}>
+                  <Button
+                    variant={
+                      pathname == `/user/${username}/friends`
+                        ? 'outlined'
+                        : 'text'
+                    }
+                    color="secondary"
+                    size="small"
+                    startIcon={<GroupIcon />}
+                  >
+                    Friends
+                  </Button>
+                </Link>
+              </Box>
+            )}
           </Box>
           <Box
             sx={{
+              mr: 2,
               display: { xs: 'none', md: 'flex' },
               gap: 1,
               alignItems: 'center',
             }}
           >
-            <Link href={`/user/${username}/account`}>
-              <IconButton aria-label="account">
-                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                  S
-                </Avatar>
-              </IconButton>
-            </Link>
-            <Button
-              onClick={handleLogout}
-              color="primary"
-              variant="outlined"
-              size="small"
-            >
-              Sign out
-            </Button>
-            <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
-            <Link href="/login">
-              <Button color="primary" variant="text" size="small">
-                Sign in
-              </Button>
-            </Link>
-            <Link href="/register">
-              <Button color="primary" variant="contained" size="small">
-                Sign up
-              </Button>
-            </Link>
+            {status === 'authenticated' ? (
+              <>
+                <Link href={`/user/${username}/account`}>
+                  <IconButton aria-label="account">
+                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                      S
+                    </Avatar>
+                  </IconButton>
+                </Link>
+                <Button
+                  onClick={handleLogout}
+                  color="primary"
+                  variant="outlined"
+                  size="small"
+                >
+                  Sign out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Link href="/login">
+                  <Button color="primary" variant="text" size="small">
+                    Sign in
+                  </Button>
+                </Link>
+                <Link href="/register">
+                  <Button color="primary" variant="contained" size="small">
+                    Sign up
+                  </Button>
+                </Link>
+              </>
+            )}
           </Box>
           <CustomDrawer handleLogout={handleLogout} username={username} />
         </StyledToolbar>
