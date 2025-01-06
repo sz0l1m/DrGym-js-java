@@ -16,7 +16,7 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import DrGymLogo from '@/components/DrGymLogo';
 import Link from 'next/link';
 
-export default function CustomDrawer({ handleLogout, username }) {
+export default function CustomDrawer({ handleLogout, username, status }) {
   const [open, setOpen] = useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -52,64 +52,70 @@ export default function CustomDrawer({ handleLogout, username }) {
             </IconButton>
           </Box>
           <Divider sx={{ my: 2 }} />
-          <Link href={`/user/${username}/posts`}>
-            <MenuItem onClick={toggleDrawer(false)}>
-              <ListItemIcon>
-                <EmojiPeopleIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Posts</ListItemText>
-            </MenuItem>
-          </Link>
-          <Link href={`/user/${username}/workouts`}>
-            <MenuItem onClick={toggleDrawer(false)}>
-              <ListItemIcon>
-                <FitnessCenterIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Workouts</ListItemText>
-            </MenuItem>
-          </Link>
-          <Link href={`/user/${username}/stats`}>
-            <MenuItem onClick={toggleDrawer(false)}>
-              <ListItemIcon>
-                <BarChartIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Statistics</ListItemText>
-            </MenuItem>
-          </Link>
-          <Link href={`/user/${username}/friends`}>
-            <MenuItem onClick={toggleDrawer(false)} sx={{ mb: 2 }}>
-              <ListItemIcon>
-                <GroupIcon fontSize="small" />
-              </ListItemIcon>
-              <ListItemText>Friends</ListItemText>
-            </MenuItem>
-          </Link>
-          <Divider />
-          <Link href="/register">
-            <MenuItem onClick={toggleDrawer(false)} sx={{ mt: 2 }}>
-              <Button color="primary" variant="contained" fullWidth>
-                Sign up
-              </Button>
-            </MenuItem>
-          </Link>
-          <Link href="/login">
-            <MenuItem onClick={toggleDrawer(false)}>
-              <Button color="primary" variant="outlined" fullWidth>
-                Sign in
-              </Button>
-            </MenuItem>
-          </Link>
-          <Divider />
-          <MenuItem
-            onClick={() => {
-              handleLogout();
-              toggleDrawer(false);
-            }}
-          >
-            <Button color="primary" variant="outlined" fullWidth>
-              Sign out
-            </Button>
-          </MenuItem>
+          {status === 'authenticated' ? (
+            <>
+              <Link href={`/user/${username}/posts`}>
+                <MenuItem onClick={toggleDrawer(false)}>
+                  <ListItemIcon>
+                    <EmojiPeopleIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Posts</ListItemText>
+                </MenuItem>
+              </Link>
+              <Link href={`/user/${username}/workouts`}>
+                <MenuItem onClick={toggleDrawer(false)}>
+                  <ListItemIcon>
+                    <FitnessCenterIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Workouts</ListItemText>
+                </MenuItem>
+              </Link>
+              <Link href={`/user/${username}/stats`}>
+                <MenuItem onClick={toggleDrawer(false)}>
+                  <ListItemIcon>
+                    <BarChartIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Statistics</ListItemText>
+                </MenuItem>
+              </Link>
+              <Link href={`/user/${username}/friends`}>
+                <MenuItem onClick={toggleDrawer(false)} sx={{ mb: 2 }}>
+                  <ListItemIcon>
+                    <GroupIcon fontSize="small" />
+                  </ListItemIcon>
+                  <ListItemText>Friends</ListItemText>
+                </MenuItem>
+              </Link>
+              <Divider sx={{ mb: 2 }} />
+              <MenuItem
+                onClick={() => {
+                  handleLogout();
+                  toggleDrawer(false);
+                }}
+              >
+                <Button color="primary" variant="outlined" fullWidth>
+                  Sign out
+                </Button>
+              </MenuItem>
+            </>
+          ) : (
+            <>
+              <Link href="/register">
+                <MenuItem onClick={toggleDrawer(false)} sx={{ mt: 2 }}>
+                  <Button color="primary" variant="contained" fullWidth>
+                    Sign up
+                  </Button>
+                </MenuItem>
+              </Link>
+              <Link href="/login">
+                <MenuItem onClick={toggleDrawer(false)}>
+                  <Button color="primary" variant="outlined" fullWidth>
+                    Sign in
+                  </Button>
+                </MenuItem>
+              </Link>
+            </>
+          )}
         </Box>
       </Drawer>
     </Box>

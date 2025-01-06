@@ -184,7 +184,11 @@ export default function CustomAppBar() {
               </>
             )}
           </Box>
-          <CustomDrawer handleLogout={handleLogout} username={username} />
+          <CustomDrawer
+            handleLogout={handleLogout}
+            username={username}
+            status={status}
+          />
         </StyledToolbar>
       </Container>
     </AppBar>
