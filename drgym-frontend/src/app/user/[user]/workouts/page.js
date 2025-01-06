@@ -17,30 +17,35 @@ const Workouts = ({ showAppMessage }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { data: session, status } = useSession();
-  console.log('session', session, status);
+  const username = session?.user?.username;
 
   useEffect(() => {
     const fetchWorkouts = async () => {
       try {
         setLoading(true);
         const response = await axios.get(
+          // `${process.env.NEXT_PUBLIC_API_URL}/api/users/${username}/workouts`
           `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
         );
         setWorkoutsData(response.data);
       } catch (err) {
-        setError(err.message);
-        showAppMessage({
-          status: true,
-          text: 'Error fetching workouts',
-          type: 'error',
-        });
+        if (err.response?.status === 404) {
+          setWorkoutsData([]);
+        } else {
+          setError(err.message);
+          showAppMessage({
+            status: true,
+            text: 'Error fetching workouts',
+            type: 'error',
+          });
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchWorkouts();
-  }, [showAppMessage]);
+  }, [username, showAppMessage]);
 
   const handleDeleteWorkout = (workoutId) => {
     setWorkoutsData((prev) =>
@@ -64,18 +69,24 @@ const Workouts = ({ showAppMessage }) => {
         </Button>
       </Box>
       <Box className={style.workoutsWrapper}>
-        {loading
-          ? Array.from({ length: 3 }).map((_, index) => (
-              <SkeletonCard key={index} />
-            ))
-          : workoutsData.map((workout) => (
-              <WorkoutCard
-                key={workout.workoutId}
-                workout={workout}
-                onDelete={handleDeleteWorkout}
-                showAppMessage={showAppMessage}
-              />
-            ))}
+        {loading ? (
+          Array.from({ length: 3 }).map((_, index) => (
+            <SkeletonCard key={index} />
+          ))
+        ) : workoutsData.length === 0 ? (
+          <Typography variant="body1">
+            You have not added any workouts yet.
+          </Typography>
+        ) : (
+          workoutsData.map((workout) => (
+            <WorkoutCard
+              key={workout.workoutId}
+              workout={workout}
+              onDelete={handleDeleteWorkout}
+              showAppMessage={showAppMessage}
+            />
+          ))
+        )}
       </Box>
       <WorkoutForm
         dialogTitle="Add new workout"
