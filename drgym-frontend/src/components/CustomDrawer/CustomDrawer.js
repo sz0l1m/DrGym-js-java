@@ -15,6 +15,9 @@ import GroupIcon from '@mui/icons-material/Group';
 import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import DrGymLogo from '@/components/DrGymLogo';
 import Link from 'next/link';
+import Avatar from '@mui/material/Avatar';
+import red from '@mui/material/colors/red';
+import { Typography } from '@mui/material';
 
 export default function CustomDrawer({ handleLogout, username, status }) {
   const [open, setOpen] = useState(false);
@@ -46,7 +49,25 @@ export default function CustomDrawer({ handleLogout, username, status }) {
               alignItems: 'baseline',
             }}
           >
-            <DrGymLogo />
+            {status === 'authenticated' ? (
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Link href={`/user/${username}/account`}>
+                  <IconButton
+                    onClick={toggleDrawer(false)}
+                    aria-label="account"
+                  >
+                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                      S
+                    </Avatar>
+                  </IconButton>
+                </Link>
+                <Typography sx={{ mt: '12px' }} variant="h6" component="div">
+                  {username}
+                </Typography>
+              </Box>
+            ) : (
+              <DrGymLogo />
+            )}
             <IconButton onClick={toggleDrawer(false)}>
               <CloseRoundedIcon />
             </IconButton>
