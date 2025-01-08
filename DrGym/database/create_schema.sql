@@ -8,9 +8,10 @@ create table USERS
         unique,
     PASSWORD VARCHAR2(100) not null,
     WEIGHT   NUMBER(5, 2),
-    HEIGHT   NUMBER(5, 2)
+    HEIGHT   NUMBER(5, 2),
+    VERIFIED NUMBER(1) default 0
 )
-/
+    /
 
 create table MUSCLES
 (
@@ -18,7 +19,7 @@ create table MUSCLES
         primary key,
     MUSCLE_NAME VARCHAR2(40) not null
 )
-/
+    /
 
 create table EXERCISES
 (
@@ -28,7 +29,7 @@ create table EXERCISES
     KCAL_BURNED NUMBER(4) default 0,
     NAME        VARCHAR2(40) not null
 )
-/
+    /
 
 create table ACTIVITIES
 (
@@ -41,7 +42,7 @@ create table ACTIVITIES
     WEIGHT      NUMBER(4) default 0,
     DURATION    DATE      default TO_DATE('00:00:00', 'HH24:MI:SS')
 )
-/
+    /
 
 create table EXERCISES_MUSCLES
 (
@@ -51,7 +52,7 @@ create table EXERCISES_MUSCLES
         references MUSCLES,
     primary key (EXERCISE_ID, MUSCLE_ID)
 )
-/
+    /
 
 create table WORKOUTS
 (
@@ -65,7 +66,7 @@ create table WORKOUTS
     DESCRIPTION      VARCHAR2(50 char),
     CREATED_DATETIME TIMESTAMP(6) default CURRENT_TIMESTAMP
 )
-/
+    /
 
 create table WORKOUT_ACTIVITIES
 (
@@ -79,6 +80,50 @@ create table WORKOUT_ACTIVITIES
         constraint WORKOUT_ACTIVITIES_PK
             primary key
 )
-/
+    /
 
+create table TOKEN
+(
+    EMAIL              VARCHAR2(255) not null
+        primary key,
+    VERIFICATION_TOKEN VARCHAR2(255),
+    RESET_TOKEN        VARCHAR2(255),
+    RESET_EXPIRY       TIMESTAMP(6)
+)
+    /
+
+create table FRIENDSHIPS
+(
+    ID               NUMBER(4)    not null
+        primary key,
+    FRIEND1_USERNAME VARCHAR2(50) not null
+        constraint FRIEND1_FK
+            references USERS,
+    FRIEND2_USERNAME VARCHAR2(50) not null
+        constraint FRIEND2_FK
+            references USERS,
+    CREATED_AT       TIMESTAMP(6) default CURRENT_TIMESTAMP,
+    constraint FRIENDSHIP_UNIQUE_PAIR1
+        unique (FRIEND1_USERNAME, FRIEND2_USERNAME)
+)
+    /
+
+alter table FRIENDSHIPS
+    add constraint FRIENDSHIP_UNIQUE_PAIR2
+        unique (FRIEND1_USERNAME, FRIEND2_USERNAME)
+    /
+
+create table FRIENDSHIP_INVITATIONS
+(
+    FRIENDSHIP_INVITATION_ID NUMBER(4)    not null
+        primary key,
+    WHO_SEND_USERNAME        VARCHAR2(50) not null
+        constraint WHO_SEND_FK
+            references USERS,
+    WHO_RECEIVE_USERNAME     VARCHAR2(50) not null
+        constraint WHO_RECEIVE_FK
+            references USERS,
+    SEND_TIME                TIMESTAMP(6) default CURRENT_TIMESTAMP
+)
+    /
 
