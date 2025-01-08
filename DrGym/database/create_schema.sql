@@ -1,3 +1,6 @@
+create sequence TOKEN_SEQUENCE
+    /
+
 create table USERS
 (
     USERNAME VARCHAR2(50)  not null
@@ -113,6 +116,17 @@ alter table FRIENDSHIPS
         unique (FRIEND1_USERNAME, FRIEND2_USERNAME)
     /
 
+create trigger TG_DIFFERENT_USERS_CHECK
+    before insert
+    on FRIENDSHIPS
+    for each row
+BEGIN
+    IF :NEW.FRIEND1_USERNAME = :NEW.FRIEND2_USERNAME THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Friendship cannot be created with only 1 user!');
+END IF;
+END;
+/
+
 create table FRIENDSHIP_INVITATIONS
 (
     FRIENDSHIP_INVITATION_ID NUMBER(8)    not null
@@ -166,4 +180,35 @@ create table POST_REACTIONS
         references USERS
 )
     /
+
+create FUNCTION ARE_FRIENDS (
+    user1 IN VARCHAR2,
+    user2 IN VARCHAR2
+) RETURN NUMBER IS
+         has_friends NUMBER;
+BEGIN
+SELECT COUNT(*)
+INTO has_friends
+FROM FRIENDSHIPS
+WHERE (FRIEND1_USERNAME = user1 AND FRIEND2_USERNAME = user2)
+   OR (FRIEND1_USERNAME = user2 AND FRIEND2_USERNAME = user1);
+
+RETURN has_friends;
+END;
+/
+
+create FUNCTION GET_FRIENDS_COUNT (
+    username IN VARCHAR2
+) RETURN NUMBER IS
+         friend_count NUMBER;
+BEGIN
+SELECT COUNT(*)
+INTO friend_count
+FROM FRIENDSHIPS
+WHERE FRIEND1_USERNAME = username
+   OR FRIEND2_USERNAME = username;
+
+RETURN friend_count;
+END;
+/
 
