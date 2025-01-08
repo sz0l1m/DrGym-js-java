@@ -127,6 +127,20 @@ END IF;
 END;
 /
 
+create trigger TG_DELETE_FRIENDSHIP_INVITATION
+    after insert
+    on FRIENDSHIPS
+    for each row
+BEGIN
+    DELETE FROM FRIENDSHIP_INVITATIONS
+    WHERE WHO_SEND_USERNAME = :NEW.FRIEND1_USERNAME
+      AND WHO_RECEIVE_USERNAME = :NEW.FRIEND2_USERNAME;
+    DELETE FROM FRIENDSHIP_INVITATIONS
+    WHERE WHO_SEND_USERNAME = :NEW.FRIEND2_USERNAME
+      AND WHO_RECEIVE_USERNAME = :NEW.FRIEND1_USERNAME;
+END;
+/
+
 create table FRIENDSHIP_INVITATIONS
 (
     FRIENDSHIP_INVITATION_ID NUMBER(8)    not null
@@ -150,19 +164,39 @@ create table POSTS
             references USERS,
     POST_DATE       TIMESTAMP(6) default CURRENT_TIMESTAMP,
     TITLE           VARCHAR2(100) not null,
-    CONTENT         CLOB,
     WORKOUT_ID      NUMBER(8)
         constraint WORKOUT_FK
-            references WORKOUTS
+            references WORKOUTS,
+    CONTENT         VARCHAR2(200)
 )
     /
+
+create trigger TG_DELETE_REACTIONS
+    after delete
+    on POSTS
+    for each row
+BEGIN
+    DELETE FROM POST_REACTIONS
+    WHERE POST_ID = :OLD.POST_ID;
+END;
+/
+
+create trigger TG_DELETE_COMMENTS
+    after delete
+    on POSTS
+    for each row
+BEGIN
+    DELETE FROM POST_COMMENTS
+    WHERE POST_ID = :OLD.POST_ID;
+END;
+/
 
 create table POST_COMMENTS
 (
     POST_COMMENT_ID   NUMBER(8)    not null
         primary key,
     POST_ID           NUMBER(8)    not null
-        references POSTS,
+        references POSTS,Ftg
     AUTHOR_USERNAME   VARCHAR2(50) not null
         references USERS,
     CONTENT           CLOB,
