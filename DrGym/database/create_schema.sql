@@ -127,3 +127,28 @@ create table FRIENDSHIP_INVITATIONS
 )
     /
 
+create table POSTS
+(
+    POST_ID    NUMBER(4)     not null
+        primary key,
+    AUTHOR_ID  VARCHAR2(50)  not null
+        constraint AUTHOR_FK
+            references USERS,
+    POST_DATE  TIMESTAMP(6) default CURRENT_TIMESTAMP,
+    TITLE      VARCHAR2(100) not null,
+    CONTENT    CLOB,
+    WORKOUT_ID NUMBER(4)
+        constraint WORKOUT_FK
+            references WORKOUTS
+)
+    /
+
+create table POST_USERS
+(
+    POST_ID  NUMBER(4)    not null
+        references POSTS,
+    USERNAME VARCHAR2(50) not null
+        references USERS,
+    primary key (POST_ID, USERNAME)
+)
+    /
