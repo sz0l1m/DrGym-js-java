@@ -2,14 +2,30 @@
 package com.drgym.drgym.model;
 
 
-import java.util.ArrayList;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Table(name = "exercises")
 public class Exercise {
+
+    @Id
+    @Column (name = "exercise_id")
     private Long id;
+
+    @Column (name = "type")
     private char type;
+
+    @Column (name = "kcal_burned")
     private Long kcal_burned;
+
+    @Column (name = "name")
     private String name;
-    private ArrayList<String> musclesWorked;
+
+    @ElementCollection
+    private List<String> musclesWorked;
 
     public Exercise() {
     }

@@ -28,6 +28,9 @@ public class User {
     @Column(name = "height")
     private Double height;
 
+    @Column(name = "verified")
+    private boolean verified;
+
     public User() {}
 
     public User(
@@ -46,6 +49,7 @@ public class User {
         this.password = password;
         this.weight = weight;
         this.height = height;
+        this.verified = false;
     }
 
     // getters
@@ -64,6 +68,8 @@ public class User {
 
     public Double getHeight() {return height;}
 
+    public boolean isVerified() { return verified; }
+
     // setters
 
     public void setUsername(String newUsername) {this.username = newUsername;}
@@ -79,4 +85,7 @@ public class User {
     public void setWeight(Double newWeight) {this.weight = newWeight;}
 
     public void setHeight(Double newHeight) {this.height = newHeight;}
+
+    public void setVerified(boolean verified) { this.verified = verified; }
+
 }

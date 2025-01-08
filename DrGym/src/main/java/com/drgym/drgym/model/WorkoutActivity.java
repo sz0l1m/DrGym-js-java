@@ -2,11 +2,15 @@ package com.drgym.drgym.model;
 
 import jakarta.persistence.*;
 
+import java.util.function.LongToDoubleFunction;
+
 @Entity
 @Table(name = "workout_activities")
 public class WorkoutActivity {
 
     @Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "workout_activity_id", nullable = false)
     private Long id;
 
@@ -17,6 +21,11 @@ public class WorkoutActivity {
     private Long activityId;
 
     public WorkoutActivity() {
+    }
+
+    public WorkoutActivity(Long workoutId, Long activityId) {
+        this.workoutId = workoutId;
+        this.activityId = activityId;
     }
 
     public WorkoutActivity(Long id, Long workoutId, Long activityId) {
