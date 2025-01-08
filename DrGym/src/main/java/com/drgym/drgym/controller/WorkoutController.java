@@ -2,6 +2,8 @@ package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.Activity;
 import com.drgym.drgym.model.Workout;
+import com.drgym.drgym.model.Exercise;
+import com.drgym.drgym.service.ExerciseService;
 import com.drgym.drgym.service.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,9 @@ import java.util.Optional;
 public class WorkoutController {
     @Autowired
     private WorkoutService workoutService;
+
+    @Autowired
+    private ExerciseService exerciseService;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getTraining(@PathVariable Long id) {
@@ -37,19 +43,54 @@ public class WorkoutController {
                 workout.getDateEnd(),
                 workout.getDescription(),
                 activities.stream()
-                        .map(a -> new ActivityResponse(
-                                a.getId(),
-                                a.getExercise_id(),
-                                a.getDuration(),
-                                a.getWeight(),
-                                a.getReps()))
+                        .map(a -> {
+                            String exerciseName = exerciseService.findById(a.getExerciseId())
+                                    .map(Exercise::getName)
+                                    .orElse("Unknown Exercise");
+
+                            return new ActivityResponse(
+                                    a.getId(),
+                                    a.getExerciseId(),
+                                    exerciseName,
+                                    a.getDuration(),
+                                    a.getWeight(),
+                                    a.getReps()
+                            );
+                        })
                         .toList());
 
         return ResponseEntity.ok(response);
     }
 
-    private record TrainingDTO(Long id, String username, LocalDateTime dateStart, LocalDateTime dateEnd, String description, LocalDateTime create_datetime) {}
+    @PostMapping
+    public ResponseEntity<Workout> createWorkout(@RequestBody Workout workout) {
+        Workout savedWorkout = workoutService.saveWorkout(workout);
+        return ResponseEntity.ok(savedWorkout);
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteWorkout(@PathVariable Long id) {
+        Optional<Workout> workoutOptional = workoutService.findById(id);
+
+        if (workoutOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        workoutService.deleteWorkout(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{workoutId}/activities/{activityId}")
+    public ResponseEntity<?> addActivityToWorkout(@PathVariable Long workoutId, @PathVariable Long activityId) {
+        workoutService.addActivityToWorkout(workoutId, activityId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{workoutId}/activities/{activityId}")
+    public ResponseEntity<?> removeActivityFromWorkout(@PathVariable Long workoutId, @PathVariable Long activityId) {
+        workoutService.removeActivityFromWorkout(workoutId, activityId);
+        return ResponseEntity.noContent().build();
+    }
 
     public record WorkoutResponse(
             Long workoutId,
@@ -63,24 +104,27 @@ public class WorkoutController {
     public record ActivityResponse(
             Long activityId,
             Long exerciseId,
-            Timestamp duration,
+            String exerciseName,
+            LocalTime duration,
             Long weight,
             Long reps
     ) {
         public ActivityResponse(
                 Long activityId,
                 Long exerciseId,
+                String exerciseName,
                 Timestamp duration,
                 Long weight,
                 Long reps
         ) {
-            this.activityId = activityId;
-            this.exerciseId = exerciseId;
-            this.duration = (duration != null && duration.toLocalDateTime().toLocalTime().equals(java.time.LocalTime.MIDNIGHT))
-                    ? null
-                    : duration;
-            this.weight = weight;
-            this.reps = reps;
+            this(
+                    activityId,
+                    exerciseId,
+                    exerciseName,
+                    (duration != null) ? duration.toLocalDateTime().toLocalTime() : null,
+                    weight,
+                    reps
+            );
         }
     }
 }

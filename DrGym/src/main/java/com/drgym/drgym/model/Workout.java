@@ -28,7 +28,7 @@ public class Workout {
     @Column(name = "created_datetime")
     private LocalDateTime dateCreated;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "workout_activities",
             joinColumns = @JoinColumn(name = "workout_id")
@@ -49,6 +49,18 @@ public class Workout {
         this.description = description;
         this.dateCreated = create_datetime;
         this.activityIds = activityIds;
+    }
+
+    public Workout(Long id, LocalDateTime dateStart, String username, LocalDateTime dateEnd, String description, LocalDateTime create_datetime) {
+        if (dateStart.isAfter(dateEnd)) {
+            throw new IllegalArgumentException("Start date cannot be after end date");
+        }
+        this.id = id;
+        this.username = username;
+        this.dateStart = dateStart;
+        this.dateEnd = dateEnd;
+        this.description = description;
+        this.dateCreated = create_datetime;
     }
 
     // getters

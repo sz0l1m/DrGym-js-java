@@ -24,6 +24,13 @@ public class WorkoutActivityService {
         return workoutActivityRepository.save(workoutActivity);
     }
 
+    public void addActivityToWorkout(Long workoutId, Long activityId) {
+        WorkoutActivity workoutActivity = new WorkoutActivity();
+        workoutActivity.setWorkoutId(workoutId);
+        workoutActivity.setActivityId(activityId);
+        workoutActivityRepository.save(workoutActivity);
+    }
+
     public void deleteWorkoutActivity(Long id) {
         workoutActivityRepository.deleteById(id);
     }
