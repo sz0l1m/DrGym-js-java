@@ -1,6 +1,9 @@
+'use client';
+
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import { ActivityCalendar } from 'react-activity-calendar';
+import { Tooltip } from '@mui/material';
 
 const activityData = [
   { date: '2024-01-01', count: 2, level: 1 },
@@ -42,13 +45,19 @@ const Stats = ({ params }) => {
       </Typography>
       <ActivityCalendar
         data={processedData}
-        labels={{
-          legend: {
-            less: 'Less',
-            more: 'More',
-          },
-          tooltip: '<strong>{{count}} activities</strong> on {{date}}',
-        }}
+        renderBlock={(block, activity) => (
+          <Tooltip
+            key={activity.date}
+            title={`${activity.count} exercises on ${activity.date}`}
+          >
+            {block}
+          </Tooltip>
+        )}
+        renderColorLegend={(block, level) => (
+          <Tooltip key={`legend-${level}`} title={`Level ${level}`}>
+            {block}
+          </Tooltip>
+        )}
       />
     </>
   );
