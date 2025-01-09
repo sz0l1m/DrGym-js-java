@@ -1,15 +1,45 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
 import { ActivityCalendar } from 'react-activity-calendar';
-import { Tooltip } from '@mui/material';
-import { calendarData } from '@/utils/mockData';
+import { Tooltip, Typography } from '@mui/material';
+import { calendarData as mockData } from '@/utils/mockData';
+import axios from 'axios';
 
 const Calendar = ({ username }) => {
+  const [calendarData, setCalendarData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const calendarTheme = {
     light: ['#ebedf0', '#bbdefb', '#64b5f6', '#1976d2', '#0d47a1'],
     dark: ['#ebedf0', '#bbdefb', '#64b5f6', '#1976d2', '#0d47a1'],
     //   Purple ['#ebedf0', '#d1c4e9', '#9575cd', '#512da8', '#311b92'],
     //   Green ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127'],
   };
+
+  // Fetch calendar data from backend
+  useEffect(() => {
+    const fetchCalendarData = async () => {
+      try {
+        setLoading(true);
+        setTimeout(() => {
+          setCalendarData(
+            setMinCalendarRange(mockData, '2024-01-01', '2024-12-31')
+          );
+          setLoading(false);
+        }, 2500);
+        // const response = await axios.get(`/api/calendar/${username}`);
+        // setCalendarData(
+        //   setMinCalendarRange(response.data, '2024-01-01', '2024-12-31')
+        // );
+      } catch (error) {
+        setError('Failed to load calendar data');
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchCalendarData();
+  }, [username]);
 
   const setMinCalendarRange = (data, startDate, endDate) => {
     const dataMap = data.reduce((acc, item) => {
@@ -34,12 +64,14 @@ const Calendar = ({ username }) => {
     '2024-12-31'
   );
 
+  if (error) return <Typography>{error}</Typography>;
   return (
     <>
       <ActivityCalendar
         data={processedCalendarData}
         theme={calendarTheme}
         maxLevel={4}
+        loading={loading}
         renderBlock={(block, activity) => (
           <Tooltip
             key={activity.date}
