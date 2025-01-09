@@ -4,12 +4,13 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import { ActivityCalendar } from 'react-activity-calendar';
 import { Tooltip } from '@mui/material';
+import { calendarTheme } from './themes';
 
 const activityData = [
   { date: '2024-01-01', count: 2, level: 1 },
   { date: '2024-01-10', count: 6, level: 2 },
-  { date: '2024-02-05', count: 4, level: 3 },
-  { date: '2024-03-15', count: 10, level: 4 },
+  { date: '2024-02-05', count: 4, level: 2 },
+  { date: '2024-03-15', count: 10, level: 3 },
 ];
 
 const Stats = ({ params }) => {
@@ -45,6 +46,8 @@ const Stats = ({ params }) => {
       </Typography>
       <ActivityCalendar
         data={processedData}
+        theme={calendarTheme}
+        maxLevel={4}
         renderBlock={(block, activity) => (
           <Tooltip
             key={activity.date}
