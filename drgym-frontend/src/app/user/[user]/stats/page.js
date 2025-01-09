@@ -3,15 +3,9 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import { ActivityCalendar } from 'react-activity-calendar';
-import { Tooltip } from '@mui/material';
+import { Divider, Tooltip } from '@mui/material';
 import { calendarTheme } from './themes';
-
-const activityData = [
-  { date: '2024-01-01', count: 2, level: 1 },
-  { date: '2024-01-10', count: 6, level: 2 },
-  { date: '2024-02-05', count: 4, level: 2 },
-  { date: '2024-03-15', count: 10, level: 3 },
-];
+import { calendarData } from '@/utils/mockData';
 
 const Stats = ({ params }) => {
   const { user } = React.use(params);
@@ -33,19 +27,19 @@ const Stats = ({ params }) => {
     return data;
   };
 
-  const processedData = setMinCalendarRange(
-    [...activityData],
+  const processedCalendarData = setMinCalendarRange(
+    [...calendarData],
     '2024-01-01',
     '2024-12-31'
   );
 
   return (
     <>
-      <Typography variant="h4" gutterBottom>
-        Stats for {user}
+      <Typography sx={{ mb: 3 }} variant="h6" gutterBottom>
+        Your workout calendar
       </Typography>
       <ActivityCalendar
-        data={processedData}
+        data={processedCalendarData}
         theme={calendarTheme}
         maxLevel={4}
         renderBlock={(block, activity) => (
