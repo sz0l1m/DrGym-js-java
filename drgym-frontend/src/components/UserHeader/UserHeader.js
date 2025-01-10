@@ -7,10 +7,36 @@ import Grid from '@mui/material/Grid2';
 import { red } from '@mui/material/colors';
 import { useRouter } from 'next/navigation';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import DeleteConfirmation from '@/components/DeleteConfirmation';
 
-export default function UserHeader({ username, avatar, subheader, actions }) {
+export default function UserHeader({
+  username,
+  avatar,
+  subheader,
+  actions,
+  onDelete,
+}) {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDeleteClick = () => {
+    setDeleteDialogOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      setDeleting(true);
+      await onDelete(username);
+    } finally {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteDialogOpen(false);
+  };
 
   return (
     <>
@@ -51,7 +77,10 @@ export default function UserHeader({ username, avatar, subheader, actions }) {
             </Link>
             {actions && (
               <Tooltip title="Remove friend">
-                <IconButton aria-label="remove friend">
+                <IconButton
+                  aria-label="remove friend"
+                  onClick={handleDeleteClick}
+                >
                   <PersonRemoveIcon color="error" />
                 </IconButton>
               </Tooltip>
@@ -59,6 +88,14 @@ export default function UserHeader({ username, avatar, subheader, actions }) {
           </Grid>
         }
         subheader={subheader}
+      />
+      <DeleteConfirmation
+        title="Remove Friend"
+        message={`Are you sure you want to remove ${username} from your friends?`}
+        open={deleteDialogOpen}
+        loading={deleting}
+        onConfirm={handleConfirmDelete}
+        onClose={handleCancelDelete}
       />
     </>
   );

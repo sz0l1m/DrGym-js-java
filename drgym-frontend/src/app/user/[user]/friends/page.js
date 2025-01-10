@@ -37,6 +37,20 @@ const Friends = () => {
     fetchFriends();
   }, []);
 
+  const handleDeleteFriend = async (username) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // await axios.delete(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends/${username}`
+      // );
+      setFriends((prevFriends) =>
+        prevFriends.filter((friend) => friend.username !== username)
+      );
+    } catch (err) {
+      alert('Failed to delete friend. Please try again later.');
+    }
+  };
+
   if (error) {
     return (
       <Typography textAlign="center" color="error">
@@ -82,7 +96,11 @@ const Friends = () => {
           ))
         : friends.map((friend) => (
             <Card key={friend.username} sx={{ maxWidth: '100%', my: 1 }}>
-              <UserHeader username={friend.username} actions />
+              <UserHeader
+                username={friend.username}
+                actions
+                onDelete={handleDeleteFriend}
+              />
             </Card>
           ))}
     </Box>
