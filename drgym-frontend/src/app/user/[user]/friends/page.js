@@ -7,6 +7,8 @@ import UserHeader from '@/components/UserHeader';
 import axios from 'axios';
 import { friends as mockFriends } from '@/utils/mockData';
 import Box from '@mui/material/Box';
+import Skeleton from '@mui/material/Skeleton';
+import CardHeader from '@mui/material/CardHeader';
 
 const Friends = () => {
   const [friends, setFriends] = useState([]);
@@ -35,10 +37,6 @@ const Friends = () => {
     fetchFriends();
   }, []);
 
-  if (loading) {
-    return <Typography>Loading friends...</Typography>;
-  }
-
   if (error) {
     return (
       <Typography textAlign="center" color="error">
@@ -59,11 +57,34 @@ const Friends = () => {
       <Typography variant="h5" gutterBottom>
         Your Friends
       </Typography>
-      {friends.map((friend) => (
-        <Card key={friend.username} sx={{ maxWidth: '100%', my: 1 }}>
-          <UserHeader username={friend.username} actions />
-        </Card>
-      ))}
+      {loading
+        ? Array.from({ length: 3 }).map((_, index) => (
+            <Card key={index} sx={{ maxWidth: '100%', my: 1 }}>
+              <CardHeader
+                avatar={
+                  <Skeleton
+                    animation="wave"
+                    variant="circular"
+                    width={40}
+                    height={40}
+                  />
+                }
+                title={
+                  <Skeleton
+                    animation="wave"
+                    height={20}
+                    width="20%"
+                    style={{ marginBottom: 6 }}
+                  />
+                }
+              />
+            </Card>
+          ))
+        : friends.map((friend) => (
+            <Card key={friend.username} sx={{ maxWidth: '100%', my: 1 }}>
+              <UserHeader username={friend.username} actions />
+            </Card>
+          ))}
     </Box>
   );
 };
