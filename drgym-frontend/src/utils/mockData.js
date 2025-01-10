@@ -27,6 +27,8 @@ const strengthExercises = [
   },
 ];
 
+const friends = ['skuter', 'pedziwiatr'];
+
 const bodyData = [
   { name: 'Bench Press', muscles: ['chest', 'triceps', 'front-deltoids'] },
   { name: 'Machine chest press', muscles: ['chest'] },
@@ -108,6 +110,8 @@ const calendarData = [
   { date: '2024-12-31', count: 10, level: 3 },
 ];
 
+export { bodyData, cardioExercises, strengthExercises, calendarData, friends };
+
 // const calendarData = [
 //   { date: '2024-01-01', count: 2, level: 1 },
 //   { date: '2024-01-05', count: 3, level: 2 },
@@ -167,8 +171,6 @@ const calendarData = [
 //   { date: '2024-10-23', count: 10, level: 3 },
 //   { date: '2024-11-12', count: 4, level: 2 },
 // ];
-
-export { bodyData, cardioExercises, strengthExercises, calendarData };
 
 // let workoutsData = [
 //   {
