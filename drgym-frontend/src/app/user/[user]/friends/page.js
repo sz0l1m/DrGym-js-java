@@ -48,6 +48,30 @@ const Friends = ({ showAppMessage }) => {
     fetchFriends();
   }, [showAppMessage]);
 
+  const handleAcceptRequest = async (username) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // await axios.delete(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends/accept/${username}`
+      // );
+      showAppMessage({
+        status: true,
+        text: `Added ${username} as a friend`,
+        type: 'success',
+      });
+    } catch (err) {
+      showAppMessage({
+        status: true,
+        text: 'Something went wrong',
+        type: 'error',
+      });
+    }
+  };
+
+  const handleDeclineRequest = async (username) => {
+    alert('Decline request');
+  };
+
   const handleDeleteFriend = async (username) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -108,8 +132,10 @@ const Friends = ({ showAppMessage }) => {
               <Card key={friend.username} sx={{ maxWidth: '100%', my: 1 }}>
                 <UserHeader
                   username={friend.username}
-                  actions
+                  actions="request"
                   onDelete={handleDeleteFriend}
+                  onAccept={handleAcceptRequest}
+                  onDecline={handleDeclineRequest}
                 />
               </Card>
             ))

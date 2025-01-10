@@ -1,12 +1,15 @@
 import { useState } from 'react';
 import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
+import Box from '@mui/material/Box';
 import Link from 'next/link';
 import { IconButton, Tooltip, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { red } from '@mui/material/colors';
 import { useRouter } from 'next/navigation';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
 
 export default function UserHeader({
@@ -15,8 +18,11 @@ export default function UserHeader({
   subheader,
   actions,
   onDelete,
+  onAccept,
+  onDecline,
 }) {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -36,6 +42,24 @@ export default function UserHeader({
 
   const handleCancelDelete = () => {
     setDeleteDialogOpen(false);
+  };
+
+  const handleAcceptRequest = async () => {
+    try {
+      setLoading(true);
+      await onAccept(username);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeclineRequest = async () => {
+    try {
+      setLoading(true);
+      await onDecline(username);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -75,7 +99,7 @@ export default function UserHeader({
                 {username}
               </Typography>
             </Link>
-            {actions && (
+            {actions === 'friend' && (
               <Tooltip title="Remove friend">
                 <IconButton
                   aria-label="remove friend"
@@ -84,6 +108,26 @@ export default function UserHeader({
                   <PersonRemoveIcon color="error" />
                 </IconButton>
               </Tooltip>
+            )}
+            {actions === 'request' && (
+              <Box>
+                <Tooltip title="Accept request">
+                  <IconButton
+                    aria-label="accept request"
+                    onClick={handleAcceptRequest}
+                  >
+                    <CheckIcon color="success" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Decline request">
+                  <IconButton
+                    aria-label="decline request"
+                    onClick={handleDeclineRequest}
+                  >
+                    <CloseIcon color="error" />
+                  </IconButton>
+                </Tooltip>
+              </Box>
             )}
           </Grid>
         }

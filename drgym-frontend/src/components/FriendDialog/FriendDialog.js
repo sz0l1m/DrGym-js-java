@@ -41,16 +41,16 @@ export default function FriendDialog({
       // );
       showAppMessage({
         status: true,
-        text: 'Friend added successfully',
+        text: 'Sent friend request.',
         type: 'success',
       });
-      togglePopup(false);
+      handleClose();
     } catch (error) {
       if (error.response?.data === 'User does not exist') {
         form.setFieldError('username', 'no account found');
         showAppMessage({
           status: true,
-          text: 'There is no account associated with this e-mail.',
+          text: 'There is no account associated with this username.',
           type: 'error',
         });
       } else {
