@@ -52,7 +52,7 @@ export default function UserHeader({
   const handleAcceptRequest = async () => {
     try {
       setLoading(true);
-      await onAccept(username);
+      await onAccept(username, avatar);
     } finally {
       setLoading(false);
     }

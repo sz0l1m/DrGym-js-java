@@ -41,7 +41,7 @@ export default function FriendDialog({
       // );
       showAppMessage({
         status: true,
-        text: 'Sent friend request.',
+        text: `Friend request to ${formData.username} has been sent.`,
         type: 'success',
       });
       handleClose();

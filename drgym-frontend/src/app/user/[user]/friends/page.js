@@ -31,7 +31,7 @@ const Friends = ({ showAppMessage }) => {
           setFriends(mockFriends.friends);
           setRequests(mockFriends.requests);
           setLoading(false);
-        }, 2000);
+        }, 1000);
         // const response = await axios.get(
         //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends`
         // );
@@ -51,7 +51,7 @@ const Friends = ({ showAppMessage }) => {
     fetchFriends();
   }, [showAppMessage]);
 
-  const handleAcceptRequest = async (username) => {
+  const handleAcceptRequest = async (username, avatar) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       // await axios.delete(
@@ -59,9 +59,13 @@ const Friends = ({ showAppMessage }) => {
       // );
       showAppMessage({
         status: true,
-        text: `Added ${username} as a friend`,
+        text: `Accepted friend request from ${username}`,
         type: 'success',
       });
+      setRequests((prevRequests) =>
+        prevRequests.filter((request) => request.username !== username)
+      );
+      setFriends((prevFriends) => [...prevFriends, { username, avatar }]);
     } catch (err) {
       showAppMessage({
         status: true,
@@ -72,7 +76,26 @@ const Friends = ({ showAppMessage }) => {
   };
 
   const handleDeclineRequest = async (username) => {
-    alert('Decline request');
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // await axios.delete(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends/decline/${username}`
+      // );
+      showAppMessage({
+        status: true,
+        text: `Declined friend request from ${username}`,
+        type: 'success',
+      });
+      setRequests((prevRequests) =>
+        prevRequests.filter((request) => request.username !== username)
+      );
+    } catch (err) {
+      showAppMessage({
+        status: true,
+        text: 'Something went wrong',
+        type: 'error',
+      });
+    }
   };
 
   const handleDeleteFriend = async (username) => {
@@ -86,7 +109,7 @@ const Friends = ({ showAppMessage }) => {
       );
       showAppMessage({
         status: true,
-        text: `Friend ${username} deleted successfully`,
+        text: `Removed ${username} from friends`,
         type: 'success',
       });
     } catch (err) {
