@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -11,7 +11,7 @@ import style from './posts.module.css';
 import SkeletonCard from '@/components/SkeletonCard';
 import { useSession } from 'next-auth/react';
 
-const Posts = ({ showAppMessage }) => {
+const PostsContent = ({ showAppMessage }) => {
   const { data: session, status } = useSession();
   const username = session?.user?.username;
   const router = useRouter();
@@ -71,6 +71,14 @@ const Posts = ({ showAppMessage }) => {
             <Post key={workout.workoutId} workout={workout} />
           ))}
     </Box>
+  );
+};
+
+const Posts = ({ showAppMessage }) => {
+  return (
+    <Suspense fallback={<Typography>Loading posts...</Typography>}>
+      <PostsContent showAppMessage={showAppMessage} />
+    </Suspense>
   );
 };
 

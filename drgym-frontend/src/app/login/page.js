@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { styled } from '@mui/material/styles';
 import {
@@ -34,7 +34,7 @@ const Root = styled('div')(({ theme }) => ({
   },
 }));
 
-const Login = ({ csrfToken = null, showAppMessage }) => {
+const LoginContent = ({ csrfToken = null, showAppMessage }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loginType, setLoginType] = useState('username');
@@ -282,6 +282,14 @@ const Login = ({ csrfToken = null, showAppMessage }) => {
         </Link>
       </Grid>
     </Grid>
+  );
+};
+
+const Login = ({ csrfToken = null, showAppMessage }) => {
+  return (
+    <Suspense fallback={<CircularProgress size={40} color="primary" />}>
+      <LoginContent csrfToken={csrfToken} showAppMessage={showAppMessage} />
+    </Suspense>
   );
 };
 
