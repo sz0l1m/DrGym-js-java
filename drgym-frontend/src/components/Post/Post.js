@@ -24,7 +24,6 @@ export default function WorkoutCard({ workout }) {
           <WorkoutInfo workout={workout} />
         </Card>
       </Box>
-      ;
     </>
   );
 }
