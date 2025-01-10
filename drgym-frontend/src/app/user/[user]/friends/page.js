@@ -75,14 +75,6 @@ const Friends = ({ showAppMessage }) => {
     );
   }
 
-  if (!friends.length && !loading) {
-    return (
-      <Typography variant="h5" gutterBottom>
-        You have no friends XD
-      </Typography>
-    );
-  }
-
   return (
     <Box
       sx={{
@@ -93,10 +85,21 @@ const Friends = ({ showAppMessage }) => {
       }}
     >
       <Typography variant="h5" gutterBottom>
-        Your Friends
+        {!loading && !friends.length
+          ? 'You have not added any friends yet'
+          : 'Your Friends'}
       </Typography>
-      {loading
-        ? Array.from({ length: 3 }).map((_, index) => (
+      {!loading
+        ? friends.map((friend) => (
+            <Card key={friend.username} sx={{ maxWidth: '100%', my: 1 }}>
+              <UserHeader
+                username={friend.username}
+                actions
+                onDelete={handleDeleteFriend}
+              />
+            </Card>
+          ))
+        : Array.from({ length: 3 }).map((_, index) => (
             <Card key={index} sx={{ maxWidth: '100%', my: 1 }}>
               <CardHeader
                 avatar={
@@ -115,15 +118,6 @@ const Friends = ({ showAppMessage }) => {
                     style={{ marginBottom: 6 }}
                   />
                 }
-              />
-            </Card>
-          ))
-        : friends.map((friend) => (
-            <Card key={friend.username} sx={{ maxWidth: '100%', my: 1 }}>
-              <UserHeader
-                username={friend.username}
-                actions
-                onDelete={handleDeleteFriend}
               />
             </Card>
           ))}
