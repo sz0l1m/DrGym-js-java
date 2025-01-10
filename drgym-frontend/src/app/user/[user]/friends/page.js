@@ -9,8 +9,9 @@ import { friends as mockFriends } from '@/utils/mockData';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import CardHeader from '@mui/material/CardHeader';
+import { withSnackbar } from '@/utils/snackbarProvider';
 
-const Friends = () => {
+const Friends = ({ showAppMessage }) => {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,7 +21,8 @@ const Friends = () => {
       try {
         setLoading(true);
         setTimeout(() => {
-          setFriends(mockFriends);
+          setFriends([]);
+          // setFriends(mockFriends);
           setLoading(false);
         }, 2000);
         // const response = await axios.get(
@@ -28,6 +30,11 @@ const Friends = () => {
         // );
         // setFriends(response.data);
       } catch (err) {
+        showAppMessage({
+          status: true,
+          text: 'Something went wrong',
+          type: 'error',
+        });
         setError('Failed to fetch friends. Please try again later.');
       } finally {
         // setLoading(false);
@@ -35,7 +42,7 @@ const Friends = () => {
     };
 
     fetchFriends();
-  }, []);
+  }, [showAppMessage]);
 
   const handleDeleteFriend = async (username) => {
     try {
@@ -46,8 +53,17 @@ const Friends = () => {
       setFriends((prevFriends) =>
         prevFriends.filter((friend) => friend.username !== username)
       );
+      showAppMessage({
+        status: true,
+        text: 'Friend deleted successfully',
+        type: 'success',
+      });
     } catch (err) {
-      alert('Failed to delete friend. Please try again later.');
+      showAppMessage({
+        status: true,
+        text: 'Failed to delete friend',
+        type: 'error',
+      });
     }
   };
 
@@ -55,6 +71,14 @@ const Friends = () => {
     return (
       <Typography textAlign="center" color="error">
         {error}
+      </Typography>
+    );
+  }
+
+  if (!friends.length && !loading) {
+    return (
+      <Typography variant="h5" gutterBottom>
+        You have no friends XD
       </Typography>
     );
   }
@@ -107,4 +131,4 @@ const Friends = () => {
   );
 };
 
-export default Friends;
+export default withSnackbar(Friends);
