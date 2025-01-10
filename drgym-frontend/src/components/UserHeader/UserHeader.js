@@ -3,7 +3,12 @@ import CardHeader from '@mui/material/CardHeader';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Link from 'next/link';
-import { IconButton, Tooltip, Typography } from '@mui/material';
+import {
+  IconButton,
+  Tooltip,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { red } from '@mui/material/colors';
 import { useRouter } from 'next/navigation';
@@ -111,22 +116,30 @@ export default function UserHeader({
             )}
             {actions === 'request' && (
               <Box>
-                <Tooltip title="Accept request">
-                  <IconButton
-                    aria-label="accept request"
-                    onClick={handleAcceptRequest}
-                  >
-                    <CheckIcon color="success" />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title="Decline request">
-                  <IconButton
-                    aria-label="decline request"
-                    onClick={handleDeclineRequest}
-                  >
-                    <CloseIcon color="error" />
-                  </IconButton>
-                </Tooltip>
+                {loading ? (
+                  <CircularProgress size={24} sx={{ mr: 4 }} />
+                ) : (
+                  <>
+                    <Tooltip title="Accept request">
+                      <IconButton
+                        disabled={loading}
+                        aria-label="accept request"
+                        onClick={handleAcceptRequest}
+                      >
+                        <CheckIcon color="success" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Decline request">
+                      <IconButton
+                        disabled={loading}
+                        aria-label="decline request"
+                        onClick={handleDeclineRequest}
+                      >
+                        <CloseIcon color="error" />
+                      </IconButton>
+                    </Tooltip>
+                  </>
+                )}
               </Box>
             )}
           </Grid>
