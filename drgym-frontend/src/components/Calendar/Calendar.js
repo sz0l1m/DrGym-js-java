@@ -16,7 +16,6 @@ const Calendar = ({ username }) => {
     //   Green ['#ebedf0', '#c6e48b', '#7bc96f', '#239a3b', '#196127'],
   };
 
-  // Fetch calendar data from backend
   useEffect(() => {
     const fetchCalendarData = async () => {
       try {
