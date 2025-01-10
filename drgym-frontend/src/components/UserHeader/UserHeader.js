@@ -51,7 +51,7 @@ export default function UserHeader({ username, avatar, subheader, actions }) {
             </Link>
             {actions && (
               <Tooltip title="Remove friend">
-                <IconButton aria-label="settings">
+                <IconButton aria-label="remove friend">
                   <PersonRemoveIcon color="error" />
                 </IconButton>
               </Tooltip>
