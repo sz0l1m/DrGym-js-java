@@ -2,7 +2,6 @@
 
 import React, { useRef, useState } from 'react';
 import Typography from '@mui/material/Typography';
-import PersonIcon from '@mui/icons-material/Person';
 import { CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { Formik, Form } from 'formik';

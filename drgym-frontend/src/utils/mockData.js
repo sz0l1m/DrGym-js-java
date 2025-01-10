@@ -29,10 +29,11 @@ const strengthExercises = [
 
 const bodyData = [
   { name: 'Bench Press', muscles: ['chest', 'triceps', 'front-deltoids'] },
-  { name: 'Push Ups', muscles: ['chest', 'triceps'] },
+  { name: 'Machine chest press', muscles: ['chest'] },
+  { name: 'Push Up', muscles: ['chest', 'triceps'] },
   {
     name: 'Back',
-    muscles: ['chest', 'triceps', 'upper-back', 'upper-back', 'lower-back'],
+    muscles: ['triceps', 'upper-back', 'upper-back', 'lower-back'],
   },
   {
     name: 'Legs',

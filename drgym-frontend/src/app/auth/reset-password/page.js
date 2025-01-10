@@ -1,13 +1,17 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { CircularProgress } from '@mui/material';
-import { Formik, Form } from 'formik';
-import { Button, IconButton, InputAdornment } from '@mui/material';
+import {
+  CircularProgress,
+  Button,
+  IconButton,
+  InputAdornment,
+} from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Formik, Form } from 'formik';
 import {
   ResetPasswordSchema,
   ResetPasswordDefaultValues,
@@ -16,7 +20,7 @@ import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
 import axios from 'axios';
 
-const ResetPassword = ({ showAppMessage }) => {
+const ResetPasswordContent = ({ showAppMessage }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -208,6 +212,14 @@ const ResetPassword = ({ showAppMessage }) => {
         )}
       </Grid>
     </Grid>
+  );
+};
+
+const ResetPassword = ({ showAppMessage }) => {
+  return (
+    <Suspense fallback={<CircularProgress size={40} color="primary" />}>
+      <ResetPasswordContent showAppMessage={showAppMessage} />
+    </Suspense>
   );
 };
 

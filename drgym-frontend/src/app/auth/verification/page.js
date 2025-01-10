@@ -1,13 +1,12 @@
 'use client';
 
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
 import { withSnackbar } from '@/utils/snackbarProvider';
-import { Typography } from '@mui/material';
-import { CircularProgress } from '@mui/material';
+import { Typography, CircularProgress } from '@mui/material';
 import axios from 'axios';
 
-const VerificationPage = ({ showAppMessage }) => {
+const VerificationPageContent = ({ showAppMessage }) => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -80,14 +79,20 @@ const VerificationPage = ({ showAppMessage }) => {
   }, [router, searchParams, showAppMessage]);
 
   return (
-    <>
-      <Typography style={{ textAlign: 'center' }}>
-        {loading && (
-          <CircularProgress color="priamry" sx={{ mr: 2 }} size="20px" />
-        )}
-        {message}
-      </Typography>
-    </>
+    <Typography style={{ textAlign: 'center' }}>
+      {loading && (
+        <CircularProgress color="primary" sx={{ mr: 2 }} size="20px" />
+      )}
+      {message}
+    </Typography>
+  );
+};
+
+const VerificationPage = ({ showAppMessage }) => {
+  return (
+    <Suspense fallback={<CircularProgress size={40} color="primary" />}>
+      <VerificationPageContent showAppMessage={showAppMessage} />
+    </Suspense>
   );
 };
 
