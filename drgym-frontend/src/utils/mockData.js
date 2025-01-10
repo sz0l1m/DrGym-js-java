@@ -27,7 +27,10 @@ const strengthExercises = [
   },
 ];
 
-const friends = ['skuter', 'pedziwiatr'];
+const friends = [
+  { username: 'skuter', avatar: null },
+  { username: 'pedziwiatr', avatar: null },
+];
 
 const bodyData = [
   { name: 'Bench Press', muscles: ['chest', 'triceps', 'front-deltoids'] },
