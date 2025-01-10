@@ -1,3 +1,5 @@
+import { requestToBodyStream } from 'next/dist/server/body-streams';
+
 const cardioExercises = [
   {
     exerciseId: 71,
@@ -27,10 +29,13 @@ const strengthExercises = [
   },
 ];
 
-const friends = [
-  { username: 'skuter', avatar: null },
-  { username: 'pedziwiatr', avatar: null },
-];
+const friends = {
+  requests: [{ username: 'szolim', avatar: null }],
+  friends: [
+    { username: 'skuter', avatar: null },
+    { username: 'pedziwiatr', avatar: null },
+  ],
+};
 
 const bodyData = [
   { name: 'Bench Press', muscles: ['chest', 'triceps', 'front-deltoids'] },

@@ -14,10 +14,12 @@ import FriendDialog from '@/components/FriendDialog';
 import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { Divider } from '@mui/material';
 
 const Friends = ({ showAppMessage }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [friends, setFriends] = useState([]);
+  const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -26,7 +28,8 @@ const Friends = ({ showAppMessage }) => {
       try {
         setLoading(true);
         setTimeout(() => {
-          setFriends(mockFriends);
+          setFriends(mockFriends.friends);
+          setRequests(mockFriends.requests);
           setLoading(false);
         }, 2000);
         // const response = await axios.get(
@@ -113,6 +116,24 @@ const Friends = ({ showAppMessage }) => {
           py: 2,
         }}
       >
+        {requests.length > 0 && !loading && (
+          <>
+            <Typography variant="h5" gutterBottom>
+              Friend Requests
+            </Typography>
+            {requests.map((friend) => (
+              <Card key={friend.username} sx={{ maxWidth: '100%', my: 1 }}>
+                <UserHeader
+                  username={friend.username}
+                  actions="request"
+                  onAccept={handleAcceptRequest}
+                  onDecline={handleDeclineRequest}
+                />
+              </Card>
+            ))}
+            <Divider sx={{ my: 4 }} />
+          </>
+        )}
         <Grid container justifyContent="space-between" sx={{ mb: 4 }}>
           <Typography variant="h5" gutterBottom>
             {!loading && !friends.length
@@ -132,10 +153,8 @@ const Friends = ({ showAppMessage }) => {
               <Card key={friend.username} sx={{ maxWidth: '100%', my: 1 }}>
                 <UserHeader
                   username={friend.username}
-                  actions="request"
+                  actions="friend"
                   onDelete={handleDeleteFriend}
-                  onAccept={handleAcceptRequest}
-                  onDecline={handleDeclineRequest}
                 />
               </Card>
             ))
