@@ -1,14 +1,21 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { ActivityCalendar } from 'react-activity-calendar';
-import { Tooltip, Typography } from '@mui/material';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  Tooltip,
+  Typography,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
+} from '@mui/material';
 import Grid from '@mui/material/Grid2';
+import CloseIcon from '@mui/icons-material/Close';
 import axios from 'axios';
 import Model from 'react-body-highlighter';
 import { bodyData as mockData } from '@/utils/mockData';
 
 const BodyHighlighter = ({ username }) => {
   const [bodyData, setBodyData] = useState([]);
+  const [selectedMuscle, setSelectedMuscle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -24,21 +31,20 @@ const BodyHighlighter = ({ username }) => {
         }, 1500);
       } catch (error) {
         setError('Failed to load the data');
-      } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     };
 
     fetchBodyData();
   }, [username]);
 
-  const handleClick = React.useCallback(({ muscle, data }) => {
-    const { exercises, frequency } = data;
-
-    alert(
-      `You clicked the ${muscle}! You've worked out this muscle ${frequency} times through the following exercises: ${JSON.stringify(exercises)}`
-    );
+  const handleClick = useCallback(({ muscle, data }) => {
+    setSelectedMuscle({ muscle, data });
   }, []);
+
+  const handleClose = () => {
+    setSelectedMuscle(null);
+  };
 
   return (
     <>
@@ -62,6 +68,53 @@ const BodyHighlighter = ({ username }) => {
           onClick={handleClick}
         />
       </Grid>
+
+      <Dialog
+        open={Boolean(selectedMuscle)}
+        onClose={handleClose}
+        aria-labelledby="muscle-dialog-title"
+      >
+        {selectedMuscle && (
+          <>
+            <DialogTitle id="muscle-dialog-title" sx={{ m: 0, p: 2 }}>
+              {selectedMuscle.muscle}
+              <IconButton
+                aria-label="close"
+                onClick={handleClose}
+                sx={{
+                  position: 'absolute',
+                  right: 8,
+                  top: 8,
+                  color: (theme) => theme.palette.grey[500],
+                }}
+              >
+                <CloseIcon />
+              </IconButton>
+            </DialogTitle>
+            <DialogContent dividers>
+              {selectedMuscle.data.frequency > 0 ? (
+                <>
+                  <Typography gutterBottom>
+                    You&apos;ve worked out this muscle{' '}
+                    <strong>{selectedMuscle.data.frequency}</strong> times.
+                  </Typography>
+                  <Typography variant="subtitle1">Exercises:</Typography>
+                  <ul>
+                    {selectedMuscle.data.exercises.map((exercise, index) => (
+                      <li key={index}>{exercise}</li>
+                    ))}
+                  </ul>
+                </>
+              ) : (
+                <Typography gutterBottom>
+                  You haven&apos;t worked out this muscle yet. Let&apos;s get
+                  moving!
+                </Typography>
+              )}
+            </DialogContent>
+          </>
+        )}
+      </Dialog>
     </>
   );
 };
