@@ -71,6 +71,7 @@ const Calendar = ({ username }) => {
         theme={calendarTheme}
         maxLevel={4}
         loading={loading}
+        weekStart={1}
         renderBlock={(block, activity) => (
           <Tooltip
             key={activity.date}

@@ -6,17 +6,9 @@ import { calendarData as mockData } from '@/utils/mockData';
 import Grid from '@mui/material/Grid2';
 import axios from 'axios';
 import Model from 'react-body-highlighter';
+import { bodyData as data } from '@/utils/mockData';
 
 const BodyHighlighter = ({ username }) => {
-  const data = [
-    { name: 'Bench Press', muscles: ['chest', 'triceps', 'front-deltoids'] },
-    { name: 'Push Ups', muscles: ['chest', 'triceps'] },
-    {
-      name: 'Push Ups1',
-      muscles: ['chest', 'triceps', 'upper-back', 'upper-back', 'lower-back'],
-    },
-  ];
-
   const handleClick = React.useCallback(({ muscle, data }) => {
     const { exercises, frequency } = data;
 
