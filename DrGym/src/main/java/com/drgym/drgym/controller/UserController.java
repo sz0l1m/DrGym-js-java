@@ -111,6 +111,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{username}/daily-exercise-count")
+    public ResponseEntity<?> getUserDailyExerciseCount(@PathVariable String username) {
+        try {
+            Clob exercisesJson = exerciseService.getUserDailyExerciseCount(username);
+            String exercisesJsonString = exercisesJson.getSubString(1, (int) exercisesJson.length());
+            return ResponseEntity.ok(exercisesJsonString);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("ERROR while fetching daily exercise count.");
+        }
+    }
+
     public record WorkoutResponse(
             Long workoutId,
             LocalDateTime startDate,
