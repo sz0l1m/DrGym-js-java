@@ -1,7 +1,6 @@
 package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.*;
-import com.drgym.drgym.repository.UserRepository;
 import com.drgym.drgym.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class AuthController {
         return authService.verify(email, token);
     }
 
-        @PostMapping("/register")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody UserRegistrationRequest request) {
         return authService.register(request);
     }

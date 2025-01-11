@@ -1,8 +1,6 @@
 package com.drgym.drgym.controller;
 
-import com.drgym.drgym.model.Activity;
-import com.drgym.drgym.model.Workout;
-import com.drgym.drgym.model.Exercise;
+import com.drgym.drgym.model.*;
 import com.drgym.drgym.service.ExerciseService;
 import com.drgym.drgym.service.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,10 +60,9 @@ public class WorkoutController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public ResponseEntity<Workout> createWorkout(@RequestBody Workout workout) {
-        Workout savedWorkout = workoutService.saveWorkout(workout);
-        return ResponseEntity.ok(savedWorkout);
+    @PostMapping("/create")
+    public ResponseEntity<?> createWorkout(@RequestBody WorkoutCreateRequest request) {
+        return workoutService.createWorkout(request);
     }
 
     @DeleteMapping("/{id}")

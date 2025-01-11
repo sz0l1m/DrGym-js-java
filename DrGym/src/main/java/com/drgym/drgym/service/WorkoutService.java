@@ -1,17 +1,19 @@
 package com.drgym.drgym.service;
 
-import com.drgym.drgym.model.Activity;
-import com.drgym.drgym.model.Workout;
-import com.drgym.drgym.model.WorkoutActivity;
+import com.drgym.drgym.model.*;
 import com.drgym.drgym.repository.ActivityRepository;
 import com.drgym.drgym.repository.WorkoutActivityRepository;
 import com.drgym.drgym.repository.WorkoutRepository;
 import jakarta.transaction.Transactional;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,8 +26,6 @@ public class WorkoutService {
 
     @Autowired
     private WorkoutActivityRepository workoutActivityRepository;
-
-
 
     public Optional<Workout> findById(Long id) {return workoutRepository.findById(id);}
 
@@ -51,6 +51,25 @@ public class WorkoutService {
         return workoutRepository.save(workout);
     }
 
+    public ResponseEntity<?> createWorkout(@RequestBody WorkoutCreateRequest request) {
+        List<Activity> savedActivities = activityRepository.saveAll(request.getActivities());
+
+        Workout workout = new Workout(
+                request.getStartDatetime(),
+                request.getUsername(),
+                request.getEndDatetime(),
+                request.getDescription(),
+                request.getCreatedDatetime()
+        );
+        Workout savedWorkout = workoutRepository.save(workout);
+
+        List<WorkoutActivity> workoutActivities = savedActivities.stream()
+                .map(activity -> new WorkoutActivity(savedWorkout.getId(), activity.getId()))
+                .collect(Collectors.toList());
+        workoutActivityRepository.saveAll(workoutActivities);
+
+        return ResponseEntity.ok("Workout created successfully");
+    }
 
     public void deleteWorkout(Long id) {
         List<WorkoutActivity> workoutActivities = workoutActivityRepository.findByWorkoutId(id);
@@ -66,7 +85,7 @@ public class WorkoutService {
     }
 
     public void addActivityToWorkout(Long workoutId, Long activityId) {
-            WorkoutActivity workoutActivity = new WorkoutActivity(2137L, workoutId, activityId);
+            WorkoutActivity workoutActivity = new WorkoutActivity(workoutId, activityId);
             workoutActivityRepository.save(workoutActivity);
     }
 
