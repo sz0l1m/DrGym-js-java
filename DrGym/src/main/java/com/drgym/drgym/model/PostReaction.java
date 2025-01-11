@@ -1,17 +1,25 @@
 // author: ksiemion
 package com.drgym.drgym.model;
 
+import jakarta.persistence.*;
 
+@Entity
 public class PostReaction {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reactionId;
-    private Long postId;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    @Column(name = "user_id")
     private Long userId;
 
     public PostReaction() {}
 
-    public PostReaction(Long reactionId, Long postId, Long userId) {
-        this.reactionId = reactionId;
-        this.postId = postId;
+    public PostReaction(Post post, Long userId) {
+        this.post = post;
         this.userId = userId;
     }
 
@@ -23,12 +31,12 @@ public class PostReaction {
         this.reactionId = reactionId;
     }
 
-    public Long getPostId() {
-        return postId;
+    public Post getPost() {
+        return post;
     }
 
-    public void setPostId(Long postId) {
-        this.postId = postId;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     public Long getUserId() {
