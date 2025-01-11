@@ -1,17 +1,23 @@
 // author: ksiemion
 package com.drgym.drgym.model;
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Entity
 public class Post {
+    @Id
     private Long id;
+    @Column(name = "author_name")
     private String authorUsername;
+    @Column(name = "post_date")
     private LocalDateTime date;
+    @Column(name = "content")
     private String content;
+    @Column(name = "title")
     private String title;
+    @Column(name = "workout_id")
     private Long trainingId;
     private List<Long> comments = new ArrayList<>();
     private List<Long> reactions = new ArrayList<>();
