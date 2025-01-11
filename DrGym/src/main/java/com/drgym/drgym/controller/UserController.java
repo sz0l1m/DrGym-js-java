@@ -8,6 +8,11 @@ import com.drgym.drgym.model.PostReaction;
 import com.drgym.drgym.service.ExerciseService;
 import com.drgym.drgym.service.UserService;
 import com.drgym.drgym.service.WorkoutService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import com.drgym.drgym.service.PostService;
 import com.drgym.drgym.service.PostReactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.security.Key;
 
 @RestController
 @RequestMapping("/api/users")
@@ -38,6 +44,13 @@ public class UserController {
 
     @Autowired
     private PostReactionService postReactionService;
+
+    private final Key SECRET_KEY;
+
+    @Autowired
+    public UserController(Key jwtSecretKey) {
+        this.SECRET_KEY = jwtSecretKey;
+    }
 
     @GetMapping("/{username}")
     public ResponseEntity<?> getUser(@PathVariable String username) {
@@ -110,7 +123,18 @@ public class UserController {
     public ResponseEntity<?> getUserExercisesInPeriod(
             @PathVariable String username,
             @RequestParam String startDate,
-            @RequestParam String endDate) {
+            @RequestParam String endDate,
+            HttpServletRequest request) {
+
+        String jwtToken = getJwtTokenFromCookie(request);
+        if (jwtToken == null) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        Claims claims = validateToken(jwtToken);
+        if (claims == null || !claims.getSubject().equals(username)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
 
         try {
             Clob exercisesJson = exerciseService.getExercisesForUserInPeriod(username, startDate, endDate);
@@ -125,7 +149,20 @@ public class UserController {
     }
 
     @GetMapping("/{username}/daily-exercise-count")
-    public ResponseEntity<?> getUserDailyExerciseCount(@PathVariable String username) {
+    public ResponseEntity<?> getUserDailyExerciseCount(
+            @PathVariable String username,
+            HttpServletRequest request) {
+
+        String jwtToken = getJwtTokenFromCookie(request);
+        if (jwtToken == null) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        Claims claims = validateToken(jwtToken);
+        if (claims == null || !claims.getSubject().equals(username)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
         try {
             Clob exercisesJson = exerciseService.getUserDailyExerciseCount(username);
             if (exercisesJson == null || exercisesJson.length() == 0) {
@@ -205,4 +242,28 @@ public class UserController {
     }
 
     private record UserDTO(String username, String name, String surname, Double weight, Double height) {}
+
+    private String getJwtTokenFromCookie(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    private Claims validateToken(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

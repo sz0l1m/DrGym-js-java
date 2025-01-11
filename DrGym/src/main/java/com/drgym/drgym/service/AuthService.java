@@ -37,7 +37,16 @@ public class AuthService {
     @Autowired
     private EmailService emailService;
 
-    private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final Key SECRET_KEY;
+
+    @Autowired
+    public AuthService(UserRepository userRepository, TokenRepository tokenRepository, PasswordEncoder passwordEncoder, EmailService emailService, Key jwtSecretKey) {
+        this.userRepository = userRepository;
+        this.tokenRepository = tokenRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
+        this.SECRET_KEY = jwtSecretKey;
+    }
 
     public ResponseEntity<?> login(String identifier, String password, HttpServletResponse response) {
         Optional<User> userOptional = userRepository.findByEmail(identifier);
@@ -50,7 +59,7 @@ public class AuthService {
                 return ResponseEntity.status(403).body("User is not verified");
             }
             String token = Jwts.builder()
-                    .setSubject(user.getEmail())
+                    .setSubject(user.getUsername())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                     .signWith(SECRET_KEY)
