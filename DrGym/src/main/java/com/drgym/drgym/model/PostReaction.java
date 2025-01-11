@@ -1,26 +1,33 @@
-// author: ksiemion
 package com.drgym.drgym.model;
 
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="post_reactions")
 public class PostReaction {
-    private Long reactionId;
+    @Id
+    @Column(name = "post_reaction_id")
+    private Long postReactionId;
+
+    @Column(name = "post_id")
     private Long postId;
-    private Long userId;
+
+    @Column(name = "author_username")
+    private String authorUsername;
 
     public PostReaction() {}
 
-    public PostReaction(Long reactionId, Long postId, Long userId) {
-        this.reactionId = reactionId;
+    public PostReaction(Long postId, String authorUsername) {
         this.postId = postId;
-        this.userId = userId;
+        this.authorUsername = authorUsername;
     }
 
-    public Long getReactionId() {
-        return reactionId;
+    public Long getPostReactionId() {
+        return postReactionId;
     }
 
-    public void setReactionId(Long reactionId) {
-        this.reactionId = reactionId;
+    public void setPostReactionId(Long postReactionId) {
+        this.postReactionId = postReactionId;
     }
 
     public Long getPostId() {
@@ -31,11 +38,11 @@ public class PostReaction {
         this.postId = postId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getAuthorUsername() {
+        return authorUsername;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
     }
 }
