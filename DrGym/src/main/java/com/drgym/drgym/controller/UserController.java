@@ -114,6 +114,9 @@ public class UserController {
 
         try {
             Clob exercisesJson = exerciseService.getExercisesForUserInPeriod(username, startDate, endDate);
+            if (exercisesJson == null || exercisesJson.length() == 0) {
+                return ResponseEntity.ok("[]");
+            }
             String exercisesJsonString = exercisesJson.getSubString(1, (int) exercisesJson.length());
             return ResponseEntity.ok(exercisesJsonString);
         } catch (Exception e) {
@@ -125,6 +128,9 @@ public class UserController {
     public ResponseEntity<?> getUserDailyExerciseCount(@PathVariable String username) {
         try {
             Clob exercisesJson = exerciseService.getUserDailyExerciseCount(username);
+            if (exercisesJson == null || exercisesJson.length() == 0) {
+                return ResponseEntity.ok("[]");
+            }
             String exercisesJsonString = exercisesJson.getSubString(1, (int) exercisesJson.length());
             return ResponseEntity.ok(exercisesJsonString);
         } catch (Exception e) {
