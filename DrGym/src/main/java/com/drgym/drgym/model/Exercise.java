@@ -25,6 +25,8 @@ public class Exercise {
     private String name;
 
     @ElementCollection
+    @CollectionTable(name = "exercises_muscles", joinColumns = @JoinColumn(name = "exercise_id"))
+    @Column(name = "muscle_id")
     private List<String> musclesWorked;
 
     public Exercise() {
