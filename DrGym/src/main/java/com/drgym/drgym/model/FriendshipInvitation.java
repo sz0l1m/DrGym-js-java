@@ -5,16 +5,16 @@ import java.time.LocalDateTime;
 
 public class FriendshipInvitation {
     private Long id;
-    private Long whoSendId;
-    private Long whoReceiveId;
+    private String whoSendUsername;
+    private String whoReceiveUsername;
     private LocalDateTime sendTime;
 
     public FriendshipInvitation() {}
 
-    public FriendshipInvitation(Long id, Long whoSendId, Long whoReceiveId, LocalDateTime sendTime) {
+    public FriendshipInvitation(Long id, String whoSendUsername, String whoReceiveUsername, LocalDateTime sendTime) {
         this.id = id;
-        this.whoSendId = whoSendId;
-        this.whoReceiveId = whoReceiveId;
+        this.whoSendUsername = whoSendUsername;
+        this.whoReceiveUsername = whoReceiveUsername;
         this.sendTime = sendTime;
     }
 
@@ -26,20 +26,20 @@ public class FriendshipInvitation {
         this.id = id;
     }
 
-    public Long getWhoSendId() {
-        return whoSendId;
+    public String getWhoSendUsername() {
+        return whoSendUsername;
     }
 
-    public void setWhoSendId(Long whoSendId) {
-        this.whoSendId = whoSendId;
+    public void setWhoSendUsername(String whoSendUsername) {
+        this.whoSendUsername = whoSendUsername;
     }
 
-    public Long getWhoReceiveId() {
-        return whoReceiveId;
+    public String getWhoReceiveUsername() {
+        return whoReceiveUsername;
     }
 
-    public void setWhoReceiveId(Long whoReceiveId) {
-        this.whoReceiveId = whoReceiveId;
+    public void setWhoReceiveUsername(String whoReceiveUsername) {
+        this.whoReceiveUsername = whoReceiveUsername;
     }
 
     public LocalDateTime getSendTime() {
