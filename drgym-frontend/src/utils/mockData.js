@@ -49,6 +49,10 @@ const bodyData = [
     name: 'Legs',
     muscles: ['gluteal', 'quadriceps', 'quadriceps', 'calves'],
   },
+  {
+    name: 'Legs',
+    muscles: ['gluteal', 'quadriceps', 'quadriceps', 'calves'],
+  },
 ];
 
 const calendarData = [

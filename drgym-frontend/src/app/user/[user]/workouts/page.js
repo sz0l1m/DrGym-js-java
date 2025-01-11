@@ -29,16 +29,12 @@ const Workouts = ({ showAppMessage }) => {
         );
         setWorkoutsData(response.data);
       } catch (err) {
-        if (err.response?.status === 404) {
-          setWorkoutsData([]);
-        } else {
-          setError(err.message);
-          showAppMessage({
-            status: true,
-            text: 'Error fetching workouts',
-            type: 'error',
-          });
-        }
+        setError(err.message);
+        showAppMessage({
+          status: true,
+          text: 'Error fetching workouts',
+          type: 'error',
+        });
       } finally {
         setLoading(false);
       }
