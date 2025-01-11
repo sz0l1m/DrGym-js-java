@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name="posts")
 public class Post {
     @Id
+    @Column(name = "post_id")
     private Long id;
 
     @Column(name = "author_name")
