@@ -23,13 +23,17 @@ const BodyHighlighter = ({ username }) => {
     const fetchBodyData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/mandrysz/exercises?startDate=2024-01-01&endDate=2025-01-31`,
-          {
-            withCredentials: true,
-          }
-        );
-        setBodyData(response.data);
+        // const response = await axios.get(
+        //   `${process.env.NEXT_PUBLIC_API_URL}/api/users/mandrysz/exercises?startDate=2024-01-01&endDate=2025-01-31`,
+        //   {
+        //     withCredentials: true,
+        //   }
+        // );
+        // setBodyData(response.data);
+        setTimeout(() => {
+          setBodyData(mockData);
+          setLoading(false);
+        }, 1500);
       } catch (error) {
         setError('Failed to load the data');
         setLoading(false);

@@ -20,19 +20,25 @@ const Calendar = ({ username }) => {
     const fetchCalendarData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/mandrysz/daily-exercise-count`,
-          {
-            withCredentials: true,
-          }
-        );
-        setCalendarData(
-          setMinCalendarRange(response.data, '2024-01-01', '2024-12-31')
-        );
+        setTimeout(() => {
+          setCalendarData(
+            setMinCalendarRange(mockData, '2024-01-01', '2024-12-31')
+          );
+          setLoading(false);
+        }, 2500);
+        // const response = await axios.get(
+        //   `${process.env.NEXT_PUBLIC_API_URL}/api/users/mandrysz/daily-exercise-count`,
+        //   {
+        //     withCredentials: true,
+        //   }
+        // );
+        // setCalendarData(
+        //   setMinCalendarRange(response.data, '2024-01-01', '2024-12-31')
+        // );
       } catch (error) {
         setError('Failed to load calendar data');
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     };
 

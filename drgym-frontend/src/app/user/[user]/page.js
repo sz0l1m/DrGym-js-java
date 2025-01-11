@@ -12,6 +12,7 @@ import Box from '@mui/material/Box';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import PostList from '@/components/PostList';
 
 const User = ({ params }) => {
   const [loading, setLoading] = React.useState(true);
@@ -111,15 +112,18 @@ const User = ({ params }) => {
             />
           </Card>
         )}
+        {!loading && (
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Calendar username={user} />
+            <Box sx={{ my: 6 }}>
+              <BodyHighlighter username={user} />
+            </Box>
+            <Box sx={{ width: '100%' }}>
+              <PostList username={user} onlyThisUser />
+            </Box>
+          </Box>
+        )}
       </Box>
-      {!loading && (
-        <>
-          <Calendar username={user} />
-          <Grid sx={{ mt: 6 }}>
-            <BodyHighlighter username={user} />
-          </Grid>
-        </>
-      )}
     </Grid>
   );
 };

@@ -5,7 +5,7 @@ import Post from '@/components/Post';
 import SkeletonCard from '@/components/SkeletonCard';
 import axios from 'axios';
 
-const PostList = ({ username, showAppMessage }) => {
+const PostList = ({ username, onlyThisUser, showAppMessage }) => {
   const [workoutsData, setWorkoutsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,13 +14,20 @@ const PostList = ({ username, showAppMessage }) => {
     const fetchWorkouts = async () => {
       try {
         setLoading(true);
-        const response1 = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
-        );
-        const response2 = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/pedziwiatr/workouts`
-        );
-        setWorkoutsData([...response1.data, ...response2.data]);
+        if (onlyThisUser) {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/users/${username}/workouts`
+          );
+          setWorkoutsData(response.data);
+        } else {
+          const response1 = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
+          );
+          const response2 = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/users/pedziwiatr/workouts`
+          );
+          setWorkoutsData([...response1.data, ...response2.data]);
+        }
       } catch (err) {
         setError('Error fetching posts');
         showAppMessage({
@@ -34,7 +41,7 @@ const PostList = ({ username, showAppMessage }) => {
     };
 
     fetchWorkouts();
-  }, [showAppMessage]);
+  }, [username, onlyThisUser, showAppMessage]);
 
   if (error) return <Typography textAlign="center">{error}</Typography>;
   return (

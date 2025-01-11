@@ -20,12 +20,10 @@ const Stats = ({ params }) => {
         py: 2,
       }}
     >
-      <Grid size={12}>
-        <Typography sx={{ mb: 3 }} variant="h6" gutterBottom>
-          Your workout calendar
-        </Typography>
-        <Calendar username={user} />
-      </Grid>
+      <Typography sx={{ mb: 3 }} variant="h6" gutterBottom>
+        Your workout calendar
+      </Typography>
+      <Calendar username={user} />
       <Grid sx={{ mt: 6 }}>
         <BodyHighlighter username={user} />
       </Grid>
