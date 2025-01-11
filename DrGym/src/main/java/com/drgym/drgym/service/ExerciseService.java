@@ -33,4 +33,9 @@ public class ExerciseService {
     public Clob getExercisesForUserInPeriod(String username, String startDate, String endDate) {
         return exerciseRepository.getExercisesForUserInPeriod(username, startDate, endDate);
     }
+
+    public Clob getUserDailyExerciseCount(String username) {
+        return exerciseRepository.getUserDailyExerciseCount(username);
+    }
+
 }
