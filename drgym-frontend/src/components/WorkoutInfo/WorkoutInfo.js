@@ -13,9 +13,11 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import EastIcon from '@mui/icons-material/East';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import Tooltip from '@mui/material/Tooltip';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import ActivityInfo from '@/components/ActivityInfo';
 import { formatDate, getDiffInHoursAndMinutes } from '@/utils/dateUtils';
 import style from './WorkoutInfo.module.css';
+import Grid from '@mui/material/Grid2';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -43,9 +45,20 @@ const ExpandMore = styled((props) => {
 
 export default function WorkoutCard({ workout }) {
   const [expanded, setExpanded] = useState(false);
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(workout.likes || 10);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
+  };
+
+  const handleLikeClick = () => {
+    if (liked) {
+      setLikeCount((prev) => prev - 1);
+    } else {
+      setLikeCount((prev) => prev + 1);
+    }
+    setLiked(!liked);
   };
 
   return (
@@ -80,6 +93,18 @@ export default function WorkoutCard({ workout }) {
         >
           <ExpandMoreIcon />
         </ExpandMore>
+        <Grid container alignItems="center" gap={2} sx={{ pl: 4 }}>
+          <IconButton
+            onClick={handleLikeClick}
+            sx={{
+              color: liked ? 'red' : 'gray',
+              ml: 'auto',
+            }}
+          >
+            <FavoriteIcon />
+          </IconButton>
+          <Typography sx={{ ml: '-8px' }}>{likeCount}</Typography>
+        </Grid>
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
