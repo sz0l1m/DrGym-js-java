@@ -104,7 +104,8 @@ public class UserController {
 
         try {
             Clob exercisesJson = exerciseService.getExercisesForUserInPeriod(username, startDate, endDate);
-            return ResponseEntity.ok(exercisesJson);
+            String exercisesJsonString = exercisesJson.getSubString(1, (int) exercisesJson.length());
+            return ResponseEntity.ok(exercisesJsonString);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("ERROR while fetching exercises.");
         }
