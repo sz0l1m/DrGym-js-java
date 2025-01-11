@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.sql.Clob;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
@@ -93,6 +94,20 @@ public class UserController {
                 .toList();
 
         return ResponseEntity.ok(workoutResponses);
+    }
+
+    @GetMapping("/{username}/exercises")
+    public ResponseEntity<?> getUserExercisesInPeriod(
+            @PathVariable String username,
+            @RequestParam String startDate,
+            @RequestParam String endDate) {
+
+        try {
+            Clob exercisesJson = exerciseService.getExercisesForUserInPeriod(username, startDate, endDate);
+            return ResponseEntity.ok(exercisesJson);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("ERROR while fetching exercises.");
+        }
     }
 
     public record WorkoutResponse(
