@@ -20,7 +20,7 @@ const Stats = ({ params }) => {
         py: 2,
       }}
     >
-      <Grid>
+      <Grid size={12}>
         <Typography sx={{ mb: 3 }} variant="h6" gutterBottom>
           Your workout calendar
         </Typography>

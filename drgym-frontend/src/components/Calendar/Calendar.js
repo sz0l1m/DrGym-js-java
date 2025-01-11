@@ -26,7 +26,12 @@ const Calendar = ({ username }) => {
           );
           setLoading(false);
         }, 2500);
-        // const response = await axios.get(`/api/calendar/${username}`);
+        // const response = await axios.get(
+        //   `${process.env.NEXT_PUBLIC_API_URL}/api/users/mandrysz/daily-exercise-count`,
+        //   {
+        //     withCredentials: true,
+        //   }
+        // );
         // setCalendarData(
         //   setMinCalendarRange(response.data, '2024-01-01', '2024-12-31')
         // );
