@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 @Table(name="post_reactions")
 public class PostReaction {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_reaction_id")
     private Long postReactionId;
 
     @Column(name = "post_id")
