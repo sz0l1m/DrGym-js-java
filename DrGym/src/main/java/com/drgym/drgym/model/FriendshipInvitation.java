@@ -1,12 +1,25 @@
 // author: ksiemion
 package com.drgym.drgym.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name="friendship_invitations")
 public class FriendshipInvitation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name = "who_send_username")
     private String whoSendUsername;
+
+    @Column(name = "who_receive_username")
     private String whoReceiveUsername;
+
+    @Column(name = "send_time")
     private LocalDateTime sendTime;
 
     public FriendshipInvitation() {}
