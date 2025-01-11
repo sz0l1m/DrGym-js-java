@@ -46,6 +46,9 @@ public class AuthService {
         }
         if (userOptional.isPresent() && passwordEncoder.matches(password, userOptional.get().getPassword())) {
             User user = userOptional.get();
+            if (!user.isVerified()) {
+                return ResponseEntity.status(403).body("User is not verified");
+            }
             String token = Jwts.builder()
                     .setSubject(user.getEmail())
                     .setIssuedAt(new Date())
