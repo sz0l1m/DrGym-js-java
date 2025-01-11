@@ -131,8 +131,6 @@ public class AuthService {
         }
         user.setVerified(true);
         userRepository.save(user);
-        verificationToken.setVerificationToken(null);
-        tokenRepository.save(verificationToken);
         return ResponseEntity.ok("User verified successfully");
     }
 
