@@ -7,7 +7,7 @@ import Calendar from '@/components/Calendar';
 import BodyHighlighter from '@/components/BodyHighlighter';
 
 const Stats = ({ params }) => {
-  const { username } = React.use(params);
+  const { user } = React.use(params);
 
   return (
     <Grid
@@ -24,10 +24,10 @@ const Stats = ({ params }) => {
         <Typography sx={{ mb: 3 }} variant="h6" gutterBottom>
           Your workout calendar
         </Typography>
-        <Calendar username={username} />
+        <Calendar username={user} />
       </Grid>
       <Grid sx={{ mt: 6 }}>
-        <BodyHighlighter username={username} />
+        <BodyHighlighter username={user} />
       </Grid>
     </Grid>
   );
