@@ -1,5 +1,5 @@
-// author: ksiemion
 package com.drgym.drgym.model;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,18 +9,24 @@ import java.util.List;
 public class Post {
     @Id
     private Long id;
+
     @Column(name = "author_name")
     private String authorUsername;
+
     @Column(name = "post_date")
     private LocalDateTime date;
+
     @Column(name = "content")
     private String content;
+
     @Column(name = "title")
     private String title;
+
     @Column(name = "workout_id")
     private Long trainingId;
-    private List<Long> comments = new ArrayList<>();
-    private List<Long> reactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostReaction> reactions = new ArrayList<>();
 
     public Post() {}
 
@@ -55,11 +61,7 @@ public class Post {
         return trainingId;
     }
 
-    public List<Long> getComments() {
-        return comments;
-    }
-
-    public List<Long> getReactions() {
+    public List<PostReaction> getReactions() {
         return reactions;
     }
 
@@ -87,27 +89,17 @@ public class Post {
         this.trainingId = training;
     }
 
-    public void setComments(List<Long> comments) {
-        this.comments = comments;
-    }
-
-    public void setReactions(List<Long> reactions) {
+    public void setReactions(List<PostReaction> reactions) {
         this.reactions = reactions;
     }
 
-    public void addComment(Long commentId) {
-        comments.add(commentId);
+    public void addReaction(PostReaction reaction) {
+        reactions.add(reaction);
+        reaction.setPostId(this.id);
     }
 
-    public void addReaction(Long reactionId) {
-        reactions.add(reactionId);
-    }
-
-    public void removeComment(Long commentId) {
-        comments.remove(commentId);
-    }
-
-    public void removeReaction(Long reactionId) {
-        reactions.remove(reactionId);
+    public void removeReaction(PostReaction reaction) {
+        reactions.remove(reaction);
+        reaction.setPostId(null);
     }
 }
