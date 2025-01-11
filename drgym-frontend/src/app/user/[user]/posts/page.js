@@ -3,11 +3,10 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid2';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import Post from '@/components/Post';
 import axios from 'axios';
-import style from './posts.module.css';
 import SkeletonCard from '@/components/SkeletonCard';
 import { useSession } from 'next-auth/react';
 
@@ -62,7 +61,7 @@ const PostsContent = ({ showAppMessage }) => {
 
   if (error) return <Typography>Error: {error}</Typography>;
   return (
-    <Box className={style.postsWrapper}>
+    <Grid container direction="column" alignItems="center">
       {loading
         ? Array.from({ length: 3 }).map((_, index) => (
             <SkeletonCard key={index} type="post" />
@@ -70,7 +69,7 @@ const PostsContent = ({ showAppMessage }) => {
         : workoutsData.map((workout) => (
             <Post key={workout.workoutId} workout={workout} />
           ))}
-    </Box>
+    </Grid>
   );
 };
 

@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import WorkoutForm from '@/components/WorkoutForm';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import SkeletonCard from '@/components/SkeletonCard';
-import style from './workouts.module.css';
+import Grid from '@mui/material/Grid2';
 import { useSession } from 'next-auth/react';
 
 const Workouts = ({ showAppMessage }) => {
@@ -64,7 +64,7 @@ const Workouts = ({ showAppMessage }) => {
           Add workout
         </Button>
       </Box>
-      <Box className={style.workoutsWrapper}>
+      <Grid container direction="column" alignItems="center">
         {loading ? (
           Array.from({ length: 3 }).map((_, index) => (
             <SkeletonCard key={index} />
@@ -83,7 +83,7 @@ const Workouts = ({ showAppMessage }) => {
             />
           ))
         )}
-      </Box>
+      </Grid>
       <WorkoutForm
         dialogTitle="Add new workout"
         popupType="new"
