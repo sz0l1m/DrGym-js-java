@@ -1,4 +1,3 @@
-// author: ksiemion
 package com.drgym.drgym.model;
 
 import jakarta.persistence.*;
@@ -7,43 +6,42 @@ import jakarta.persistence.*;
 public class PostReaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reactionId;
+    private Long postReactionId;
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @Column(name = "post_id")
+    private Long postId;
 
-    @Column(name = "user_id")
-    private Long userId;
+    @Column(name = "author_username")
+    private String authorUsername;
 
     public PostReaction() {}
 
-    public PostReaction(Post post, Long userId) {
-        this.post = post;
-        this.userId = userId;
+    public PostReaction(Long postId, String authorUsername) {
+        this.postId = postId;
+        this.authorUsername = authorUsername;
     }
 
-    public Long getReactionId() {
-        return reactionId;
+    public Long getPostReactionId() {
+        return postReactionId;
     }
 
-    public void setReactionId(Long reactionId) {
-        this.reactionId = reactionId;
+    public void setPostReactionId(Long postReactionId) {
+        this.postReactionId = postReactionId;
     }
 
-    public Post getPost() {
-        return post;
+    public Long getPostId() {
+        return postId;
     }
 
-    public void setPost(Post post) {
-        this.post = post;
+    public void setPostId(Long postId) {
+        this.postId = postId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public String getAuthorUsername() {
+        return authorUsername;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
     }
 }
