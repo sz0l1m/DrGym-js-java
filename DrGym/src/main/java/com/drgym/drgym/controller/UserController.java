@@ -3,9 +3,12 @@ package com.drgym.drgym.controller;
 import com.drgym.drgym.model.Activity;
 import com.drgym.drgym.model.User;
 import com.drgym.drgym.model.Workout;
+import com.drgym.drgym.model.Post;
+import com.drgym.drgym.model.PostReaction;
 import com.drgym.drgym.service.ExerciseService;
 import com.drgym.drgym.service.UserService;
 import com.drgym.drgym.service.WorkoutService;
+import com.drgym.drgym.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +31,10 @@ public class UserController {
 
     @Autowired
     private ExerciseService exerciseService;
+
+    @Autowired
+    private PostService postService;
+
 
     @GetMapping("/{username}")
     public ResponseEntity<?> getUser(@PathVariable String username) {
@@ -120,6 +127,27 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("ERROR while fetching daily exercise count.");
         }
+    }
+
+    @PostMapping("/{username}/posts")
+    public ResponseEntity<?> createPost(@PathVariable String username, @RequestBody String content) {
+        Post createdPost = postService.createPost(username, content);
+        return ResponseEntity.ok(createdPost);
+    }
+
+    @DeleteMapping("/{username}/posts/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable String username, @PathVariable Long postId) {
+        postService.deletePost(postId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{username}/posts")
+    public ResponseEntity<?> getUserPosts(@PathVariable String username) {
+        List<Post> posts = postService.findPostsByUsername(username);
+        if (posts.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(posts);
     }
 
     public record WorkoutResponse(
