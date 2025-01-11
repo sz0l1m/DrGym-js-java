@@ -12,7 +12,7 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
-    @Column(name = "author_name")
+    @Column(name = "author_username")
     private String username;
 
     @Column(name = "post_date")
