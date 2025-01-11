@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class PostService {
@@ -15,6 +17,10 @@ public class PostService {
 
     public List<Post> findPostsByUsername(String username) {
         return postRepository.findByUsername(username);
+    }
+
+    public Optional<Post> findPostById(Long postId) {
+        return postRepository.findById(postId);
     }
 
     public Post createPost(String username, String content) {
