@@ -9,8 +9,7 @@ import java.util.function.LongToDoubleFunction;
 public class WorkoutActivity {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
-
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "workout_activity_id", nullable = false)
     private Long id;
 
@@ -24,12 +23,6 @@ public class WorkoutActivity {
     }
 
     public WorkoutActivity(Long workoutId, Long activityId) {
-        this.workoutId = workoutId;
-        this.activityId = activityId;
-    }
-
-    public WorkoutActivity(Long id, Long workoutId, Long activityId) {
-        this.id = id;
         this.workoutId = workoutId;
         this.activityId = activityId;
     }
