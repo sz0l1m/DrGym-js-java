@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Post {
     private Long id;
-    private Long authorId;
+    private String authorUsername;
     private LocalDateTime date;
     private String content;
     private String title;
@@ -29,8 +29,8 @@ public class Post {
         return id;
     }
 
-    public Long getAuthorId() {
-        return authorId;
+    public String getAuthorUsername() {
+        return authorUsername;
     }
 
     public LocalDateTime getDate() {
@@ -61,8 +61,8 @@ public class Post {
         this.id = id;
     }
 
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
     }
 
     public void setDate(LocalDateTime date) {
