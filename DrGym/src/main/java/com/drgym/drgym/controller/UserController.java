@@ -83,7 +83,7 @@ public class UserController {
     public ResponseEntity<?> getWorkoutsForUser(@PathVariable String username) {
         List<Workout> workouts = workoutService.findByUsername(username);
         if (workouts.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok("[]");
         }
 
         List<WorkoutResponse> workoutResponses = workouts.stream()
@@ -191,7 +191,7 @@ public class UserController {
     public ResponseEntity<?> getUserPosts(@PathVariable String username) {
         List<Post> posts = postService.findPostsByUsername(username);
         if (posts.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok("[]");
         }
         return ResponseEntity.ok(posts);
     }
@@ -200,7 +200,7 @@ public class UserController {
     public ResponseEntity<?> getReactionsForPost(@PathVariable String username, @PathVariable Long postId) {
         List<PostReaction> reactions = postReactionService.findByPostId(postId);
         if (reactions.isEmpty()) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.ok("[]");
         }
         return ResponseEntity.ok(reactions);
     }
