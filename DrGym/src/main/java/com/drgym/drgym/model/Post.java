@@ -11,7 +11,7 @@ public class Post {
     private Long id;
 
     @Column(name = "author_name")
-    private String authorUsername;
+    private String username;
 
     @Column(name = "post_date")
     private LocalDateTime date;
@@ -41,8 +41,8 @@ public class Post {
         return id;
     }
 
-    public String getAuthorUsername() {
-        return authorUsername;
+    public String getUsername() {
+        return username;
     }
 
     public LocalDateTime getDate() {
@@ -69,8 +69,8 @@ public class Post {
         this.id = id;
     }
 
-    public void setAuthorUsername(String authorUsername) {
-        this.authorUsername = authorUsername;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setDate(LocalDateTime date) {
