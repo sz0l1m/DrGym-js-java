@@ -3,6 +3,7 @@ package com.drgym.drgym.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name="post_reactions")
 public class PostReaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
