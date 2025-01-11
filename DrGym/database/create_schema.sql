@@ -287,3 +287,13 @@ SET VERIFICATION_TOKEN = NULL
 WHERE EMAIL = :NEW.EMAIL;
 END;
 /
+
+CREATE OR REPLACE TRIGGER delete_invitation_after_friendship
+    AFTER INSERT ON friendships
+    FOR EACH ROW
+BEGIN
+DELETE FROM friendship_invitations
+WHERE (who_send_username = :NEW.friend1_username AND who_receive_username = :NEW.friend2_username)
+   OR (who_send_username = :NEW.friend2_username AND who_receive_username = :NEW.friend1_username);
+END;
+/
