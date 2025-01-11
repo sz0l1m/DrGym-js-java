@@ -196,7 +196,7 @@ create table POST_COMMENTS
     POST_COMMENT_ID   NUMBER(8)    not null
         primary key,
     POST_ID           NUMBER(8)    not null
-        references POSTS,Ftg
+        references POSTS,
     AUTHOR_USERNAME   VARCHAR2(50) not null
         references USERS,
     CONTENT           CLOB,
@@ -243,6 +243,37 @@ WHERE FRIEND1_USERNAME = username
    OR FRIEND2_USERNAME = username;
 
 RETURN friend_count;
+END;
+/
+
+create FUNCTION GET_USERS_EXERCISES_IN_PERIOD(
+    p_username IN VARCHAR2,
+    p_start_date IN DATE,
+    p_end_date IN DATE
+) RETURN CLOB IS
+         data_json CLOB;
+BEGIN
+SELECT
+    JSON_ARRAYAGG(
+            JSON_OBJECT(
+                    'name' VALUE exercises.NAME,
+                    'muscles' VALUE (
+                    SELECT JSON_ARRAYAGG(muscles.MUSCLE_NAME)
+                    FROM EXERCISES_MUSCLES exercises_muscles
+                    JOIN MUSCLES muscles ON exercises_muscles.MUSCLE_ID = muscles.MUSCLE_ID
+                    WHERE exercises_muscles.EXERCISE_ID = exercises.EXERCISE_ID
+                )
+            )
+    )
+INTO data_json
+FROM EXERCISES exercises
+         JOIN WORKOUTS workouts ON workouts.USERNAME = p_username
+         JOIN WORKOUT_ACTIVITIES workout_activities ON workout_activities.WORKOUT_ID = workouts.WORKOUT_ID
+         JOIN ACTIVITIES activities ON activities.ACTIVITY_ID = workout_activities.ACTIVITY_ID
+WHERE workouts.START_DATETIME BETWEEN p_start_date AND p_end_date
+  AND activities.EXERCISE_ID = exercises.EXERCISE_ID;
+
+RETURN data_json;
 END;
 /
 
