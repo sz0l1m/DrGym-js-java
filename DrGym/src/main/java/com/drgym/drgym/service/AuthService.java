@@ -59,7 +59,7 @@ public class AuthService {
                 return ResponseEntity.status(403).body("User is not verified");
             }
             String token = Jwts.builder()
-                    .setSubject(user.getEmail())
+                    .setSubject(user.getUsername())
                     .setIssuedAt(new Date())
                     .setExpiration(new Date(System.currentTimeMillis() + 86400000))
                     .signWith(SECRET_KEY)
