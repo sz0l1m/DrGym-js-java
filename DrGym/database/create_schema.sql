@@ -277,3 +277,34 @@ RETURN data_json;
 END;
 /
 
+CREATE OR REPLACE FUNCTION GET_USER_DAILY_EXERCISE_COUNT(
+    p_username IN VARCHAR2
+) RETURN CLOB IS
+    data_json CLOB;
+BEGIN
+SELECT JSON_ARRAYAGG(
+               JSON_OBJECT(
+                       'date' VALUE TO_CHAR(workouts.END_DATETIME, 'YYYY-MM-DD'),
+                       'count' VALUE COUNT(*),
+                       'level' VALUE CASE
+                        WHEN COUNT(*) <= 0 THEN 0
+                        WHEN COUNT(*) <= 6 THEN 1
+                        WHEN COUNT(*) <= 12 THEN 2
+                        WHEN COUNT(*) <= 18 THEN 2
+                        ELSE 3
+                    END
+               )
+       )
+INTO data_json
+FROM WORKOUTS workouts
+         JOIN WORKOUT_ACTIVITIES workout_activities ON workout_activities.WORKOUT_ID = workouts.WORKOUT_ID
+         JOIN ACTIVITIES activities ON activities.ACTIVITY_ID = workout_activities.ACTIVITY_ID
+WHERE workouts.USERNAME = p_username
+GROUP BY workouts.END_DATETIME
+HAVING COUNT(*) > 0;
+
+RETURN data_json;
+END;
+/
+
+
