@@ -12,6 +12,7 @@ import java.util.List;
 public class Exercise {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name = "exercise_id")
     private Long id;
 
@@ -19,7 +20,7 @@ public class Exercise {
     private char type;
 
     @Column (name = "kcal_burned")
-    private Long kcal_burned;
+    private Long kcalBurned;
 
     @Column (name = "name")
     private String name;
@@ -35,13 +36,20 @@ public class Exercise {
     public Exercise(Long id, char type, Long kcal_burned, String name, ArrayList<String> musclesWorked) {
         this.id = id;
         this.type = type;
-        this.kcal_burned = kcal_burned;
+        this.kcalBurned = kcal_burned;
         this.name = name;
         if (musclesWorked != null) {
             this.musclesWorked = new ArrayList<>(musclesWorked);
         } else {
             this.musclesWorked = new ArrayList<>();
         }
+    }
+
+    public Exercise(String name, char type, Long kcalBurned, List<String> musclesWorked) {
+        this.name = name;
+        this.type = type;
+        this.kcalBurned = kcalBurned;
+        this.musclesWorked = musclesWorked;
     }
 
     public Long getId() {
@@ -61,11 +69,11 @@ public class Exercise {
     }
 
     public Long getKcal_burned() {
-        return kcal_burned;
+        return kcalBurned;
     }
 
     public void setKcal_burned(Long newKcal_burned) {
-        kcal_burned = newKcal_burned;
+        kcalBurned = newKcal_burned;
     }
 
     public String getName() {
