@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 @Table(name = "activities")
 public class Activity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "activity_id", nullable = false)
     private Long id;
 
@@ -23,8 +24,7 @@ public class Activity {
     @Column(name = "duration")
     private Timestamp duration;
 
-    public Activity(Long id, Long exercise_id, Long reps, Long weight, Timestamp duration) {
-        this.id = id;
+    public Activity(Long exercise_id, Long reps, Long weight, Timestamp duration) {
         this.exercise_id = exercise_id;
         this.reps = reps;
         this.weight = weight;

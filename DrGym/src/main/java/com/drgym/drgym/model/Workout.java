@@ -10,6 +10,7 @@ import jakarta.persistence.*;
 @Table(name="workouts")
 public class Workout {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "workout_id", nullable = false)
     private Long id;
 
@@ -38,11 +39,10 @@ public class Workout {
     public Workout() {
     }
 
-    public Workout(Long id, LocalDateTime dateStart, String username, LocalDateTime dateEnd, String description, LocalDateTime create_datetime, List<Long> activityIds) {
+    public Workout(LocalDateTime dateStart, String username, LocalDateTime dateEnd, String description, LocalDateTime create_datetime, List<Long> activityIds) {
         if (dateStart.isAfter(dateEnd)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
-        this.id = id;
         this.username = username;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
@@ -51,11 +51,10 @@ public class Workout {
         this.activityIds = activityIds;
     }
 
-    public Workout(Long id, LocalDateTime dateStart, String username, LocalDateTime dateEnd, String description, LocalDateTime create_datetime) {
+    public Workout(LocalDateTime dateStart, String username, LocalDateTime dateEnd, String description, LocalDateTime create_datetime) {
         if (dateStart.isAfter(dateEnd)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
-        this.id = id;
         this.username = username;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
