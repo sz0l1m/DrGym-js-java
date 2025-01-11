@@ -248,21 +248,21 @@ END;
 
 create FUNCTION GET_USERS_EXERCISES_IN_PERIOD(
     p_username IN VARCHAR2,
-    p_start_date IN DATE,
-    p_end_date IN DATE
+    p_start_date IN VARCHAR2,
+    p_end_date IN VARCHAR2
 ) RETURN CLOB IS
-         data_json CLOB;
+    data_json CLOB;
 BEGIN
 SELECT
     JSON_ARRAYAGG(
             JSON_OBJECT(
                     'name' VALUE exercises.NAME,
                     'muscles' VALUE (
-                    SELECT JSON_ARRAYAGG(muscles.MUSCLE_NAME)
-                    FROM EXERCISES_MUSCLES exercises_muscles
-                    JOIN MUSCLES muscles ON exercises_muscles.MUSCLE_ID = muscles.MUSCLE_ID
-                    WHERE exercises_muscles.EXERCISE_ID = exercises.EXERCISE_ID
-                )
+                            SELECT JSON_ARRAYAGG(muscles.MUSCLE_NAME)
+                            FROM EXERCISES_MUSCLES exercises_muscles
+                                     JOIN MUSCLES muscles ON exercises_muscles.MUSCLE_ID = muscles.MUSCLE_ID
+                            WHERE exercises_muscles.EXERCISE_ID = exercises.EXERCISE_ID
+                        )
             )
     )
 INTO data_json
@@ -270,7 +270,7 @@ FROM EXERCISES exercises
          JOIN WORKOUTS workouts ON workouts.USERNAME = p_username
          JOIN WORKOUT_ACTIVITIES workout_activities ON workout_activities.WORKOUT_ID = workouts.WORKOUT_ID
          JOIN ACTIVITIES activities ON activities.ACTIVITY_ID = workout_activities.ACTIVITY_ID
-WHERE workouts.START_DATETIME BETWEEN p_start_date AND p_end_date
+WHERE workouts.START_DATETIME BETWEEN TO_DATE(p_start_date, 'YYYY-MM-DD') AND TO_DATE(p_end_date, 'YYYY-MM-DD')
   AND activities.EXERCISE_ID = exercises.EXERCISE_ID;
 
 RETURN data_json;
