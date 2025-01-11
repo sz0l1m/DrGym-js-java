@@ -1,12 +1,25 @@
 // author: ksiemion
 package com.drgym.drgym.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name="friendships")
 public class Friendship {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
+
+    @Column(name = "friend1_username")
     private String friend1_username;
+
+    @Column(name = "friend2_username")
     private String friend2_username;
+
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public Friendship() {}
