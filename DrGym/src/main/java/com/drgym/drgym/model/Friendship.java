@@ -5,16 +5,16 @@ import java.time.LocalDateTime;
 
 public class Friendship {
     private Long id;
-    private Long friendId1;
-    private Long friendId2;
+    private String friend1_username;
+    private String friend2_username;
     private LocalDateTime createdAt;
 
     public Friendship() {}
 
-    public Friendship(Long id, Long friendId1, Long friendId2) {
+    public Friendship(Long id, String friend1_username, String friend2_username) {
         this.id = id;
-        this.friendId1 = friendId1;
-        this.friendId2 = friendId2;
+        this.friend1_username = friend1_username;
+        this.friend2_username = friend2_username;
     }
 
     public Long getId() {
@@ -25,19 +25,27 @@ public class Friendship {
         this.id = id;
     }
 
-    public Long getFriendId1() {
-        return friendId1;
+    public String getFriend1_username() {
+        return friend1_username;
     }
 
-    public void setFriendId1(Long friendId1) {
-        this.friendId1 = friendId1;
+    public void setFriend1_username(String friend1_username) {
+        this.friend1_username = friend1_username;
     }
 
-    public Long getFriendId2() {
-        return friendId2;
+    public String getFriend2_username() {
+        return friend2_username;
     }
 
-    public void setFriendId2(Long friendId2) {
-        this.friendId2 = friendId2;
+    public void setFriend2_username(String friend2_username) {
+        this.friend2_username = friend2_username;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
