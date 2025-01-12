@@ -16,6 +16,18 @@ create table USERS
 )
     /
 
+create trigger UPDATE_TOKEN_ON_VERIFIED
+    after update of VERIFIED
+    on USERS
+    for each row
+    when (NEW.verified = 1)
+BEGIN
+    UPDATE TOKEN
+    SET VERIFICATION_TOKEN = NULL
+    WHERE EMAIL = :NEW.EMAIL;
+END;
+/
+
 create table MUSCLES
 (
     MUSCLE_ID   NUMBER(4)    not null
@@ -24,181 +36,168 @@ create table MUSCLES
 )
     /
 
-create table EXERCISES
-(
-    EXERCISE_ID NUMBER(4)    not null
-        primary key,
-    TYPE        CHAR      default 'S',
-    KCAL_BURNED NUMBER(4) default 0,
-    NAME        VARCHAR2(40) not null
-)
-    /
-
-create table ACTIVITIES
-(
-    ACTIVITY_ID NUMBER(4) not null
-        primary key,
-    EXERCISE_ID NUMBER(4) not null
-        constraint FK_ACTIVITES_EXERCISE_ID
-            references EXERCISES,
-    REPS        NUMBER(4) default 0,
-    WEIGHT      NUMBER(4) default 0,
-    DURATION    DATE      default TO_DATE('00:00:00', 'HH24:MI:SS')
-)
-    /
-
-create table EXERCISES_MUSCLES
-(
-    EXERCISE_ID NUMBER(4) not null
-        references EXERCISES,
-    MUSCLE_ID   NUMBER(4) not null
-        references MUSCLES,
-    primary key (EXERCISE_ID, MUSCLE_ID)
-)
-    /
-
-create table WORKOUTS
-(
-    WORKOUT_ID       NUMBER       not null
-        primary key,
-    START_DATETIME   DATE         not null,
-    USERNAME         VARCHAR2(50) not null
-        references USERS
-            on delete cascade,
-    END_DATETIME     DATE,
-    DESCRIPTION      VARCHAR2(50 char),
-    CREATED_DATETIME TIMESTAMP(6) default CURRENT_TIMESTAMP
-)
-    /
-
-create table WORKOUT_ACTIVITIES
-(
-    WORKOUT_ID          NUMBER not null
-        references WORKOUTS
-            on delete cascade,
-    ACTIVITY_ID         NUMBER not null
-        references ACTIVITIES
-            on delete cascade,
-    WORKOUT_ACTIVITY_ID NUMBER not null
-        constraint WORKOUT_ACTIVITIES_PK
-            primary key
-)
-    /
-
 create table TOKEN
 (
     EMAIL              VARCHAR2(255) not null
-        primary key,
+        primary key
+        constraint EMAIL_FK
+            references USERS (EMAIL)
+                on delete cascade,
     VERIFICATION_TOKEN VARCHAR2(255),
     RESET_TOKEN        VARCHAR2(255),
     RESET_EXPIRY       TIMESTAMP(6)
 )
     /
 
-create table FRIENDSHIPS
+create table ACTIVITIES
 (
-    ID               NUMBER(8)    not null
+    ACTIVITY_ID NUMBER generated as identity
         primary key,
-    FRIEND1_USERNAME VARCHAR2(50) not null
-        constraint FRIEND1_FK
-            references USERS,
-    FRIEND2_USERNAME VARCHAR2(50) not null
-        constraint FRIEND2_FK
-            references USERS,
-    CREATED_AT       TIMESTAMP(6) default CURRENT_TIMESTAMP,
-    constraint FRIENDSHIP_UNIQUE_PAIR1
-        unique (FRIEND1_USERNAME, FRIEND2_USERNAME)
+    EXERCISE_ID NUMBER not null,
+    REPS        NUMBER,
+    WEIGHT      NUMBER,
+    DURATION    TIMESTAMP(6)
 )
     /
 
-alter table FRIENDSHIPS
-    add constraint FRIENDSHIP_UNIQUE_PAIR2
-        unique (FRIEND1_USERNAME, FRIEND2_USERNAME)
+create table WORKOUTS
+(
+    WORKOUT_ID       NUMBER generated as identity
+        primary key,
+    START_DATETIME   TIMESTAMP(6),
+    USERNAME         VARCHAR2(255)
+        constraint FK_WORKOUTS_USERNAME
+            references USERS
+                on delete cascade,
+    END_DATETIME     TIMESTAMP(6),
+    DESCRIPTION      VARCHAR2(255),
+    CREATED_DATETIME TIMESTAMP(6)
+)
     /
 
-create trigger TG_DIFFERENT_USERS_CHECK
-    before insert
-    on FRIENDSHIPS
-    for each row
-BEGIN
-    IF :NEW.FRIEND1_USERNAME = :NEW.FRIEND2_USERNAME THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Friendship cannot be created with only 1 user!');
-END IF;
-END;
-/
+create table WORKOUT_ACTIVITIES
+(
+    WORKOUT_ACTIVITY_ID NUMBER generated as identity
+        primary key,
+    WORKOUT_ID          NUMBER
+        constraint FK_WORKOUT_ACTIVITIES_WORKOUT_ID
+            references WORKOUTS
+            on delete cascade,
+    ACTIVITY_ID         NUMBER
+        constraint FK_TEMP_WORKOUT_ACTIVITIES_ACTIVITY_ID
+            references ACTIVITIES
+)
+    /
 
-create trigger TG_DELETE_FRIENDSHIP_INVITATION
+create table EXERCISES
+(
+    EXERCISE_ID NUMBER generated as identity
+        primary key,
+    TYPE        CHAR,
+    KCAL_BURNED NUMBER,
+    NAME        VARCHAR2(255)
+)
+    /
+
+create table EXERCISES_MUSCLES
+(
+    ID          NUMBER generated as identity
+        primary key,
+    EXERCISE_ID NUMBER
+        constraint EXERCISE_FK
+            references EXERCISES
+            on delete cascade,
+    MUSCLE_ID   NUMBER
+        constraint MUSCLE_FK
+            references MUSCLES
+)
+    /
+
+create table FRIENDSHIPS
+(
+    ID               NUMBER generated as identity
+        primary key,
+    FRIEND1_USERNAME VARCHAR2(255)
+        constraint FK_FRIEND1
+            references USERS,
+    FRIEND2_USERNAME VARCHAR2(255)
+        constraint FK_FRIEND2
+            references USERS,
+    CREATED_AT       TIMESTAMP(6)
+)
+    /
+
+create trigger DELETE_INVITATION_AFTER_FRIENDSHIP
     after insert
     on FRIENDSHIPS
     for each row
 BEGIN
-    DELETE FROM FRIENDSHIP_INVITATIONS
-    WHERE WHO_SEND_USERNAME = :NEW.FRIEND1_USERNAME
-      AND WHO_RECEIVE_USERNAME = :NEW.FRIEND2_USERNAME;
-    DELETE FROM FRIENDSHIP_INVITATIONS
-    WHERE WHO_SEND_USERNAME = :NEW.FRIEND2_USERNAME
-      AND WHO_RECEIVE_USERNAME = :NEW.FRIEND1_USERNAME;
+    DELETE FROM friendship_invitations
+    WHERE (who_send_username = :NEW.friend1_username AND who_receive_username = :NEW.friend2_username)
+       OR (who_send_username = :NEW.friend2_username AND who_receive_username = :NEW.friend1_username);
 END;
 /
 
 create table FRIENDSHIP_INVITATIONS
 (
-    FRIENDSHIP_INVITATION_ID NUMBER(8)    not null
+    ID                   NUMBER generated as identity
         primary key,
-    WHO_SEND_USERNAME        VARCHAR2(50) not null
-        constraint WHO_SEND_FK
+    WHO_SEND_USERNAME    VARCHAR2(255)
+        constraint FK_WHO_SEND
             references USERS,
-    WHO_RECEIVE_USERNAME     VARCHAR2(50) not null
-        constraint WHO_RECEIVE_FK
+    WHO_RECEIVE_USERNAME VARCHAR2(255)
+        constraint FK_WHO_RECEIVE
             references USERS,
-    SEND_TIME                TIMESTAMP(6) default CURRENT_TIMESTAMP
+    SEND_TIME            TIMESTAMP(6),
+    constraint UNIQUE_FRIENDSHIP_INVITATION
+        unique (WHO_SEND_USERNAME, WHO_RECEIVE_USERNAME)
 )
     /
 
+create trigger TG_BLOCK_DUPLICATE_INVITATIONS
+    before insert
+    on FRIENDSHIP_INVITATIONS
+    for each row
+DECLARE
+invitation_count NUMBER;
+BEGIN
+SELECT COUNT(*)
+INTO invitation_count
+FROM FRIENDSHIP_INVITATIONS
+WHERE WHO_SEND_USERNAME = :NEW.WHO_RECEIVE_USERNAME
+  AND WHO_RECEIVE_USERNAME = :NEW.WHO_SEND_USERNAME;
+
+IF invitation_count > 0 THEN
+        RAISE_APPLICATION_ERROR(-20001, 'The invitation receiver has already sent the sender an invitation.');
+END IF;
+END;
+/
+
 create table POSTS
 (
-    POST_ID         NUMBER(8)     not null
+    POST_ID         NUMBER       default "Z13"."ISEQ$$_643189".nextval generated as identity
         primary key,
     AUTHOR_USERNAME VARCHAR2(50)  not null
-        constraint AUTHOR_FK
-            references USERS,
+        references USERS,
     POST_DATE       TIMESTAMP(6) default CURRENT_TIMESTAMP,
     TITLE           VARCHAR2(100) not null,
     WORKOUT_ID      NUMBER(8)
-        constraint WORKOUT_FK
-            references WORKOUTS,
+        references WORKOUTS
+            on delete cascade,
     CONTENT         VARCHAR2(200)
 )
     /
 
-create trigger TG_DELETE_REACTIONS
-    after delete
-    on POSTS
-    for each row
-BEGIN
-    DELETE FROM POST_REACTIONS
-    WHERE POST_ID = :OLD.POST_ID;
-END;
-/
-
-create trigger TG_DELETE_COMMENTS
-    after delete
-    on POSTS
-    for each row
-BEGIN
-    DELETE FROM POST_COMMENTS
-    WHERE POST_ID = :OLD.POST_ID;
-END;
-/
-
 create table POST_COMMENTS
 (
-    POST_COMMENT_ID   NUMBER(8)    not null
-        primary key,
+    POST_COMMENT_ID   NUMBER(8)    default "Z13"."ISEQ$$_643195".nextval generated as identity
+		primary key,
     POST_ID           NUMBER(8)    not null
-        references POSTS,
+        constraint FK_POST_ID
+            references POSTS,
     AUTHOR_USERNAME   VARCHAR2(50) not null
-        references USERS,
+        constraint FK_AUTHOR_USERNAME
+            references USERS,
     CONTENT           CLOB,
     POST_COMMENT_DATE TIMESTAMP(6) default CURRENT_TIMESTAMP
 )
@@ -206,12 +205,15 @@ create table POST_COMMENTS
 
 create table POST_REACTIONS
 (
-    POST_REACTION_ID NUMBER(8)    not null
+    POST_REACTION_ID NUMBER(8) generated as identity
         primary key,
     POST_ID          NUMBER(8)    not null
-        references POSTS,
+        constraint FK_REACTION_POST_ID
+            references POSTS,
     AUTHOR_USERNAME  VARCHAR2(40) not null
-        references USERS
+        constraint FK_REACTOR_USERNAME
+            references USERS
+                on delete cascade
 )
     /
 
@@ -248,8 +250,8 @@ END;
 
 create FUNCTION GET_USERS_EXERCISES_IN_PERIOD(
     p_username IN VARCHAR2,
-    p_start_date IN DATE,
-    p_end_date IN DATE
+    p_start_date IN VARCHAR2,
+    p_end_date IN VARCHAR2
 ) RETURN CLOB IS
          data_json CLOB;
 BEGIN
@@ -258,11 +260,11 @@ SELECT
             JSON_OBJECT(
                     'name' VALUE exercises.NAME,
                     'muscles' VALUE (
-                    SELECT JSON_ARRAYAGG(muscles.MUSCLE_NAME)
-                    FROM EXERCISES_MUSCLES exercises_muscles
-                    JOIN MUSCLES muscles ON exercises_muscles.MUSCLE_ID = muscles.MUSCLE_ID
-                    WHERE exercises_muscles.EXERCISE_ID = exercises.EXERCISE_ID
-                )
+                            SELECT JSON_ARRAYAGG(muscles.MUSCLE_NAME)
+                            FROM EXERCISES_MUSCLES exercises_muscles
+                                     JOIN MUSCLES muscles ON exercises_muscles.MUSCLE_ID = muscles.MUSCLE_ID
+                            WHERE exercises_muscles.EXERCISE_ID = exercises.EXERCISE_ID
+                        )
             )
     )
 INTO data_json
@@ -270,17 +272,17 @@ FROM EXERCISES exercises
          JOIN WORKOUTS workouts ON workouts.USERNAME = p_username
          JOIN WORKOUT_ACTIVITIES workout_activities ON workout_activities.WORKOUT_ID = workouts.WORKOUT_ID
          JOIN ACTIVITIES activities ON activities.ACTIVITY_ID = workout_activities.ACTIVITY_ID
-WHERE workouts.START_DATETIME BETWEEN p_start_date AND p_end_date
+WHERE workouts.START_DATETIME BETWEEN TO_DATE(p_start_date, 'YYYY-MM-DD') AND TO_DATE(p_end_date, 'YYYY-MM-DD')
   AND activities.EXERCISE_ID = exercises.EXERCISE_ID;
 
 RETURN data_json;
 END;
 /
 
-CREATE OR REPLACE FUNCTION GET_USER_DAILY_EXERCISE_COUNT(
+create FUNCTION GET_USER_DAILY_EXERCISE_COUNT(
     p_username IN VARCHAR2
 ) RETURN CLOB IS
-    data_json CLOB;
+         data_json CLOB;
 BEGIN
 SELECT JSON_ARRAYAGG(
                JSON_OBJECT(
@@ -306,5 +308,4 @@ HAVING COUNT(*) > 0;
 RETURN data_json;
 END;
 /
-
 
