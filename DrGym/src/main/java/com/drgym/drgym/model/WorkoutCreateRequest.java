@@ -8,7 +8,6 @@ public class WorkoutCreateRequest {
     private String description;
     private LocalDateTime startDatetime;
     private LocalDateTime endDatetime;
-    private LocalDateTime createdDatetime;
     private List<Activity> activities;
 
     public WorkoutCreateRequest() {
@@ -19,7 +18,6 @@ public class WorkoutCreateRequest {
         this.description = description;
         this.startDatetime = startDatetime;
         this.endDatetime = endDatetime;
-        this.createdDatetime = createdDatetime;
         this.activities = activities;
     }
 
@@ -53,14 +51,6 @@ public class WorkoutCreateRequest {
 
     public void setEndDatetime(LocalDateTime endDatetime) {
         this.endDatetime = endDatetime;
-    }
-
-    public LocalDateTime getCreatedDatetime() {
-        return createdDatetime;
-    }
-
-    public void setCreatedDatetime(LocalDateTime createdDatetime) {
-        this.createdDatetime = createdDatetime;
     }
 
     public List<Activity> getActivities() {
