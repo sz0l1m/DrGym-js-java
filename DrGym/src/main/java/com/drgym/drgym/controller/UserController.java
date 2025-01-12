@@ -59,6 +59,15 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/search/{search}")
+    public ResponseEntity<?> getUserSearch(@PathVariable String search) {
+        List<User> users = userService.findBySearch(search);
+        List<String> usernames = users.stream()
+                .map(User::getUsername)
+                .toList();
+        return ResponseEntity.ok(usernames);
+    }
+
     @GetMapping("/email/{email}")
     public ResponseEntity<?> getUserByEmail(@PathVariable String email) {
         Optional<User> user = userService.findByEmail(email);
