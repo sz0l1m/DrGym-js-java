@@ -44,7 +44,6 @@ import {
   cardioActivitySchema,
 } from '@/utils/schemas/WorkoutSchema';
 import { formatDate } from '@/utils/dateUtils';
-import { cardioExercises, strengthExercises } from '@/utils/mockData';
 
 export default function WorkoutForm({
   dialogTitle,
@@ -57,14 +56,34 @@ export default function WorkoutForm({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activityList, setActivityList] = useState([]);
+  const [exercises, setExercises] = useState([]);
 
   useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/by-type`
+        );
+        setExercises(response.data);
+      } catch (error) {
+        togglePopup();
+        showAppMessage({
+          status: true,
+          text: 'Error fetching exercises',
+          type: 'error',
+        });
+      }
+    };
+
     if (popupType !== 'new' && workout.activities) {
       setActivityList(workout.activities);
     } else {
       setActivityList([]);
     }
-  }, [popupType, workout.activities]);
+    if (popupStatus) {
+      fetchExercises();
+    }
+  }, [popupType, workout.activities, popupStatus, togglePopup, showAppMessage]);
 
   const handleAddWorkout = async (values, actions) => {
     if (!activityList.length) {
@@ -78,17 +97,18 @@ export default function WorkoutForm({
     }
     try {
       actions.setSubmitting(true);
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`,
-        {
-          ...values,
-          activities: activityList,
-        },
-        {
-          withCredentials: true,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      console.log('values', values);
+      // const response = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/create`,
+      //   {
+      //     ...values,
+      //     activities: activityList,
+      //   },
+      //   {
+      //     withCredentials: true,
+      //     headers: { 'Content-Type': 'application/json' },
+      //   }
+      // );
     } catch (error) {
       console.error('Error adding workout', error);
       showAppMessage({
@@ -282,12 +302,12 @@ export default function WorkoutForm({
                 <Autocomplete
                   options={
                     values.exerciseType === 'cardio'
-                      ? cardioExercises
-                      : strengthExercises
+                      ? exercises.cardio
+                      : exercises.strength
                   }
-                  getOptionLabel={(option) => option.exerciseName || ''}
+                  getOptionLabel={(option) => option.name || ''}
                   isOptionEqualToValue={(option, value) =>
-                    option.exerciseId === value.exerciseId
+                    option.id === value.id
                   }
                   disabled={!values.exerciseType}
                   value={values.exercise || null}
