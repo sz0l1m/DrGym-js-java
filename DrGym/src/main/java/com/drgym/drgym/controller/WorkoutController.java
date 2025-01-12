@@ -24,7 +24,7 @@ public class WorkoutController {
     private ExerciseService exerciseService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTraining(@PathVariable Long id) {
+    public ResponseEntity<?> getWorkout(@PathVariable Long id) {
         Optional<Workout> workoutOptional = workoutService.findById(id);
 
         if (workoutOptional.isEmpty()) {
@@ -77,16 +77,9 @@ public class WorkoutController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/{workoutId}/activities/{activityId}")
-    public ResponseEntity<?> addActivityToWorkout(@PathVariable Long workoutId, @PathVariable Long activityId) {
-        workoutService.addActivityToWorkout(workoutId, activityId);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{workoutId}/activities/{activityId}")
-    public ResponseEntity<?> removeActivityFromWorkout(@PathVariable Long workoutId, @PathVariable Long activityId) {
-        workoutService.removeActivityFromWorkout(workoutId, activityId);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/update")
+    public ResponseEntity<?> updateWorkout(@RequestBody WorkoutUpdateRequest request) {
+        return workoutService.updateWorkout(request);
     }
 
     public record WorkoutResponse(
