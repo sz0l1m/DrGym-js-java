@@ -18,6 +18,7 @@ import {
   useMediaQuery,
   IconButton,
   Tooltip,
+  Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { DateTimePicker, TimeField } from '@mui/x-date-pickers';
@@ -309,10 +310,17 @@ export default function WorkoutForm({
                 fullWidth
                 multiline
                 maxRows={4}
-                sx={{ mt: 2 }}
+                sx={{ my: 2 }}
               />
-
-              <FormControl sx={{ mt: 4 }} fullWidth>
+              {popupType === 'edit' && (
+                <>
+                  <Divider sx={{ mb: 2, mt: 1 }} />
+                  <Typography variant="h6" sx={{ mt: 0 }}>
+                    Add another exercise
+                  </Typography>
+                </>
+              )}
+              <FormControl sx={{ mt: 2 }} fullWidth>
                 <FormLabel error={!!errors.exerciseType}>
                   {errors.exerciseType || 'Exercise Type'}
                 </FormLabel>
@@ -457,7 +465,14 @@ export default function WorkoutForm({
               >
                 Add Exercise
               </Button>
-
+              {activityList.length > 0 && (
+                <>
+                  <Divider sx={{ my: 2 }} />
+                  <Typography variant="h6" sx={{ mt: 2 }}>
+                    List of exercises
+                  </Typography>
+                </>
+              )}
               {activityList.map(({ exerciseId, ...activity }, index) => (
                 <Box key={index}>
                   <Box

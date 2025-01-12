@@ -23,7 +23,7 @@ const Workouts = ({ showAppMessage }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/${username}/workouts`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
       );
       setWorkoutsData(response.data);
       console.log(response.data);
@@ -37,7 +37,7 @@ const Workouts = ({ showAppMessage }) => {
     } finally {
       setLoading(false);
     }
-  }, [username, showAppMessage]);
+  }, [showAppMessage]);
 
   useEffect(() => {
     fetchWorkouts();
