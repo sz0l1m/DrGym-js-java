@@ -85,6 +85,53 @@ export default function WorkoutForm({
     }
   }, [popupType, workout.activities, popupStatus, togglePopup, showAppMessage]);
 
+  const handleAddActivity = (values, setFieldValue, setErrors) => {
+    const newActivity = {
+      exerciseType: values.exerciseType,
+      exercise: values.exercise?.name,
+      reps: String(values.reps) || null,
+      weight: String(values.weight) || null,
+      duration: values.duration,
+    };
+
+    const activitySchema =
+      values.exerciseType === 'strength'
+        ? strengthActivitySchema
+        : cardioActivitySchema;
+    activitySchema
+      .validate(newActivity, { abortEarly: false })
+      .then(() => {
+        setActivityList((prev) => [
+          ...prev,
+          {
+            exerciseId: values.exercise.id,
+            exerciseName: values.exercise.name,
+            reps: values.reps || 0,
+            weight: values.weight || 0,
+            duration: values.duration
+              ? formatDate(values.duration.toISOString(), 'HH:mm:ss')
+              : '00:00:00',
+          },
+        ]);
+        setFieldValue('exerciseType', '');
+        setFieldValue('exercise', '');
+        setFieldValue('reps', '');
+        setFieldValue('weight', '');
+        setFieldValue('duration', null);
+        setErrors({});
+      })
+      .catch((validationErrors) => {
+        const errors = validationErrors.inner.reduce(
+          (acc, err) => ({
+            ...acc,
+            [err.path]: err.message,
+          }),
+          {}
+        );
+        setErrors(errors);
+      });
+  };
+
   const handleAddWorkout = async (values, actions) => {
     if (!activityList.length) {
       showAppMessage({
@@ -409,55 +456,9 @@ export default function WorkoutForm({
                 sx={{ mt: 2 }}
                 variant="contained"
                 color="secondary"
-                onClick={() => {
-                  const newActivity = {
-                    exerciseType: values.exerciseType,
-                    exercise: values.exercise?.exerciseName,
-                    reps: String(values.reps) || null,
-                    weight: String(values.weight) || null,
-                    duration: values.duration,
-                  };
-
-                  const activitySchema =
-                    values.exerciseType === 'strength'
-                      ? strengthActivitySchema
-                      : cardioActivitySchema;
-                  activitySchema
-                    .validate(newActivity, { abortEarly: false })
-                    .then(() => {
-                      setActivityList((prev) => [
-                        ...prev,
-                        {
-                          exerciseId: values.exercise.exerciseId,
-                          exerciseName: values.exercise.exerciseName,
-                          reps: values.reps || 0,
-                          weight: values.weight || 0,
-                          duration: values.duration
-                            ? formatDate(
-                                values.duration.toISOString(),
-                                'HH:mm:ss'
-                              )
-                            : '00:00:00',
-                        },
-                      ]);
-                      setFieldValue('exerciseType', '');
-                      setFieldValue('exercise', '');
-                      setFieldValue('reps', '');
-                      setFieldValue('weight', '');
-                      setFieldValue('duration', null);
-                      setErrors({});
-                    })
-                    .catch((validationErrors) => {
-                      const errors = validationErrors.inner.reduce(
-                        (acc, err) => ({
-                          ...acc,
-                          [err.path]: err.message,
-                        }),
-                        {}
-                      );
-                      setErrors(errors);
-                    });
-                }}
+                onClick={() =>
+                  handleAddActivity(values, setFieldValue, setErrors)
+                }
               >
                 Add Exercise
               </Button>
