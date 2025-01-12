@@ -1,4 +1,3 @@
-// author: ksiemion
 package com.drgym.drgym.model;
 
 import jakarta.persistence.*;
@@ -14,20 +13,20 @@ public class Friendship {
     private Long id;
 
     @Column(name = "friend1_username")
-    private String friend1_username;
+    private String friend1Username;
 
     @Column(name = "friend2_username")
-    private String friend2_username;
+    private String friend2Username;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     public Friendship() {}
 
-    public Friendship(Long id, String friend1_username, String friend2_username) {
+    public Friendship(Long id, String friend1Username, String friend2Username) {
         this.id = id;
-        this.friend1_username = friend1_username;
-        this.friend2_username = friend2_username;
+        this.friend1Username = friend1Username;
+        this.friend2Username = friend2Username;
     }
 
     public Long getId() {
@@ -38,20 +37,20 @@ public class Friendship {
         this.id = id;
     }
 
-    public String getFriend1_username() {
-        return friend1_username;
+    public String getFriend1Username() {
+        return friend1Username;
     }
 
-    public void setFriend1_username(String friend1_username) {
-        this.friend1_username = friend1_username;
+    public void setFriend1Username(String friend1Username) {
+        this.friend1Username = friend1Username;
     }
 
-    public String getFriend2_username() {
-        return friend2_username;
+    public String getFriend2Username() {
+        return friend2Username;
     }
 
-    public void setFriend2_username(String friend2_username) {
-        this.friend2_username = friend2_username;
+    public void setFriend2Username(String friend2Username) {
+        this.friend2Username = friend2Username;
     }
 
     public LocalDateTime getCreatedAt() {
