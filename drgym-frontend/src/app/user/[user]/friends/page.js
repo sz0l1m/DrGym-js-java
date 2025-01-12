@@ -30,7 +30,10 @@ const Friends = ({ showAppMessage }) => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/friends/${session?.user?.username}`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/friends/${session?.user?.username}`,
+          {
+            withCredentials: true,
+          }
         );
         console.log(response.data);
         setFriends(response.data.friends);

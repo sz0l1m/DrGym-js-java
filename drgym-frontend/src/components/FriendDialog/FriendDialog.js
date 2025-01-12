@@ -32,13 +32,15 @@ export default function FriendDialog({
   const handleAddFriend = async (formData, form) => {
     try {
       setLoading(true);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      // const response = await axios.post(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends`,
-      //   {
-      //     username: formData.username,
-      //   }
-      // );
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/friends/sendRequest`,
+        {
+          username: formData.username,
+        },
+        {
+          withCredentials: true,
+        }
+      );
       showAppMessage({
         status: true,
         text: `Friend request to ${formData.username} has been sent.`,

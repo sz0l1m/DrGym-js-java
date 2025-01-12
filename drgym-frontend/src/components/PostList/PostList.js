@@ -16,15 +16,24 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
         setLoading(true);
         if (onlyThisUser) {
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/users/${username}/workouts`
+            `${process.env.NEXT_PUBLIC_API_URL}/api/users/${username}/workouts`,
+            {
+              withCredentials: true,
+            }
           );
           setWorkoutsData(response.data);
         } else {
           const response1 = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
+            `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`,
+            {
+              withCredentials: true,
+            }
           );
           const response2 = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/users/pedziwiatr/workouts`
+            `${process.env.NEXT_PUBLIC_API_URL}/api/users/pedziwiatr/workouts`,
+            {
+              withCredentials: true,
+            }
           );
           setWorkoutsData([...response1.data, ...response2.data]);
         }

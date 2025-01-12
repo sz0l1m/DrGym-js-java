@@ -35,7 +35,10 @@ export default function WorkoutCard({ workout, onDelete, showAppMessage }) {
     try {
       setLoading(true);
       await axios.delete(
-        `http://localhost:8080/api/workouts/${workout.workoutId}`
+        `http://localhost:8080/api/workouts/${workout.workoutId}`,
+        {
+          withCredentials: true,
+        }
       );
       onDelete(workout.workoutId);
     } catch (error) {

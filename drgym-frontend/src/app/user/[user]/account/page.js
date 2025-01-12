@@ -38,7 +38,10 @@ const AccountPage = ({ showAppMessage }) => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim`
+          `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim`,
+          {
+            withCredentials: true,
+          }
         );
         setUserData({
           ...response.data,

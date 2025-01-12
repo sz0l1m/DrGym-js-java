@@ -23,7 +23,10 @@ const Workouts = ({ showAppMessage }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`,
+        {
+          withCredentials: true,
+        }
       );
       setWorkoutsData(response.data);
     } catch (err) {
