@@ -15,6 +15,7 @@ import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Divider } from '@mui/material';
+import { useSession } from 'next-auth/react';
 
 const Friends = ({ showAppMessage }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -22,20 +23,18 @@ const Friends = ({ showAppMessage }) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchFriends = async () => {
       try {
         setLoading(true);
-        setTimeout(() => {
-          setFriends(mockFriends.friends);
-          setRequests(mockFriends.requests);
-          setLoading(false);
-        }, 1000);
-        // const response = await axios.get(
-        //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends`
-        // );
-        // setFriends(response.data);
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/friends/${session?.user?.username}`
+        );
+        console.log(response.data);
+        setFriends(response.data.friends);
+        setRequests(response.data.invitations);
       } catch (err) {
         showAppMessage({
           status: true,
@@ -44,12 +43,12 @@ const Friends = ({ showAppMessage }) => {
         });
         setError('Failed to fetch friends. Please try again later.');
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     };
 
     fetchFriends();
-  }, [showAppMessage]);
+  }, [session?.user?.username, showAppMessage]);
 
   const handleAcceptRequest = async (username, avatar) => {
     try {
@@ -63,7 +62,7 @@ const Friends = ({ showAppMessage }) => {
         type: 'success',
       });
       setRequests((prevRequests) =>
-        prevRequests.filter((request) => request.username !== username)
+        prevRequests.filter((request) => request.sender !== username)
       );
       setFriends((prevFriends) => [...prevFriends, { username, avatar }]);
     } catch (err) {
@@ -87,7 +86,7 @@ const Friends = ({ showAppMessage }) => {
         type: 'success',
       });
       setRequests((prevRequests) =>
-        prevRequests.filter((request) => request.username !== username)
+        prevRequests.filter((request) => request.sender !== username)
       );
     } catch (err) {
       showAppMessage({
@@ -145,9 +144,9 @@ const Friends = ({ showAppMessage }) => {
               Friend Requests
             </Typography>
             {requests.map((friend) => (
-              <Card key={friend.username} sx={{ maxWidth: '100%', my: 1 }}>
+              <Card key={friend.sender} sx={{ maxWidth: '100%', my: 1 }}>
                 <UserHeader
-                  username={friend.username}
+                  username={friend.sender}
                   actions="request"
                   onAccept={handleAcceptRequest}
                   onDecline={handleDeclineRequest}
