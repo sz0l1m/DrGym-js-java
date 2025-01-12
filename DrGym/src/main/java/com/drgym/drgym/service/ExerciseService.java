@@ -55,6 +55,10 @@ public class ExerciseService {
                 .filter(exercise -> exercise.getType() == 'C')
                 .map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName()))
                 .collect(Collectors.toList()));
+        exercisesByType.put("endurance", exercises.stream()
+                .filter(exercise -> exercise.getType() == 'E')
+                .map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName()))
+                .collect(Collectors.toList()));
         return exercisesByType;
     }
 
