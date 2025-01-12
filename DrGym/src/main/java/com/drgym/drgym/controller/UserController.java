@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.security.Key;
 
+import static java.lang.Boolean.*;
+
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -53,7 +55,11 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<?> getUser(@PathVariable String username) {
+    public ResponseEntity<?> getUser(@PathVariable String username, HttpServletRequest request) {
+        if (!tokenOwnerOrFriend(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
         Optional<User> user = userService.findByUsername(username);
         return user.map(u -> ResponseEntity.ok(new UserDTO(u.getUsername(), u.getName(), u.getSurname(), u.getWeight(), u.getHeight())))
                 .orElse(ResponseEntity.notFound().build());
@@ -70,17 +76,11 @@ public class UserController {
 
     @GetMapping("/email/{email}")
     public ResponseEntity<?> getUserByEmail(@PathVariable String email) {
+
         Optional<User> user = userService.findByEmail(email);
         return user.map(u -> ResponseEntity.ok(new UserDTO(u.getUsername(), u.getName(), u.getSurname(), u.getWeight(), u.getHeight())))
                 .orElse(ResponseEntity.notFound().build());
     }
-
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userService.saveUser(user);
-        return ResponseEntity.ok(savedUser);
-    }
-
 
     @DeleteMapping("/{username}")
     public ResponseEntity<?> deleteUser(@PathVariable String username) {
@@ -89,7 +89,11 @@ public class UserController {
     }
 
     @GetMapping("/{username}/workouts")
-    public ResponseEntity<?> getWorkoutsForUser(@PathVariable String username) {
+    public ResponseEntity<?> getWorkoutsForUser(@PathVariable String username, HttpServletRequest request) {
+        if (!tokenOwnerOrFriend(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
         List<Workout> workouts = workoutService.findByUsername(username);
         if (workouts.isEmpty()) {
             return ResponseEntity.ok("[]");
@@ -135,13 +139,7 @@ public class UserController {
             @RequestParam String endDate,
             HttpServletRequest request) {
 
-        String jwtToken = getJwtTokenFromCookie(request);
-        if (jwtToken == null) {
-            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
-        }
-
-        Claims claims = validateToken(jwtToken);
-        if (claims == null || (!claims.getSubject().equals(username) && !userService.areUsersFriends(claims.getSubject(), username))) {
+        if (!tokenOwnerOrFriend(username, request)) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
         }
 
@@ -162,13 +160,7 @@ public class UserController {
             @PathVariable String username,
             HttpServletRequest request) {
 
-        String jwtToken = getJwtTokenFromCookie(request);
-        if (jwtToken == null) {
-            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
-        }
-
-        Claims claims = validateToken(jwtToken);
-        if (claims == null || (!claims.getSubject().equals(username) && !userService.areUsersFriends(claims.getSubject(), username))) {
+        if (!tokenOwnerOrFriend(username, request)) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
         }
 
@@ -274,5 +266,19 @@ public class UserController {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    private Boolean tokenOwnerOrFriend(String username, HttpServletRequest request) {
+        String jwtToken = getJwtTokenFromCookie(request);
+        if (jwtToken == null) {
+            return FALSE;
+        }
+
+        Claims claims = validateToken(jwtToken);
+        if (claims == null || (!claims.getSubject().equals(username) && !userService.areUsersFriends(claims.getSubject(), username))) {
+            return FALSE;
+        }
+
+        return TRUE;
     }
 }
