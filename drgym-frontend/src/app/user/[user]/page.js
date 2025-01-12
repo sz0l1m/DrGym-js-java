@@ -24,23 +24,25 @@ const User = ({ params }) => {
   useEffect(() => {
     const checkFriendStatus = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
         setLoading(false);
-        // const response = await axios.get(
-        //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends/${user}`
-        // );
-
-        // if (response.data.isFriend) {
-        //   setAvatar(response.data.avatar);
-        //   setLoading(false);
-        // } else {
-        //   router.replace(
-        //     `/user/${session.username}/posts?message=User ${user} is not your friend&type=warning`
-        //   );
-        // }
+        if (session?.user?.username === user) {
+          router.replace(`/user/${user}/account`);
+          return;
+        }
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/friends/isFriend/${session?.user?.username}/${user}`
+        );
+        if (response.data) {
+          setAvatar(response.data?.avatar || null);
+          setLoading(false);
+        } else {
+          router.replace(
+            `/user/${session?.user?.username}/posts?message=User ${user} is not your friend&type=warning`
+          );
+        }
       } catch (err) {
         router.replace(
-          `/user/${session.username}/posts?message=An error occurred. Redirected.&type=error`
+          `/user/${session?.user?.username}/posts?message=An error occurred. Redirected.&type=error`
         );
       }
     };

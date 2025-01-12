@@ -143,7 +143,7 @@ export default function WorkoutForm({
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/create`,
         {
-          username: session.user.username,
+          username: session?.user?.username,
           description: values.description,
           startDatetime: values.startDate.toISOString(),
           endDatetime: values.endDate.toISOString(),

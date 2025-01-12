@@ -26,7 +26,6 @@ const Workouts = ({ showAppMessage }) => {
         `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
       );
       setWorkoutsData(response.data);
-      console.log(response.data);
     } catch (err) {
       setError(err.message);
       showAppMessage({

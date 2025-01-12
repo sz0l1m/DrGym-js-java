@@ -82,7 +82,6 @@ const AccountPage = ({ showAppMessage }) => {
   };
 
   const handleFormSubmit = (values, { resetForm }) => {
-    console.log('Form submitted:', { ...values, avatar });
     showAppMessage({
       status: true,
       text: 'Profile updated successfully!',
