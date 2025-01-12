@@ -5,7 +5,6 @@ import com.drgym.drgym.repository.ActivityRepository;
 import com.drgym.drgym.repository.WorkoutActivityRepository;
 import com.drgym.drgym.repository.WorkoutRepository;
 import jakarta.transaction.Transactional;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,22 +83,43 @@ public class WorkoutService {
         workoutRepository.deleteById(id);
     }
 
-    public void addActivityToWorkout(Long workoutId, Long activityId) {
-            WorkoutActivity workoutActivity = new WorkoutActivity(workoutId, activityId);
-            workoutActivityRepository.save(workoutActivity);
-    }
+    @Transactional
+    public ResponseEntity<?> updateWorkout(@RequestBody WorkoutUpdateRequest request) {
+        Optional<Workout> workoutOptional = workoutRepository.findById(request.getId());
 
-    public void removeActivityFromWorkout(Long workoutId, Long activityId) {
-        Optional<Workout> workoutOptional = workoutRepository.findById(workoutId);
-        if (workoutOptional.isPresent()) {
-            Workout workout = workoutOptional.get();
-            workout.getActivityIds().remove(activityId);
-            workoutRepository.save(workout);
-
-            WorkoutActivity workoutActivity = workoutActivityRepository.findByWorkoutIdAndActivityId(workoutId, activityId);
-            if (workoutActivity != null) {
-                workoutActivityRepository.delete(workoutActivity);
-            }
+        if (workoutOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
+
+        Workout workout = workoutOptional.get();
+        workout.setUsername(request.getUsername());
+        workout.setDescription(request.getDescription());
+        workout.setDateStart(request.getStartDatetime());
+        workout.setDateEnd(request.getEndDatetime());
+
+        if (request.getActivitiesToRemove() != null) {
+            activityRepository.deleteAllById(request.getActivitiesToRemove());
+        }
+
+        List<Activity> savedNewActivities = activityRepository.saveAll(request.getActivitiesToAdd());
+        List<Long> newActivityIds = savedNewActivities.stream()
+                .map(Activity::getId)
+                .toList();
+
+        List<Long> updatedActivityIds = workout.getActivityIds();
+        if (request.getActivitiesToRemove() != null) {
+            updatedActivityIds.removeAll(request.getActivitiesToRemove());
+        }
+        updatedActivityIds.addAll(newActivityIds);
+        workout.setActivityIds(updatedActivityIds);
+
+        workoutRepository.save(workout);
+
+        List<WorkoutActivity> workoutActivities = savedNewActivities.stream()
+                .map(activity -> new WorkoutActivity(workout.getId(), activity.getId()))
+                .collect(Collectors.toList());
+        workoutActivityRepository.saveAll(workoutActivities);
+
+        return ResponseEntity.ok("Workout updated successfully");
     }
 }
