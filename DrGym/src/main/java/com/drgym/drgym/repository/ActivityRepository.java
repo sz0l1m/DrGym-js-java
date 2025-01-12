@@ -9,4 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface ActivityRepository extends JpaRepository <Activity, Long> {
+    List<Activity> findByWorkoutId(Long workoutId);
+    void deleteByWorkoutId(Long workoutId);
 }
