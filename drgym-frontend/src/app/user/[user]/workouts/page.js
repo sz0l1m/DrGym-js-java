@@ -1,7 +1,7 @@
 'use client';
 
 import { Box, Button, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import WorkoutCard from '@/components/WorkoutCard';
 import AddIcon from '@mui/icons-material/Add';
@@ -19,29 +19,29 @@ const Workouts = ({ showAppMessage }) => {
   const { data: session, status } = useSession();
   const username = session?.user?.username;
 
-  useEffect(() => {
-    const fetchWorkouts = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/${username}/workouts`
-          // `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`
-        );
-        setWorkoutsData(response.data);
-      } catch (err) {
-        setError(err.message);
-        showAppMessage({
-          status: true,
-          text: 'Error fetching workouts',
-          type: 'error',
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchWorkouts();
+  const fetchWorkouts = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/${username}/workouts`
+      );
+      setWorkoutsData(response.data);
+      console.log(response.data);
+    } catch (err) {
+      setError(err.message);
+      showAppMessage({
+        status: true,
+        text: 'Error fetching workouts',
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
   }, [username, showAppMessage]);
+
+  useEffect(() => {
+    fetchWorkouts();
+  }, [fetchWorkouts]);
 
   const handleDeleteWorkout = (workoutId) => {
     setWorkoutsData((prev) =>
@@ -90,6 +90,7 @@ const Workouts = ({ showAppMessage }) => {
         popupStatus={dialogOpen}
         togglePopup={setDialogOpen}
         showAppMessage={showAppMessage}
+        onAddWorkout={fetchWorkouts}
       />
     </>
   );

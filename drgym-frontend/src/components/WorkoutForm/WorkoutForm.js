@@ -7,10 +7,8 @@ import {
   FormControl,
   FormLabel,
   FormControlLabel,
-  Select,
   Radio,
   RadioGroup,
-  MenuItem,
   TextField,
   Button,
   Dialog,
@@ -18,14 +16,8 @@ import {
   DialogActions,
   DialogContent,
   useMediaQuery,
-  InputLabel,
-  List,
-  ListItem,
-  ListItemText,
   IconButton,
-  Typography,
   Tooltip,
-  duration,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { DateTimePicker, TimeField } from '@mui/x-date-pickers';
@@ -44,6 +36,7 @@ import {
   cardioActivitySchema,
 } from '@/utils/schemas/WorkoutSchema';
 import { formatDate } from '@/utils/dateUtils';
+import { useSession } from 'next-auth/react';
 
 export default function WorkoutForm({
   dialogTitle,
@@ -52,11 +45,13 @@ export default function WorkoutForm({
   togglePopup,
   workout = {},
   showAppMessage,
+  onAddWorkout,
 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activityList, setActivityList] = useState([]);
   const [exercises, setExercises] = useState([]);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -144,37 +139,37 @@ export default function WorkoutForm({
     }
     try {
       actions.setSubmitting(true);
-      console.log('values', values);
-      // const response = await axios.post(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/create`,
-      //   {
-      //     ...values,
-      //     activities: activityList,
-      //   },
-      //   {
-      //     withCredentials: true,
-      //     headers: { 'Content-Type': 'application/json' },
-      //   }
-      // );
-    } catch (error) {
-      console.error('Error adding workout', error);
-      showAppMessage({
-        status: true,
-        text: 'Error adding workout',
-        type: 'error',
-      });
-    }
-    setTimeout(() => {
-      alert(JSON.stringify({ ...values, activities: activityList }, null, 2));
-      setActivityList([]);
-      actions.setSubmitting(false);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/create`,
+        {
+          username: session.user.username,
+          description: values.description,
+          startDatetime: values.startDate.toISOString(),
+          endDatetime: values.endDate.toISOString(),
+          createdDatetime: new Date().toISOString(),
+          activities: activityList,
+        },
+        {
+          withCredentials: true,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      onAddWorkout();
       handleClose();
       showAppMessage({
         status: true,
         text: 'Workout added successfully!',
         type: 'success',
       });
-    }, 1000);
+    } catch (error) {
+      showAppMessage({
+        status: true,
+        text: 'Error adding workout',
+        type: 'error',
+      });
+    } finally {
+      actions.setSubmitting(false);
+    }
   };
 
   const handleEditWorkout = (values, actions) => {

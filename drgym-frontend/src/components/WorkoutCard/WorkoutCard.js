@@ -32,28 +32,23 @@ export default function WorkoutCard({ workout, onDelete, showAppMessage }) {
   };
 
   const deleteWorkout = async () => {
-    showAppMessage({
-      status: true,
-      text: 'Workout deletion is commented out',
-      type: 'warning',
-    });
-    // try {
-    //   setLoading(true);
-    //   await axios.delete(
-    //     `http://localhost:8080/api/workouts/${workout.workoutId}`
-    //   );
-    //   onDelete(workout.workoutId);
-    // } catch (error) {
-    //   console.error('Error deleting workout:', error);
-    //   showAppMessage({
-    //     status: true,
-    //     text: 'Error deleting workout',
-    //     type: 'error',
-    //   });
-    // } finally {
-    //   setLoading(false);
-    //   setOpenDeleteConfirmation(false);
-    // }
+    try {
+      setLoading(true);
+      await axios.delete(
+        `http://localhost:8080/api/workouts/${workout.workoutId}`
+      );
+      onDelete(workout.workoutId);
+    } catch (error) {
+      console.error('Error deleting workout:', error);
+      showAppMessage({
+        status: true,
+        text: 'Error deleting workout',
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
+      setOpenDeleteConfirmation(false);
+    }
   };
 
   return (
