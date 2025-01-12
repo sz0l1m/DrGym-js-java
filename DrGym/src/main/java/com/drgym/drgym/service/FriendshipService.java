@@ -55,7 +55,7 @@ public class FriendshipService {
     }
 
     @Transactional
-    public String sendFriendRequest(String sender, String receiver, LocalDateTime sendTime) {
+    public String sendFriendRequest(String sender, String receiver) {
         if (friendshipRepository.existsByFriend1UsernameAndFriend2Username(sender, receiver) ||
                 friendshipRepository.existsByFriend1UsernameAndFriend2Username(receiver, sender)) {
             return "Already friends";
@@ -66,7 +66,7 @@ public class FriendshipService {
         FriendshipInvitation invitation = new FriendshipInvitation();
         invitation.setWhoSendUsername(sender);
         invitation.setWhoReceiveUsername(receiver);
-        invitation.setSendTime(sendTime != null ? sendTime : LocalDateTime.now());
+        invitation.setSendTime(LocalDateTime.now());
         friendshipInvitationRepository.save(invitation);
         return "Request sent";
     }
@@ -129,14 +129,12 @@ public class FriendshipService {
     public static class FriendRequestDTO {
         private String sender;
         private String receiver;
-        private LocalDateTime sendTime;
 
         public FriendRequestDTO() {}
 
         public FriendRequestDTO(String sender, String receiver, LocalDateTime sendTime) {
             this.sender = sender;
             this.receiver = receiver;
-            this.sendTime = sendTime;
         }
 
         public String getSender() {
@@ -153,14 +151,6 @@ public class FriendshipService {
 
         public void setReceiver(String receiver) {
             this.receiver = receiver;
-        }
-
-        public LocalDateTime getSendTime() {
-            return sendTime;
-        }
-
-        public void setSendTime(LocalDateTime sendTime) {
-            this.sendTime = sendTime;
         }
     }
 }

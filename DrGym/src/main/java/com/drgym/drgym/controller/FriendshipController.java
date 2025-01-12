@@ -19,7 +19,7 @@ public class FriendshipController {
     @Autowired
     private FriendshipService friendshipService;
 
-    @GetMapping("/{username}")
+    @GetMapping("friendsinfo/{username}")
     public Map<String, List<?>> getUserFriendsAndInvitations(@PathVariable String username) {
         List<UserFriendDTO> friends = friendshipService.getUserFriends(username);
         List<FriendRequestDTO> invitations = friendshipService.getUserFriendshipInvitations(username);
@@ -36,7 +36,7 @@ public class FriendshipController {
 
     @PostMapping("/sendRequest")
     public String sendFriendRequest(@RequestBody FriendRequestDTO friendRequest) {
-        return friendshipService.sendFriendRequest(friendRequest.getSender(), friendRequest.getReceiver(), friendRequest.getSendTime());
+        return friendshipService.sendFriendRequest(friendRequest.getSender(), friendRequest.getReceiver());
     }
 
     @PostMapping("/acceptRequest")
