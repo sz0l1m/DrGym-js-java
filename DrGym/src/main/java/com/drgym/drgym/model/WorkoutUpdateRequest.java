@@ -7,20 +7,20 @@ public class WorkoutUpdateRequest {
     private Long id;
     private String username;
     private String description;
-    private LocalDateTime startDatetime;
-    private LocalDateTime endDatetime;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private List<Long> activitiesToRemove;
     private List<Activity> activitiesToAdd;
 
     public WorkoutUpdateRequest() {
     }
 
-    public WorkoutUpdateRequest(Long id, String username, String description, LocalDateTime startDatetime, LocalDateTime endDatetime, List<Long> activitiesToRemove, List<Activity> activitiesToAdd) {
+    public WorkoutUpdateRequest(Long id, String username, String description, LocalDateTime startDate, LocalDateTime endDate, List<Long> activitiesToRemove, List<Activity> activitiesToAdd) {
         this.id = id;
         this.username = username;
         this.description = description;
-        this.startDatetime = startDatetime;
-        this.endDatetime = endDatetime;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.activitiesToRemove = activitiesToRemove;
         this.activitiesToAdd = activitiesToAdd;
     }
@@ -49,20 +49,20 @@ public class WorkoutUpdateRequest {
         this.description = description;
     }
 
-    public LocalDateTime getStartDatetime() {
-        return startDatetime;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setStartDatetime(LocalDateTime startDatetime) {
-        this.startDatetime = startDatetime;
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDatetime() {
-        return endDatetime;
+    public LocalDateTime getEndDate() {
+        return endDate;
     }
 
-    public void setEndDatetime(LocalDateTime endDatetime) {
-        this.endDatetime = endDatetime;
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 
     public List<Long> getActivitiesToRemove() {

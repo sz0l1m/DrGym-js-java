@@ -6,18 +6,18 @@ import java.util.List;
 public class WorkoutCreateRequest {
     private String username;
     private String description;
-    private LocalDateTime startDatetime;
-    private LocalDateTime endDatetime;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private List<Activity> activities;
 
     public WorkoutCreateRequest() {
     }
 
-    public WorkoutCreateRequest(String username, String description, LocalDateTime startDatetime, LocalDateTime endDatetime, LocalDateTime createdDatetime, List<Activity> activities) {
+    public WorkoutCreateRequest(String username, String description, LocalDateTime startDate, LocalDateTime endDate, List<Activity> activities) {
         this.username = username;
         this.description = description;
-        this.startDatetime = startDatetime;
-        this.endDatetime = endDatetime;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.activities = activities;
     }
 
@@ -37,20 +37,20 @@ public class WorkoutCreateRequest {
         this.description = description;
     }
 
-    public LocalDateTime getStartDatetime() {
-        return startDatetime;
+    public LocalDateTime getStartDate() {
+        return startDate;
     }
 
-    public void setStartDatetime(LocalDateTime startDatetime) {
-        this.startDatetime = startDatetime;
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDatetime() {
-        return endDatetime;
+    public LocalDateTime getEndDate() {
+        return endDate;
     }
 
-    public void setEndDatetime(LocalDateTime endDatetime) {
-        this.endDatetime = endDatetime;
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 
     public List<Activity> getActivities() {
