@@ -1,31 +1,15 @@
 package com.drgym.drgym.repository;
 
-import com.drgym.drgym.model.Activity;
 import com.drgym.drgym.model.Workout;
-import com.drgym.drgym.model.WorkoutActivity;
-import com.drgym.drgym.service.WorkoutActivityService;
 import com.drgym.drgym.service.WorkoutService;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class WorkoutRepositoryTests {
 
     @Autowired
     private WorkoutRepository workoutRepository;
-
-    @Autowired
-    private WorkoutActivityRepository workoutActivityRepository;
-
-    @Autowired
-    private WorkoutActivityService workoutActivityService;
 
     @Autowired
     private ActivityRepository activityRepository;
