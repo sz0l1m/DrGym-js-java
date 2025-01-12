@@ -74,14 +74,6 @@ public class UserController {
         return ResponseEntity.ok(usernames);
     }
 
-    @GetMapping("/email/{email}")
-    public ResponseEntity<?> getUserByEmail(@PathVariable String email) {
-
-        Optional<User> user = userService.findByEmail(email);
-        return user.map(u -> ResponseEntity.ok(new UserDTO(u.getUsername(), u.getName(), u.getSurname(), u.getWeight(), u.getHeight())))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
     @DeleteMapping("/{username}")
     public ResponseEntity<?> deleteUser(@PathVariable String username) {
         userService.deleteUser(username);
