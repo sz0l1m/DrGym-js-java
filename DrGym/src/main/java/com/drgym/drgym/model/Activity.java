@@ -26,11 +26,15 @@ public class Activity {
     @Column(name = "duration")
     private Timestamp duration;
 
-    public Activity(Long exercise_id, Long reps, Long weight, Timestamp duration) {
+    @Column(name = "workout_id")
+    private Long workoutId;
+
+    public Activity(Long exercise_id, Long reps, Long weight, Timestamp duration, Long workoutId) {
         this.exercise_id = exercise_id;
         this.reps = reps;
         this.weight = weight;
         this.duration = duration;
+        this.workoutId = workoutId;
     }
 
     public Activity() {}
@@ -67,4 +71,8 @@ public class Activity {
     public String durationToString() {
         return duration.toString();
     }
+
+    public Long getWorkoutId() { return workoutId; }
+
+    public void setWorkoutId(Long workoutId) { this.workoutId = workoutId; }
 }
