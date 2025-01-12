@@ -2,7 +2,6 @@ package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.*;
 import com.drgym.drgym.repository.ActivityRepository;
-import com.drgym.drgym.repository.WorkoutActivityRepository;
 import com.drgym.drgym.repository.WorkoutRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class WorkoutService {
@@ -23,17 +21,10 @@ public class WorkoutService {
     @Autowired
     private ActivityRepository activityRepository;
 
-    @Autowired
-    private WorkoutActivityRepository workoutActivityRepository;
-
-    public Optional<Workout> findById(Long id) {return workoutRepository.findById(id);}
+    public Optional<Workout> findById(Long id) { return workoutRepository.findById(id); }
 
     public List<Activity> findActivitiesByWorkoutId(Long workoutId) {
-        List<WorkoutActivity> links = workoutActivityRepository.findByWorkoutId(workoutId);
-        List<Long> activityIds = links.stream()
-                .map(WorkoutActivity::getActivityId)
-                .toList();
-        return activityRepository.findAllById(activityIds);
+        return activityRepository.findByWorkoutId(workoutId);
     }
 
     public List<Workout> findByUsername(String username) {
@@ -41,46 +32,35 @@ public class WorkoutService {
     }
 
     public Workout saveWorkout(Workout workout) {
-        List<Long> validActivityIds = workout.getActivityIds().stream()
-                .filter(activityId -> activityRepository.existsById(activityId))
-                .collect(Collectors.toList());
-
-        workout.setActivityIds(validActivityIds);
-
         return workoutRepository.save(workout);
     }
 
     public ResponseEntity<?> createWorkout(@RequestBody WorkoutCreateRequest request) {
-        List<Activity> savedActivities = activityRepository.saveAll(request.getActivities());
+        if (request.getStartDate() == null) {
+            return ResponseEntity.badRequest().body("Start date cannot be null");
+        }
 
         Workout workout = new Workout(
-                request.getStartDatetime(),
+                request.getStartDate(),
                 request.getUsername(),
-                request.getEndDatetime(),
+                request.getEndDate(),
                 request.getDescription(),
                 LocalDateTime.now()
         );
         Workout savedWorkout = workoutRepository.save(workout);
 
-        List<WorkoutActivity> workoutActivities = savedActivities.stream()
-                .map(activity -> new WorkoutActivity(savedWorkout.getId(), activity.getId()))
-                .collect(Collectors.toList());
-        workoutActivityRepository.saveAll(workoutActivities);
+        List<Activity> activities = request.getActivities();
+        activities.forEach(activity -> activity.setWorkoutId(savedWorkout.getId()));
+        activityRepository.saveAll(activities);
 
         return ResponseEntity.ok("Workout created successfully");
     }
 
-    public void deleteWorkout(Long id) {
-        List<WorkoutActivity> workoutActivities = workoutActivityRepository.findByWorkoutId(id);
-
-        List<Long> activityIds = workoutActivities.stream()
-                .map(WorkoutActivity::getActivityId)
-                .toList();
-
-        workoutActivityRepository.deleteAll(workoutActivities);
-        activityRepository.deleteAllById(activityIds);
-
+    @Transactional
+    public ResponseEntity<?> deleteWorkout(Long id) {
+        activityRepository.deleteByWorkoutId(id);
         workoutRepository.deleteById(id);
+        return ResponseEntity.ok("Workout deleted successfully");
     }
 
     @Transactional
@@ -94,31 +74,17 @@ public class WorkoutService {
         Workout workout = workoutOptional.get();
         workout.setUsername(request.getUsername());
         workout.setDescription(request.getDescription());
-        workout.setDateStart(request.getStartDatetime());
-        workout.setDateEnd(request.getEndDatetime());
+        workout.setStartDate(request.getStartDate());
+        workout.setEndDate(request.getEndDate());
 
         if (request.getActivitiesToRemove() != null) {
             activityRepository.deleteAllById(request.getActivitiesToRemove());
         }
 
         List<Activity> savedNewActivities = activityRepository.saveAll(request.getActivitiesToAdd());
-        List<Long> newActivityIds = savedNewActivities.stream()
-                .map(Activity::getId)
-                .toList();
-
-        List<Long> updatedActivityIds = workout.getActivityIds();
-        if (request.getActivitiesToRemove() != null) {
-            updatedActivityIds.removeAll(request.getActivitiesToRemove());
-        }
-        updatedActivityIds.addAll(newActivityIds);
-        workout.setActivityIds(updatedActivityIds);
+        savedNewActivities.forEach(activity -> activity.setWorkoutId(workout.getId()));
 
         workoutRepository.save(workout);
-
-        List<WorkoutActivity> workoutActivities = savedNewActivities.stream()
-                .map(activity -> new WorkoutActivity(workout.getId(), activity.getId()))
-                .collect(Collectors.toList());
-        workoutActivityRepository.saveAll(workoutActivities);
 
         return ResponseEntity.ok("Workout updated successfully");
     }
