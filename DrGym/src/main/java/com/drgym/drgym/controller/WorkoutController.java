@@ -36,9 +36,9 @@ public class WorkoutController {
 
         WorkoutResponse response = new WorkoutResponse(
                 workout.getId(),
-                workout.getDateStart(),
+                workout.getStartDate(),
                 workout.getUsername(),
-                workout.getDateEnd(),
+                workout.getEndDate(),
                 workout.getDescription(),
                 activities.stream()
                         .map(a -> {
@@ -73,8 +73,7 @@ public class WorkoutController {
             return ResponseEntity.notFound().build();
         }
 
-        workoutService.deleteWorkout(id);
-        return ResponseEntity.noContent().build();
+        return workoutService.deleteWorkout(id);
     }
 
     @PutMapping("/update")
