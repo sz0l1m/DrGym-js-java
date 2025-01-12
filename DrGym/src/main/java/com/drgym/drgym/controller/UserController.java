@@ -141,7 +141,7 @@ public class UserController {
         }
 
         Claims claims = validateToken(jwtToken);
-        if (claims == null || !claims.getSubject().equals(username)) {
+        if (claims == null || (!claims.getSubject().equals(username) && !userService.areUsersFriends(claims.getSubject(), username))) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
         }
 
@@ -168,7 +168,7 @@ public class UserController {
         }
 
         Claims claims = validateToken(jwtToken);
-        if (claims == null || !claims.getSubject().equals(username)) {
+        if (claims == null || (!claims.getSubject().equals(username) && !userService.areUsersFriends(claims.getSubject(), username))) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
         }
 

@@ -39,4 +39,8 @@ public class UserService {
     public List<User> findBySearch(String search) {
         return userRepository.findByUsernameContaining(search);
     }
+
+    public boolean areUsersFriends(String username1, String username2) {
+        return userRepository.areUsersFriends(username1, username2);
+    }
 }
