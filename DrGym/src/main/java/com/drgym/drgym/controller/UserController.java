@@ -92,9 +92,9 @@ public class UserController {
 
                     return new WorkoutResponse(
                             workout.getId(),
-                            workout.getDateStart(),
+                            workout.getStartDate(),
                             workout.getUsername(),
-                            workout.getDateEnd(),
+                            workout.getEndDate(),
                             workout.getDescription(),
                             activities.stream()
                                     .map(a -> {
