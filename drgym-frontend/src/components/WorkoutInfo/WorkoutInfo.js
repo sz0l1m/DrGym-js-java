@@ -43,10 +43,10 @@ const ExpandMore = styled((props) => {
   ],
 }));
 
-export default function WorkoutCard({ workout }) {
+export default function WorkoutCard({ workout, isPost }) {
   const [expanded, setExpanded] = useState(false);
-  const [liked, setLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(workout.likes || 10);
+  const [liked, setLiked] = useState(workout.liked || !isPost);
+  const [likeCount, setLikeCount] = useState(workout.likes || 0);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -95,9 +95,13 @@ export default function WorkoutCard({ workout }) {
         </ExpandMore>
         <Grid container alignItems="center" gap={2} sx={{ pl: 4 }}>
           <IconButton
+            disabled={!isPost}
             onClick={handleLikeClick}
             sx={{
               color: liked ? 'red' : 'gray',
+              '&.Mui-disabled': {
+                color: 'red',
+              },
               ml: 'auto',
             }}
           >

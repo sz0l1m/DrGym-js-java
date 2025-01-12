@@ -21,7 +21,7 @@ export default function WorkoutCard({ workout }) {
               realitveStartDate.slice(1)
             }
           />
-          <WorkoutInfo workout={workout} />
+          <WorkoutInfo workout={workout} isPost />
         </Card>
       </Box>
     </>
