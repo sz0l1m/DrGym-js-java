@@ -9,15 +9,14 @@ import WorkoutForm from '@/components/WorkoutForm';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import SkeletonCard from '@/components/SkeletonCard';
 import Grid from '@mui/material/Grid2';
-import { useSession } from 'next-auth/react';
+import { getUsername } from '@/utils/getUser';
 
 const Workouts = ({ showAppMessage }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [workoutsData, setWorkoutsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { data: session, status } = useSession();
-  const username = session?.user?.username;
+  const username = getUsername();
 
   const fetchWorkouts = useCallback(async () => {
     try {
@@ -27,7 +26,6 @@ const Workouts = ({ showAppMessage }) => {
       );
       setWorkoutsData(response.data);
     } catch (err) {
-      console.error(err);
       setError('fetch worokuts', err.message);
       showAppMessage({
         status: true,

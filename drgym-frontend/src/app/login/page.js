@@ -79,10 +79,17 @@ const LoginContent = ({ csrfToken = null, showAppMessage }) => {
           withCredentials: true,
         }
       );
+
       const { username, avatar } = await res.data;
       if (!username) {
         throw new Error('Missing username');
       }
+
+      localStorage.setItem('username', username);
+      if (avatar) {
+        localStorage.setItem('avatar', avatar);
+      }
+
       await signIn('credentials', {
         username: username,
         avatar: avatar || null,
