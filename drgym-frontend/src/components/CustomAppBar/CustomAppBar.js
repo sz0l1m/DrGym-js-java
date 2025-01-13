@@ -19,6 +19,7 @@ import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import { removeUserData } from '@/utils/localStorage';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -50,6 +51,7 @@ export default function CustomAppBar() {
           withCredentials: true,
         }
       );
+      removeUserData();
       signOut({
         callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/login?message=You have been signed out&type=info`,
       });

@@ -9,7 +9,7 @@ import WorkoutForm from '@/components/WorkoutForm';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import SkeletonCard from '@/components/SkeletonCard';
 import Grid from '@mui/material/Grid2';
-import { getUsername } from '@/utils/getUser';
+import { getUsername } from '@/utils/localStorage';
 
 const Workouts = ({ showAppMessage }) => {
   const [dialogOpen, setDialogOpen] = useState(false);

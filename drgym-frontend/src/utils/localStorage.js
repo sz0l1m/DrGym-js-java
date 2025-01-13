@@ -12,4 +12,11 @@ const getAvatar = () => {
   return avatar;
 };
 
-export { getUsername, getAvatar };
+const removeUserData = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem('username');
+    localStorage.removeItem('avatar');
+  }
+};
+
+export { getUsername, getAvatar, removeUserData };
