@@ -3,9 +3,11 @@ package com.drgym.drgym.controller;
 import com.drgym.drgym.model.*;
 import com.drgym.drgym.service.ExerciseService;
 import com.drgym.drgym.service.WorkoutService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -23,8 +25,11 @@ public class WorkoutController {
     @Autowired
     private ExerciseService exerciseService;
 
+    @Autowired
+    private UserController userController;
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> getWorkout(@PathVariable Long id) {
+    public ResponseEntity<?> getWorkout(@PathVariable Long id, HttpServletRequest request) {
         Optional<Workout> workoutOptional = workoutService.findById(id);
 
         if (workoutOptional.isEmpty()) {
@@ -32,6 +37,13 @@ public class WorkoutController {
         }
 
         Workout workout = workoutOptional.get();
+        String username = workout.getUsername();
+
+        if (!userController.tokenOwnerOrFriend(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+
         List<Activity> activities = workoutService.findActivitiesByWorkoutId(id);
 
         WorkoutResponse response = new WorkoutResponse(

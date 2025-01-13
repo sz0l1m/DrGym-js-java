@@ -23,11 +23,11 @@ import java.sql.Timestamp;
 import java.sql.Clob;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.security.Key;
 
-import static java.lang.Boolean.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -260,17 +260,32 @@ public class UserController {
         }
     }
 
-    private Boolean tokenOwnerOrFriend(String username, HttpServletRequest request) {
+    public boolean tokenOwnerOrFriend(String username, HttpServletRequest request) {
         String jwtToken = getJwtTokenFromCookie(request);
         if (jwtToken == null) {
-            return FALSE;
+            return false;
         }
 
         Claims claims = validateToken(jwtToken);
         if (claims == null || (!claims.getSubject().equals(username) && !userService.areUsersFriends(claims.getSubject(), username))) {
-            return FALSE;
+            return false;
         }
 
-        return TRUE;
+        return true;
+    }
+
+    public boolean tokenOwner(String username, HttpServletRequest request) {
+        String jwtToken = getJwtTokenFromCookie(request);
+        if (jwtToken == null) {
+            return false;
+        }
+
+        Claims claims = validateToken(jwtToken);
+        return claims != null && claims.getSubject().equals(username);
+    }
+
+    public boolean isTokenExpired(String token) {
+        Claims claims = validateToken(token);
+        return claims.getExpiration().before(new Date());
     }
 }
