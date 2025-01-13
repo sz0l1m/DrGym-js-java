@@ -46,7 +46,6 @@ export default function CustomAppBar() {
     try {
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/logout`,
-        {},
         {
           withCredentials: true,
         }

@@ -8,12 +8,13 @@ import { useDropzone } from 'react-dropzone';
 import Grid from '@mui/material/Grid2';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
-import axios from 'axios';
+
 import {
   AccountSchema,
   AccountDefaultValues,
 } from '@/utils/schemas/AccountSchema';
-import { set } from 'date-fns';
+import { useSession } from 'next-auth/react';
+import axiosInstance from '@/utils/axiosInstance';
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   border: '2px dashed #ccc',
@@ -32,16 +33,14 @@ const AccountPage = ({ showAppMessage }) => {
   const [error, setError] = useState(null);
   const [avatar, setAvatar] = useState(userData?.avatar || null);
   const [hasChanges, setHasChanges] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim`,
-          {
-            withCredentials: true,
-          }
+        const response = await axiosInstance.get(
+          `/api/users/${session?.user?.username}`
         );
         setUserData({
           ...response.data,
@@ -62,7 +61,7 @@ const AccountPage = ({ showAppMessage }) => {
     };
 
     fetchUserData();
-  }, [showAppMessage]);
+  }, [session?.user?.username, showAppMessage]);
 
   const handleAvatarChange = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {

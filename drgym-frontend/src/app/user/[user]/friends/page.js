@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import UserHeader from '@/components/UserHeader';
-import axios from 'axios';
+import axiosInstance from '@/utils/axiosInstance';
 import { friends as mockFriends } from '@/utils/mockData';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
@@ -29,11 +29,8 @@ const Friends = ({ showAppMessage }) => {
     const fetchFriends = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/friends/${session?.user?.username}`,
-          {
-            withCredentials: true,
-          }
+        const response = await axiosInstance.get(
+          `/api/friends/${session?.user?.username}`
         );
         setFriends(response.data.friends);
         setRequests(response.data.invitations);
@@ -52,6 +49,7 @@ const Friends = ({ showAppMessage }) => {
     fetchFriends();
   }, [session?.user?.username, showAppMessage]);
 
+  // FIXME (axiosInstance)
   const handleAcceptRequest = async (username, avatar) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));

@@ -12,7 +12,7 @@ import {
 import Grid from '@mui/material/Grid2';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
-import axios from 'axios';
+import axiosInstance from '@/utils/axiosInstance';
 import FriendDialogTitle from './FriendDialogTitle';
 import CustomInput from '@/components/CustomInput';
 import {
@@ -32,15 +32,9 @@ export default function FriendDialog({
   const handleAddFriend = async (formData, form) => {
     try {
       setLoading(true);
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/friends/sendRequest`,
-        {
-          username: formData.username,
-        },
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axiosInstance.post(`/api/friends/sendRequest`, {
+        username: formData.username,
+      });
       showAppMessage({
         status: true,
         text: `Friend request to ${formData.username} has been sent.`,

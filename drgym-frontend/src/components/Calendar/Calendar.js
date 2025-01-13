@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ActivityCalendar } from 'react-activity-calendar';
 import { Tooltip, Typography } from '@mui/material';
 import { calendarData as mockData } from '@/utils/mockData';
-import axios from 'axios';
+import axiosInstance from '@/utils/axiosInstance';
 
 const Calendar = ({ username }) => {
   const [calendarData, setCalendarData] = useState([]);
@@ -26,11 +26,8 @@ const Calendar = ({ username }) => {
           );
           setLoading(false);
         }, 2500);
-        // const response = await axios.get(
-        //   `${process.env.NEXT_PUBLIC_API_URL}/api/users/mandrysz/daily-exercise-count`,
-        //   {
-        //     withCredentials: true,
-        //   }
+        // const response = await axiosInstance.get(
+        //   `/api/users/mandrysz/daily-exercise-count`
         // );
         // setCalendarData(
         //   setMinCalendarRange(response.data, '2024-01-01', '2024-12-31')

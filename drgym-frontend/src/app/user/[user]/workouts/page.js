@@ -2,7 +2,7 @@
 
 import { Box, Button, Typography } from '@mui/material';
 import { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/utils/axiosInstance';
 import WorkoutCard from '@/components/WorkoutCard';
 import AddIcon from '@mui/icons-material/Add';
 import WorkoutForm from '@/components/WorkoutForm';
@@ -22,15 +22,13 @@ const Workouts = ({ showAppMessage }) => {
   const fetchWorkouts = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/${username}/workouts`,
-        {
-          withCredentials: true,
-        }
+      const response = await axiosInstance.get(
+        `/api/users/${username}/workouts`
       );
       setWorkoutsData(response.data);
     } catch (err) {
-      setError(err.message);
+      console.error(err);
+      setError('fetch worokuts', err.message);
       showAppMessage({
         status: true,
         text: 'Error fetching workouts',

@@ -10,7 +10,7 @@ import Skeleton from '@mui/material/Skeleton';
 import CardHeader from '@mui/material/CardHeader';
 import Box from '@mui/material/Box';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import axiosInstance from '@/utils/axiosInstance';
 import { useSession } from 'next-auth/react';
 import PostList from '@/components/PostList';
 
@@ -29,11 +29,8 @@ const User = ({ params }) => {
           router.replace(`/user/${user}/account`);
           return;
         }
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/friends/isFriend/${session?.user?.username}/${user}`,
-          {
-            withCredentials: true,
-          }
+        const response = await axiosInstance.get(
+          `/api/friends/isFriend/${session?.user?.username}/${user}`
         );
         if (response.data) {
           setAvatar(response.data?.avatar || null);
@@ -53,11 +50,12 @@ const User = ({ params }) => {
     checkFriendStatus();
   }, [router, user, session]);
 
+  // FIXME
   const handleDeleteFriend = async (username) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      // await axios.delete(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends/${username}`
+      // const response = await axiosInstance.delete(
+      //   `/api/friends/delete}`
       // );
       setFriends((prevFriends) =>
         prevFriends.filter((friend) => friend.username !== username)

@@ -24,7 +24,7 @@ import { useTheme } from '@mui/material/styles';
 import { DateTimePicker, TimeField } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { renderTimeViewClock } from '@mui/x-date-pickers/timeViewRenderers';
-import axios from 'axios';
+import axiosInstance from '@/utils/axiosInstance';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -57,9 +57,7 @@ export default function WorkoutForm({
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/exercises/by-type`
-        );
+        const response = await axiosInstance.get(`/api/exercises/by-type`);
         setExercises(response.data);
       } catch (error) {
         togglePopup();
@@ -140,20 +138,14 @@ export default function WorkoutForm({
     }
     try {
       actions.setSubmitting(true);
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/create`,
-        {
-          username: session?.user?.username,
-          description: values.description,
-          startDate: values.startDate.toISOString(),
-          endDate: values.endDate.toISOString(),
-          activities: activityList,
-        },
-        {
-          withCredentials: true,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
+      const response = await axiosInstance.post(`/api/workouts/create`, {
+        username: session?.user?.username,
+        description: values.description,
+        startDate: values.startDate.toISOString(),
+        endDate: values.endDate.toISOString(),
+        activities: activityList,
+      });
+
       onAddWorkout();
       handleClose();
       showAppMessage({
