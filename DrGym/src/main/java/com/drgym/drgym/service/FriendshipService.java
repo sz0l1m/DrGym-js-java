@@ -44,7 +44,7 @@ public class FriendshipService {
     public List<FriendRequestDTO> getUserFriendshipInvitations(String username) {
         List<FriendshipInvitation> invitations = friendshipInvitationRepository.findByWhoReceiveUsername(username);
         return invitations.stream()
-                .map(invitation -> new FriendRequestDTO(invitation.getWhoSendUsername(), invitation.getWhoReceiveUsername(), invitation.getSendTime()))
+                .map(invitation -> new FriendRequestDTO(invitation.getId(), invitation.getWhoSendUsername(), invitation.getWhoReceiveUsername(), invitation.getSendTime()))
                 .collect(Collectors.toList());
     }
 
@@ -100,6 +100,12 @@ public class FriendshipService {
         return "Friend removed";
     }
 
+    public String getInvitationReceiver(Long invitationId) {
+        FriendshipInvitation invitation = friendshipInvitationRepository.findById(invitationId)
+                .orElseThrow(() -> new NoSuchElementException("Invitation not found with id: " + invitationId));
+        return invitation.getWhoReceiveUsername();
+    }
+
     public static class UserFriendDTO {
         private String username;
         private LocalDateTime date;
@@ -127,14 +133,24 @@ public class FriendshipService {
     }
 
     public static class FriendRequestDTO {
+        private Long id;
         private String sender;
         private String receiver;
 
         public FriendRequestDTO() {}
 
-        public FriendRequestDTO(String sender, String receiver, LocalDateTime sendTime) {
+        public FriendRequestDTO(Long id, String sender, String receiver, LocalDateTime sendTime) {
+            this.id = id;
             this.sender = sender;
             this.receiver = receiver;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
         }
 
         public String getSender() {
