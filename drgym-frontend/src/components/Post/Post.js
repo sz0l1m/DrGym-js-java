@@ -5,9 +5,7 @@ import WorkoutInfo from '@/components/WorkoutInfo';
 import { formatRelativeTime } from '@/utils/dateUtils';
 import UserHeader from '@/components/UserHeader';
 
-export default function WorkoutCard({ workout }) {
-  const [loading, setLoading] = useState(false);
-
+export default function Post({ workout }) {
   const realitveStartDate = formatRelativeTime(workout.startDate);
 
   return (

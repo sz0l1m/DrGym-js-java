@@ -35,7 +35,6 @@ const Friends = ({ showAppMessage }) => {
             withCredentials: true,
           }
         );
-        console.log(response.data);
         setFriends(response.data.friends);
         setRequests(response.data.invitations);
       } catch (err) {

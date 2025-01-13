@@ -140,7 +140,6 @@ export default function WorkoutForm({
     }
     try {
       actions.setSubmitting(true);
-      console.log('values', values);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/create`,
         {
