@@ -100,8 +100,15 @@ public class WorkoutController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateWorkout(@RequestBody WorkoutUpdateRequest request) {
-        return workoutService.updateWorkout(request);
+    public ResponseEntity<?> updateWorkout(@RequestBody WorkoutUpdateRequest workoutRequest, HttpServletRequest request) {
+
+        String username = workoutRequest.getUsername();
+
+        if (!userController.tokenOwner(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        return workoutService.updateWorkout(workoutRequest);
     }
 
     public record WorkoutResponse(
