@@ -73,16 +73,27 @@ public class WorkoutController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createWorkout(@RequestBody WorkoutCreateRequest request) {
-        return workoutService.createWorkout(request);
+    public ResponseEntity<?> createWorkout(@RequestBody WorkoutCreateRequest workoutRequest, HttpServletRequest request) {
+        if (userController.isTokenExpired(request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        return workoutService.createWorkout(workoutRequest);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteWorkout(@PathVariable Long id) {
+    public ResponseEntity<?> deleteWorkout(@PathVariable Long id, HttpServletRequest request) {
         Optional<Workout> workoutOptional = workoutService.findById(id);
 
         if (workoutOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
+        }
+
+        Workout workout = workoutOptional.get();
+        String username = workout.getUsername();
+
+        if (!userController.tokenOwner(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
         }
 
         return workoutService.deleteWorkout(id);
