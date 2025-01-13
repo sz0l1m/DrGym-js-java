@@ -23,7 +23,7 @@ const Workouts = ({ showAppMessage }) => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/szolim/workouts`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/users/${username}/workouts`,
         {
           withCredentials: true,
         }
@@ -39,7 +39,7 @@ const Workouts = ({ showAppMessage }) => {
     } finally {
       setLoading(false);
     }
-  }, [showAppMessage]);
+  }, [username, showAppMessage]);
 
   useEffect(() => {
     fetchWorkouts();

@@ -140,14 +140,14 @@ export default function WorkoutForm({
     }
     try {
       actions.setSubmitting(true);
+      console.log('values', values);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/workouts/create`,
         {
           username: session?.user?.username,
           description: values.description,
-          startDatetime: values.startDate.toISOString(),
-          endDatetime: values.endDate.toISOString(),
-          createdDatetime: new Date().toISOString(),
+          startDate: values.startDate.toISOString(),
+          endDate: values.endDate.toISOString(),
           activities: activityList,
         },
         {
