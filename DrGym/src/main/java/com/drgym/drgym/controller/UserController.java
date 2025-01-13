@@ -284,8 +284,17 @@ public class UserController {
         return claims != null && claims.getSubject().equals(username);
     }
 
-    public boolean isTokenExpired(String token) {
-        Claims claims = validateToken(token);
+    public boolean isTokenExpired(HttpServletRequest request) {
+        String jwtToken = getJwtTokenFromCookie(request);
+        if (jwtToken == null) {
+            return true;
+        }
+
+        Claims claims = validateToken(jwtToken);
+        if (claims == null) {
+            return true;
+        }
+
         return claims.getExpiration().before(new Date());
     }
 }
