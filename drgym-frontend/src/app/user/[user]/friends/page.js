@@ -51,22 +51,20 @@ const Friends = ({ showAppMessage }) => {
   }, [username, showAppMessage]);
 
   // FIXME (axiosInstance)
-  const handleAcceptRequest = async (username, avatar) => {
+  const handleAcceptRequest = async (id, username, avatar) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      // await axios.delete(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends/accept/${username}`
-      // );
+      await axiosInstance.post(`/api/friends/acceptRequest?invitationId=${id}`);
       showAppMessage({
         status: true,
         text: `Accepted friend request from ${username}`,
         type: 'success',
       });
       setRequests((prevRequests) =>
-        prevRequests.filter((request) => request.sender !== username)
+        prevRequests.filter((request) => request.id !== id)
       );
       setFriends((prevFriends) => [...prevFriends, { username, avatar }]);
     } catch (err) {
+      console.error('Error accepting friend request:', err);
       showAppMessage({
         status: true,
         text: 'Something went wrong',
@@ -144,10 +142,11 @@ const Friends = ({ showAppMessage }) => {
             <Typography variant="h5" gutterBottom>
               Friend Requests
             </Typography>
-            {requests.map((friend) => (
-              <Card key={friend.sender} sx={{ maxWidth: '100%', my: 1 }}>
+            {requests.map((request) => (
+              <Card key={request.id} sx={{ maxWidth: '100%', my: 1 }}>
                 <UserHeader
-                  username={friend.sender}
+                  id={request.id}
+                  username={request.sender}
                   actions="request"
                   onAccept={handleAcceptRequest}
                   onDecline={handleDeclineRequest}

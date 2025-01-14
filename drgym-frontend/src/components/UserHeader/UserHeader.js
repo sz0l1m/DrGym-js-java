@@ -20,6 +20,7 @@ import DeleteConfirmation from '@/components/DeleteConfirmation';
 export default function UserHeader({
   username,
   avatar,
+  id,
   subheader,
   actions,
   onDelete,
@@ -52,7 +53,7 @@ export default function UserHeader({
   const handleAcceptRequest = async () => {
     try {
       setLoading(true);
-      await onAccept(username, avatar);
+      await onAccept(id, username, avatar);
     } finally {
       setLoading(false);
     }
@@ -61,7 +62,7 @@ export default function UserHeader({
   const handleDeclineRequest = async () => {
     try {
       setLoading(true);
-      await onDecline(username);
+      await onDecline(id, username);
     } finally {
       setLoading(false);
     }
