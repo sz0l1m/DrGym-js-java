@@ -59,7 +59,7 @@ const Friends = ({ showAppMessage }) => {
         type: 'success',
       });
       setRequests((prevRequests) =>
-        prevRequests.filter((request) => request.id !== id)
+        prevRequests.filter((request) => request.sender !== username)
       );
       setFriends((prevFriends) => [...prevFriends, { username, avatar }]);
     } catch (err) {
@@ -72,16 +72,13 @@ const Friends = ({ showAppMessage }) => {
     }
   };
 
-  const handleDeclineRequest = async (username) => {
+  const handleDeclineRequest = async (id, username) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      // await axios.delete(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends/decline/${username}`
-      // );
+      await axiosInstance.post(`/api/friends/rejectRequest?invitationId=${id}`);
       showAppMessage({
         status: true,
         text: `Declined friend request from ${username}`,
-        type: 'success',
+        type: 'info',
       });
       setRequests((prevRequests) =>
         prevRequests.filter((request) => request.sender !== username)
