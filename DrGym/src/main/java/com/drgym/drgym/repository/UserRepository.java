@@ -17,6 +17,7 @@ public interface UserRepository extends JpaRepository<User, String> {
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
     List<User> findByUsernameContaining(String search);
+    void deleteByUsername(String username);
 
     @Query("SELECT CASE WHEN COUNT(f) > 0 THEN TRUE ELSE FALSE END FROM Friendship f WHERE (f.friend1Username = :username1 AND f.friend2Username = :username2) OR (f.friend1Username = :username2 AND f.friend2Username = :username1)")
     boolean areUsersFriends(@Param("username1") String username1, @Param("username2") String username2);

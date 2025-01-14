@@ -75,7 +75,10 @@ public class UserController {
     }
 
     @DeleteMapping("/{username}")
-    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+    public ResponseEntity<?> deleteUser(@PathVariable String username, HttpServletRequest request) {
+        if (!tokenOwner(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }

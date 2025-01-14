@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public void deleteUser(String username) {
-        userRepository.deleteById(username);
+        userRepository.deleteByUsername(username);
     }
 
     public Optional<User> updateUser(String username, String new_name, Double height) {
