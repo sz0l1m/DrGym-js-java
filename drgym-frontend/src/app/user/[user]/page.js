@@ -13,8 +13,9 @@ import { useRouter } from 'next/navigation';
 import axiosInstance from '@/utils/axiosInstance';
 import PostList from '@/components/PostList';
 import { getUsername } from '@/utils/localStorage';
+import { withSnackbar } from '@/utils/snackbarProvider';
 
-const User = ({ params }) => {
+const User = ({ params, showAppMessage }) => {
   const [loading, setLoading] = React.useState(true);
   const { user } = React.use(params);
   const [avatar, setAvatar] = React.useState(null);
@@ -24,7 +25,7 @@ const User = ({ params }) => {
   useEffect(() => {
     const checkFriendStatus = async () => {
       try {
-        setLoading(false);
+        setLoading(true);
         if (username === user) {
           router.replace(`/user/${user}/account`);
           return;
@@ -122,7 +123,11 @@ const User = ({ params }) => {
               <BodyHighlighter username={user} />
             </Box>
             <Box sx={{ width: '100%' }}>
-              <PostList username={user} onlyThisUser />
+              <PostList
+                username={user}
+                onlyThisUser
+                showAppMessage={showAppMessage}
+              />
             </Box>
           </Box>
         )}
@@ -131,4 +136,4 @@ const User = ({ params }) => {
   );
 };
 
-export default User;
+export default withSnackbar(User);
