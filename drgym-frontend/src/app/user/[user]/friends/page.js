@@ -23,14 +23,13 @@ const Friends = ({ showAppMessage }) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const username = getUsername();
 
   useEffect(() => {
     const fetchFriends = async () => {
       try {
         setLoading(true);
         const response = await axiosInstance.get(
-          `/api/friends/friendsinfo/${username}`
+          `/api/friends/friendsinfo/${getUsername()}`
         );
         setFriends(response.data.friends);
         setRequests(response.data.invitations);
@@ -48,7 +47,7 @@ const Friends = ({ showAppMessage }) => {
     };
 
     fetchFriends();
-  }, [username, showAppMessage]);
+  }, [showAppMessage]);
 
   // FIXME (axiosInstance)
   const handleAcceptRequest = async (id, username, avatar) => {
@@ -97,11 +96,15 @@ const Friends = ({ showAppMessage }) => {
   };
 
   const handleDeleteFriend = async (username) => {
+    console.log('Deleting friend:', username);
+    console.log('me:', getUsername());
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      // await axios.delete(
-      //   `${process.env.NEXT_PUBLIC_API_URL}/api/friends/${username}`
-      // );
+      await axiosInstance.delete(`/api/friends/removeFriend`, {
+        data: {
+          user1: 'mandrysz',
+          user2: 'milosz',
+        },
+      });
       setFriends((prevFriends) =>
         prevFriends.filter((friend) => friend.username !== username)
       );
@@ -111,6 +114,7 @@ const Friends = ({ showAppMessage }) => {
         type: 'success',
       });
     } catch (err) {
+      console.error('Error deleting friend:', err);
       showAppMessage({
         status: true,
         text: 'Failed to delete friend',
