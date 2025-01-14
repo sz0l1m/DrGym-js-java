@@ -57,7 +57,7 @@ export default function FriendDialog({
       } else if (response.data === 'Already friends') {
         showAppMessage({
           status: true,
-          text: `You are already friends or an invitation has been made.`,
+          text: `You are already friends or an invitation has already been made.`,
           type: 'info',
         });
         handleClose();
@@ -134,7 +134,7 @@ export default function FriendDialog({
                       touched={touched.username}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      tabIndex={1}
+                      tabIndex={0}
                       endAdornment={
                         values.username && (
                           <InputAdornment position="end">
