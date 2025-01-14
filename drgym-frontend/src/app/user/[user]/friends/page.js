@@ -29,10 +29,13 @@ const Friends = ({ showAppMessage }) => {
     const fetchFriends = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(`/api/friends/${username}`);
+        const response = await axiosInstance.get(
+          `/api/friends/friendsinfo/${username}`
+        );
         setFriends(response.data.friends);
         setRequests(response.data.invitations);
       } catch (err) {
+        console.error('Error fetching friends:', err);
         showAppMessage({
           status: true,
           text: 'Something went wrong',

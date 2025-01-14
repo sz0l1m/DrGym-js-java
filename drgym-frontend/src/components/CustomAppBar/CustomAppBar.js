@@ -163,7 +163,7 @@ export default function CustomAppBar() {
                 <Link href={`/user/${username}/account`}>
                   <IconButton aria-label="account">
                     <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                      S
+                      {username.charAt(0).toUpperCase()}
                     </Avatar>
                   </IconButton>
                 </Link>

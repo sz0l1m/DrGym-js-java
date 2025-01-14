@@ -19,6 +19,7 @@ import {
   UsernameSchema,
   UsernameDefaultValues,
 } from '@/utils/schemas/UsernameSchema';
+import { getUsername } from '@/utils/localStorage';
 
 export default function FriendDialog({
   popupStatus,
@@ -28,19 +29,46 @@ export default function FriendDialog({
   const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const username = getUsername();
 
   const handleAddFriend = async (formData, form) => {
     try {
+      if (formData.username === username) {
+        form.setFieldError('username', 'it is you');
+        showAppMessage({
+          status: true,
+          text: 'You cannot add yourself as a friend.',
+          type: 'error',
+        });
+        return;
+      }
       setLoading(true);
       const response = await axiosInstance.post(`/api/friends/sendRequest`, {
-        username: formData.username,
+        sender: username,
+        receiver: formData.username,
       });
-      showAppMessage({
-        status: true,
-        text: `Friend request to ${formData.username} has been sent.`,
-        type: 'success',
-      });
-      handleClose();
+      if (response.data === 'Request sent') {
+        showAppMessage({
+          status: true,
+          text: `Friend request to ${formData.username} has been sent.`,
+          type: 'success',
+        });
+        handleClose();
+      } else if (response.data === 'Already friends') {
+        showAppMessage({
+          status: true,
+          text: `You are already friends or an invitation has been made.`,
+          type: 'info',
+        });
+        handleClose();
+      } else {
+        form.setFieldError('username', 'no account found');
+        showAppMessage({
+          status: true,
+          text: 'There is no account associated with this username.',
+          type: 'error',
+        });
+      }
     } catch (error) {
       if (error.response?.data === 'User does not exist') {
         form.setFieldError('username', 'no account found');
