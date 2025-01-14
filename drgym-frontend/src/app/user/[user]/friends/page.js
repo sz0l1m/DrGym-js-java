@@ -49,7 +49,6 @@ const Friends = ({ showAppMessage }) => {
     fetchFriends();
   }, [showAppMessage]);
 
-  // FIXME (axiosInstance)
   const handleAcceptRequest = async (id, username, avatar) => {
     try {
       await axiosInstance.post(`/api/friends/acceptRequest?invitationId=${id}`);

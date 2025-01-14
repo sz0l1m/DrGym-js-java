@@ -134,7 +134,7 @@ export default function FriendDialog({
                       touched={touched.username}
                       onBlur={handleBlur}
                       onChange={handleChange}
-                      tabIndex={0}
+                      tabIndex={1}
                       endAdornment={
                         values.username && (
                           <InputAdornment position="end">
