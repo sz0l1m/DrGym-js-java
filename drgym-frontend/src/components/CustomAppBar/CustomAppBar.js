@@ -76,7 +76,13 @@ export default function CustomAppBar() {
       <Container maxWidth="lg">
         <StyledToolbar variant="dense" disableGutters>
           <Box
-            sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}
+            sx={{
+              flexGrow: 1,
+              minHeight: '56px',
+              display: 'flex',
+              alignItems: 'center',
+              px: 0,
+            }}
           >
             <DrGymLogo />
             {status === 'authenticated' && (
@@ -152,7 +158,7 @@ export default function CustomAppBar() {
               alignItems: 'center',
             }}
           >
-            {status === 'authenticated' ? (
+            {status === 'authenticated' && (
               <>
                 <Link href={`/user/${username}/account`}>
                   <IconButton aria-label="account">
@@ -170,7 +176,8 @@ export default function CustomAppBar() {
                   Sign out
                 </Button>
               </>
-            ) : (
+            )}
+            {status === 'unauthenticated' && (
               <>
                 <Link href="/login">
                   <Button color="primary" variant="text" size="small">
