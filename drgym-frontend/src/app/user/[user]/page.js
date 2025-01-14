@@ -11,44 +11,44 @@ import CardHeader from '@mui/material/CardHeader';
 import Box from '@mui/material/Box';
 import { useRouter } from 'next/navigation';
 import axiosInstance from '@/utils/axiosInstance';
-import { useSession } from 'next-auth/react';
 import PostList from '@/components/PostList';
+import { getUsername } from '@/utils/localStorage';
 
 const User = ({ params }) => {
   const [loading, setLoading] = React.useState(true);
   const { user } = React.use(params);
   const [avatar, setAvatar] = React.useState(null);
   const router = useRouter();
-  const { data: session } = useSession();
+  const username = getUsername();
 
   useEffect(() => {
     const checkFriendStatus = async () => {
       try {
         setLoading(false);
-        if (session?.user?.username === user) {
+        if (username === user) {
           router.replace(`/user/${user}/account`);
           return;
         }
         const response = await axiosInstance.get(
-          `/api/friends/isFriend/${session?.user?.username}/${user}`
+          `/api/friends/isFriend/${username}/${user}`
         );
         if (response.data) {
           setAvatar(response.data?.avatar || null);
           setLoading(false);
         } else {
           router.replace(
-            `/user/${session?.user?.username}/posts?message=User ${user} is not your friend&type=warning`
+            `/user/${username}/posts?message=User ${user} is not your friend&type=warning`
           );
         }
       } catch (err) {
         router.replace(
-          `/user/${session?.user?.username}/posts?message=An error occurred. Redirected.&type=error`
+          `/user/${username}/posts?message=An error occurred. Redirected.&type=error`
         );
       }
     };
 
     checkFriendStatus();
-  }, [router, user, session]);
+  }, [router, user, username]);
 
   // FIXME
   const handleDeleteFriend = async (username) => {

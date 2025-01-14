@@ -37,7 +37,7 @@ import {
   cardioActivitySchema,
 } from '@/utils/schemas/WorkoutSchema';
 import { formatDate } from '@/utils/dateUtils';
-import { useSession } from 'next-auth/react';
+import { getUsername } from '@/utils/localStorage';
 
 export default function WorkoutForm({
   dialogTitle,
@@ -52,7 +52,7 @@ export default function WorkoutForm({
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activityList, setActivityList] = useState([]);
   const [exercises, setExercises] = useState([]);
-  const { data: session } = useSession();
+  const username = getUsername();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -139,7 +139,7 @@ export default function WorkoutForm({
     try {
       actions.setSubmitting(true);
       const response = await axiosInstance.post(`/api/workouts/create`, {
-        username: session?.user?.username,
+        username: username,
         description: values.description,
         startDate: values.startDate.toISOString(),
         endDate: values.endDate.toISOString(),

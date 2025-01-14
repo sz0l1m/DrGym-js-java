@@ -5,11 +5,10 @@ import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import Typography from '@mui/material/Typography';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import PostList from '@/components/PostList';
-import { useSession } from 'next-auth/react';
+import { getUsername } from '@/utils/localStorage';
 
 const PostsContent = ({ showAppMessage }) => {
-  const { data: session, status } = useSession();
-  const username = session?.user?.username;
+  const username = getUsername();
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();

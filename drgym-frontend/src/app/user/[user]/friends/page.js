@@ -15,7 +15,7 @@ import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Divider } from '@mui/material';
-import { useSession } from 'next-auth/react';
+import { getUsername } from '@/utils/localStorage';
 
 const Friends = ({ showAppMessage }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -23,15 +23,13 @@ const Friends = ({ showAppMessage }) => {
   const [requests, setRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { data: session } = useSession();
+  const username = getUsername();
 
   useEffect(() => {
     const fetchFriends = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(
-          `/api/friends/${session?.user?.username}`
-        );
+        const response = await axiosInstance.get(`/api/friends/${username}`);
         setFriends(response.data.friends);
         setRequests(response.data.invitations);
       } catch (err) {
@@ -47,7 +45,7 @@ const Friends = ({ showAppMessage }) => {
     };
 
     fetchFriends();
-  }, [session?.user?.username, showAppMessage]);
+  }, [username, showAppMessage]);
 
   // FIXME (axiosInstance)
   const handleAcceptRequest = async (username, avatar) => {

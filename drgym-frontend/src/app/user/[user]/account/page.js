@@ -13,8 +13,8 @@ import {
   AccountSchema,
   AccountDefaultValues,
 } from '@/utils/schemas/AccountSchema';
-import { useSession } from 'next-auth/react';
 import axiosInstance from '@/utils/axiosInstance';
+import { getUsername } from '@/utils/localStorage';
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   border: '2px dashed #ccc',
@@ -33,15 +33,13 @@ const AccountPage = ({ showAppMessage }) => {
   const [error, setError] = useState(null);
   const [avatar, setAvatar] = useState(userData?.avatar || null);
   const [hasChanges, setHasChanges] = useState(false);
-  const { data: session } = useSession();
+  const username = getUsername();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(
-          `/api/users/${session?.user?.username}`
-        );
+        const response = await axiosInstance.get(`/api/users/${username}`);
         setUserData({
           ...response.data,
           firstName: response.data.name,
@@ -61,7 +59,7 @@ const AccountPage = ({ showAppMessage }) => {
     };
 
     fetchUserData();
-  }, [session?.user?.username, showAppMessage]);
+  }, [username, showAppMessage]);
 
   const handleAvatarChange = (acceptedFiles) => {
     if (acceptedFiles.length > 0) {
