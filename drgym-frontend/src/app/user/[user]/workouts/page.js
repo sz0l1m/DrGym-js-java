@@ -77,6 +77,7 @@ const Workouts = ({ showAppMessage }) => {
               key={workout.workoutId}
               workout={workout}
               onDelete={handleDeleteWorkout}
+              onEditWorkout={fetchWorkouts}
               showAppMessage={showAppMessage}
             />
           ))
@@ -87,8 +88,8 @@ const Workouts = ({ showAppMessage }) => {
         popupType="new"
         popupStatus={dialogOpen}
         togglePopup={setDialogOpen}
-        showAppMessage={showAppMessage}
         onAddWorkout={fetchWorkouts}
+        showAppMessage={showAppMessage}
       />
     </>
   );

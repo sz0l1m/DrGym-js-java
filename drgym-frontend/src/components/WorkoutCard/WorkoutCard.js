@@ -14,7 +14,12 @@ import axiosInstance from '@/utils/axiosInstance';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
 import { formatDate, formatRelativeTime } from '@/utils/dateUtils';
 
-export default function WorkoutCard({ workout, onDelete, showAppMessage }) {
+export default function WorkoutCard({
+  workout,
+  onDelete,
+  onEditWorkout,
+  showAppMessage,
+}) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -100,6 +105,7 @@ export default function WorkoutCard({ workout, onDelete, showAppMessage }) {
           popupStatus={openDialog}
           togglePopup={setOpenDialog}
           workout={workout}
+          onEditWorkout={onEditWorkout}
           showAppMessage={showAppMessage}
         />
         <DeleteConfirmation

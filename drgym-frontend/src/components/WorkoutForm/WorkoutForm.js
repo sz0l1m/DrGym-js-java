@@ -45,12 +45,14 @@ export default function WorkoutForm({
   popupStatus,
   togglePopup,
   workout = {},
-  showAppMessage,
   onAddWorkout,
+  onEditWorkout,
+  showAppMessage,
 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [activityList, setActivityList] = useState([]);
+  const [activitiesToDelete, setActivitiesToDelete] = useState([]);
   const [exercises, setExercises] = useState([]);
   const username = getUsername();
 
@@ -80,33 +82,32 @@ export default function WorkoutForm({
   }, [popupType, workout.activities, popupStatus, togglePopup, showAppMessage]);
 
   const handleAddActivity = (values, setFieldValue, setErrors) => {
-    const newActivity = {
-      exerciseType: values.exerciseType,
-      exercise: values.exercise?.name,
-      reps: String(values.reps) || null,
-      weight: String(values.weight) || null,
-      duration: values.duration,
-    };
-
     const activitySchema =
       values.exerciseType === 'strength'
         ? strengthActivitySchema
         : cardioActivitySchema;
     activitySchema
-      .validate(newActivity, { abortEarly: false })
+      .validate(
+        {
+          exerciseType: values.exerciseType,
+          exercise: values.exercise?.name,
+          reps: String(values.reps) || null,
+          weight: String(values.weight) || null,
+          duration: values.duration,
+        },
+        { abortEarly: false }
+      )
       .then(() => {
-        setActivityList((prev) => [
-          ...prev,
-          {
-            exerciseId: values.exercise.id,
-            exerciseName: values.exercise.name,
-            reps: values.reps || 0,
-            weight: values.weight || 0,
-            duration: values.duration
-              ? formatDate(values.duration.toISOString(), 'HH:mm:ss')
-              : '00:00:00',
-          },
-        ]);
+        const newActivity = {
+          exerciseId: values.exercise.id,
+          exerciseName: values.exercise.name,
+          reps: values.reps || 0,
+          weight: values.weight || 0,
+          duration: values.duration
+            ? formatDate(values.duration.toISOString(), 'HH:mm:ss')
+            : '00:00:00',
+        };
+        setActivityList((prev) => [...prev, newActivity]);
         setFieldValue('exerciseType', '');
         setFieldValue('exercise', '');
         setFieldValue('reps', '');
@@ -124,6 +125,13 @@ export default function WorkoutForm({
         );
         setErrors(errors);
       });
+  };
+
+  const handleDeleteActivity = (activityId, index) => {
+    setActivityList((prev) => prev.filter((_, i) => i !== index));
+    if (activityId) {
+      setActivitiesToDelete((prev) => [...prev, activityId]);
+    }
   };
 
   const handleAddWorkout = async (values, actions) => {
@@ -164,7 +172,7 @@ export default function WorkoutForm({
     }
   };
 
-  const handleEditWorkout = (values, actions) => {
+  const handleEditWorkout = async (values, actions) => {
     if (!activityList.length) {
       showAppMessage({
         status: true,
@@ -174,17 +182,37 @@ export default function WorkoutForm({
       actions.setSubmitting(false);
       return;
     }
-    actions.setSubmitting(true);
-    setTimeout(() => {
-      alert(JSON.stringify({ ...values, activities: activityList }, null, 2));
-      actions.setSubmitting(false);
+    try {
+      actions.setSubmitting(true);
+      const response = await axiosInstance.put(`/api/workouts/update`, {
+        id: workout.workoutId,
+        username: username,
+        description: values.description,
+        startDate: values.startDate.toISOString(),
+        endDate: values.endDate.toISOString(),
+        activitiesToAdd: activityList.filter(
+          (activity) => !activity.activityId
+        ),
+        activitiesToRemove: activitiesToDelete,
+      });
+
+      onEditWorkout();
       handleClose();
       showAppMessage({
         status: true,
-        text: 'Workout edited successfully!',
+        text: 'Workout updated successfully!',
         type: 'success',
       });
-    }, 1000);
+    } catch (error) {
+      console.error(error);
+      showAppMessage({
+        status: true,
+        text: 'Error updating workout',
+        type: 'error',
+      });
+    } finally {
+      actions.setSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -483,9 +511,7 @@ export default function WorkoutForm({
                         color="error"
                         sx={{ mr: 1 }}
                         onClick={() =>
-                          setActivityList((prev) =>
-                            prev.filter((_, i) => i !== index)
-                          )
+                          handleDeleteActivity(activity.activityId, index)
                         }
                       >
                         <DeleteIcon />
