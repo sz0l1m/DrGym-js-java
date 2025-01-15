@@ -60,6 +60,12 @@ public class FriendshipService {
                 friendshipRepository.existsByFriend1UsernameAndFriend2Username(receiver, sender)) {
             return "Already friends";
         }
+        if (friendshipInvitationRepository.existsInvitation(sender, receiver)) {
+            return "Invitation already sent";
+        }
+        if (friendshipInvitationRepository.existsInvitation(sender, receiver)) {
+            return "Receiver has already sent an invitation";
+        }
         if (!userRepository.existsByUsername(receiver)) {
             return "User not found";
         }
