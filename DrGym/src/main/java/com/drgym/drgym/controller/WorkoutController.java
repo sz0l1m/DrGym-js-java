@@ -49,6 +49,17 @@ public class WorkoutController {
         return ResponseEntity.ok(workout);
     }
 
+    @GetMapping("/private")
+    public ResponseEntity<?> getPrivateWorkouts(HttpServletRequest request) {
+        String username = userController.getUsernameFromToken(request);
+        if (userController.isTokenExpired(request) || username == null) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        List<Workout> privateWorkouts = workoutService.findPrivateWorkoutsByUsername(username);
+        return ResponseEntity.ok(privateWorkouts);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createWorkout(@RequestBody WorkoutCreateRequest workoutRequest, HttpServletRequest request) {
         String tokenUsername = userController.getUsernameFromToken(request);
