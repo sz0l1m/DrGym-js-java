@@ -113,7 +113,7 @@ export default function WorkoutCard({ workout, isPost }) {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           {workout.activities.map((activity) => (
-            <Box key={activity.activityId}>
+            <Box key={activity.id}>
               <Divider sx={{ mb: 3 }} />
               <ActivityInfo activity={activity} />
             </Box>

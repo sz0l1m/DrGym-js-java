@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import UserHeader from '@/components/UserHeader';
 import axiosInstance from '@/utils/axiosInstance';
-import { friends as mockFriends } from '@/utils/mockData';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import CardHeader from '@mui/material/CardHeader';
@@ -108,7 +107,6 @@ const Friends = ({ showAppMessage }) => {
         type: 'success',
       });
     } catch (err) {
-      console.error('Error deleting friend:', err);
       showAppMessage({
         status: true,
         text: 'Failed to delete friend',

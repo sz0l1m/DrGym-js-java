@@ -25,6 +25,7 @@ const Workouts = ({ showAppMessage }) => {
         `/api/users/${username}/workouts`
       );
       setWorkoutsData(response.data);
+      console.log('response.data', response.data);
     } catch (err) {
       setError('fetch worokuts', err.message);
       showAppMessage({
@@ -41,10 +42,8 @@ const Workouts = ({ showAppMessage }) => {
     fetchWorkouts();
   }, [fetchWorkouts]);
 
-  const handleDeleteWorkout = (workoutId) => {
-    setWorkoutsData((prev) =>
-      prev.filter((workout) => workout.workoutId !== workoutId)
-    );
+  const handleDeleteWorkout = (id) => {
+    setWorkoutsData((prev) => prev.filter((workout) => workout.id !== id));
   };
 
   if (error) return <Typography>Error: {error}</Typography>;
@@ -74,7 +73,7 @@ const Workouts = ({ showAppMessage }) => {
         ) : (
           workoutsData.map((workout) => (
             <WorkoutCard
-              key={workout.workoutId}
+              key={workout.id}
               workout={workout}
               onDelete={handleDeleteWorkout}
               onEditWorkout={fetchWorkouts}

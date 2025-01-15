@@ -13,6 +13,9 @@ import WorkoutInfo from '@/components/WorkoutInfo';
 import axiosInstance from '@/utils/axiosInstance';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
 import { formatDate, formatRelativeTime } from '@/utils/dateUtils';
+import Grid from '@mui/material/Grid2';
+import { Typography } from '@mui/material';
+import Chip from '@mui/material/Chip';
 
 export default function WorkoutCard({
   workout,
@@ -24,6 +27,8 @@ export default function WorkoutCard({
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const isPost = false;
 
   const menuOpen = Boolean(anchorEl);
   const realitveStartDate = formatRelativeTime(workout.startDate);
@@ -39,13 +44,13 @@ export default function WorkoutCard({
   const deleteWorkout = async () => {
     try {
       setLoading(true);
-      await axiosInstance.delete(`/api/workouts/${workout.workoutId}`);
+      await axiosInstance.delete(`/api/workouts/${workout.id}`);
       showAppMessage({
         status: true,
         text: 'Workout deleted successfully',
         type: 'success',
       });
-      onDelete(workout.workoutId);
+      onDelete(workout.id);
     } catch (error) {
       console.error('Error deleting workout:', error);
       showAppMessage({
@@ -69,7 +74,18 @@ export default function WorkoutCard({
                 <MoreVertIcon />
               </IconButton>
             }
-            title={formatDate(workout.startDate, 'd MMMM yyyy')}
+            title={
+              <Grid container alignItems="center" gap={6}>
+                <Typography variant="h5">
+                  {formatDate(workout.startDate, 'd MMMM yyyy')}
+                </Typography>
+                <Chip
+                  label={isPost ? 'Public' : 'Private'}
+                  color={isPost ? 'success' : 'warning'}
+                  variant="outlined"
+                />
+              </Grid>
+            }
             subheader={
               realitveStartDate.charAt(0).toUpperCase() +
               realitveStartDate.slice(1)
