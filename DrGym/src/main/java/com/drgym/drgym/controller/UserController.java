@@ -3,8 +3,6 @@ package com.drgym.drgym.controller;
 import com.drgym.drgym.model.Activity;
 import com.drgym.drgym.model.User;
 import com.drgym.drgym.model.Workout;
-import com.drgym.drgym.model.Post;
-import com.drgym.drgym.model.PostReaction;
 import com.drgym.drgym.service.ExerciseService;
 import com.drgym.drgym.service.UserService;
 import com.drgym.drgym.service.WorkoutService;
@@ -19,10 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.sql.Clob;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -40,12 +35,6 @@ public class UserController {
 
     @Autowired
     private ExerciseService exerciseService;
-
-    @Autowired
-    private PostService postService;
-
-    @Autowired
-    private PostReactionService postReactionService;
 
     private final Key SECRET_KEY;
 
