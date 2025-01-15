@@ -63,15 +63,15 @@ public class PostController {
     }
 
     @PostMapping("/{postId}/reactions")
-    public ResponseEntity<?> addReactionToPost(@PathVariable Long postId, @RequestBody PostReaction reaction) {
-        reaction.setPostId(postId);
-        PostReaction createdReaction = postReactionService.addReaction(reaction);
+    public ResponseEntity<?> addReactionToPost(@PathVariable Long postId, @RequestParam String username) {
+        PostReaction reaction = new PostReaction(postId, username);
+        postReactionService.addReaction(reaction);
         return ResponseEntity.ok("Reaction added successfully.");
     }
 
-    @DeleteMapping("/{postId}/reactions/{reactionId}")
-    public ResponseEntity<?> deleteReaction(@PathVariable Long postId, @PathVariable Long reactionId) {
-        postReactionService.removeReaction(reactionId);
+    @DeleteMapping("/{postId}/reactions")
+    public ResponseEntity<?> deleteReaction(@PathVariable Long postId, @RequestParam String username) {
+        postReactionService.removeReactionByUsername(postId, username);
         return ResponseEntity.noContent().build();
     }
 }
