@@ -1,7 +1,6 @@
 package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.Exercise;
-import com.drgym.drgym.model.ExerciseCreateRequest;
 import com.drgym.drgym.repository.ExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -62,15 +61,8 @@ public class ExerciseService {
         return exercisesByType;
     }
 
-    public ResponseEntity<?> createExercise(@RequestBody ExerciseCreateRequest request) {
-        Exercise exercise = new Exercise(
-                request.getName(),
-                request.getType(),
-                request.getKcalBurned(),
-                request.getMusclesWorked()
-        );
-        Exercise savedExercise = exerciseRepository.save(exercise);
-
+    public ResponseEntity<?> createExercise(@RequestBody Exercise request) {
+        exerciseRepository.save(request);
         return ResponseEntity.ok("Exercise created successfully");
     }
 
