@@ -1,8 +1,10 @@
 package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.*;
+import com.drgym.drgym.repository.ActivityRepository;
 import com.drgym.drgym.repository.PostRepository;
 import com.drgym.drgym.repository.WorkoutRepository;
+import com.drgym.drgym.repository.ExerciseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-
 @Service
 public class PostService {
     @Autowired
@@ -19,6 +20,12 @@ public class PostService {
 
     @Autowired
     private WorkoutRepository workoutRepository;
+
+    @Autowired
+    private ExerciseRepository exerciseRepository;
+
+    @Autowired
+    private ActivityRepository activityRepository;
 
     public List<Post> findPostsByUsername(String username) {
         return postRepository.findByUsername(username);
@@ -31,6 +38,12 @@ public class PostService {
             Workout workout = post.getTraining();
             if (workout != null) {
                 List<Activity> activities = workoutRepository.findActivitiesByWorkoutId(workout.getId());
+                activities.forEach(activity -> {
+                    Exercise exercise = exerciseRepository.findById(activity.getExerciseId()).orElse(null);
+                    if (exercise != null) {
+                        activity.setExerciseName(exercise.getName());
+                    }
+                });
                 workout.setActivities(activities);
             }
             return Optional.of(post);
@@ -48,6 +61,16 @@ public class PostService {
 
             if (postRequest.getWorkoutId() != null) {
                 Workout workout = workoutRepository.findById(postRequest.getWorkoutId()).orElse(null);
+                if (workout != null) {
+                    List<Activity> activities = workoutRepository.findActivitiesByWorkoutId(workout.getId());
+                    activities.forEach(activity -> {
+                        Exercise exercise = exerciseRepository.findById(activity.getExerciseId()).orElse(null);
+                        if (exercise != null) {
+                            activity.setExerciseName(exercise.getName());
+                        }
+                    });
+                    workout.setActivities(activities);
+                }
                 post.setTraining(workout);
             }
 
@@ -76,6 +99,16 @@ public class PostService {
                         LocalDateTime.now()
                 );
                 Workout savedWorkout = workoutRepository.save(workout);
+                List<Activity> activities = workoutRequest.getActivities();
+                activities.forEach(activity -> {
+                    activity.setWorkoutId(savedWorkout.getId());
+                    Exercise exercise = exerciseRepository.findById(activity.getExerciseId()).orElse(null);
+                    if (exercise != null) {
+                        activity.setExerciseName(exercise.getName());
+                    }
+                    activityRepository.save(activity);
+                });
+                savedWorkout.setActivities(activities);
                 post.setTraining(savedWorkout);
             }
 
