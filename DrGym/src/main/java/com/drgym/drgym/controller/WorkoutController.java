@@ -51,7 +51,8 @@ public class WorkoutController {
 
     @PostMapping("/create")
     public ResponseEntity<?> createWorkout(@RequestBody WorkoutCreateRequest workoutRequest, HttpServletRequest request) {
-        if (userController.isTokenExpired(request)) {
+        String tokenUsername = userController.getUsernameFromToken(request);
+        if (userController.isTokenExpired(request) || !tokenUsername.equals(workoutRequest.getUsername())) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
         }
 
@@ -78,10 +79,8 @@ public class WorkoutController {
 
     @PutMapping("/update")
     public ResponseEntity<?> updateWorkout(@RequestBody WorkoutUpdateRequest workoutRequest, HttpServletRequest request) {
-
-        String username = workoutRequest.getUsername();
-
-        if (!userController.tokenOwner(username, request)) {
+        String tokenUsername = userController.getUsernameFromToken(request);
+        if (userController.isTokenExpired(request) || !tokenUsername.equals(workoutRequest.getUsername())) {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
         }
 
