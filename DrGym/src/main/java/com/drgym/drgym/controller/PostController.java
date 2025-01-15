@@ -2,6 +2,7 @@ package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.Post;
 import com.drgym.drgym.model.PostReaction;
+import com.drgym.drgym.model.PostCreateRequest;
 import com.drgym.drgym.service.PostService;
 import com.drgym.drgym.service.PostReactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,11 @@ public class PostController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/create_with_workout")
+    public ResponseEntity<?> createPost(@RequestBody PostCreateRequest postRequest) {
+        return postService.createPost(postRequest);
     }
 
     @GetMapping("/{postId}/reactions")
