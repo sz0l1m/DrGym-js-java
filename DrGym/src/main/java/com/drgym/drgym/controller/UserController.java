@@ -198,4 +198,10 @@ public class UserController {
 
         return claims.getExpiration().before(new Date());
     }
+
+    public String getUsernameFromToken(HttpServletRequest request) {
+        String jwtToken = getJwtTokenFromCookie(request);
+        Claims claims = validateToken(jwtToken);
+        return claims != null ? claims.getSubject() : null;
+    }
 }
