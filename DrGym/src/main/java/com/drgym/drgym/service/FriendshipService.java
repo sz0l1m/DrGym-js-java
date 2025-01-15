@@ -112,6 +112,10 @@ public class FriendshipService {
         return invitation.getWhoReceiveUsername();
     }
 
+    public List<String> getFriendsUsernames(String username) {
+        return friendshipRepository.findFriendsUsernamesByUsername(username);
+    }
+
     public static class UserFriendDTO {
         private String username;
         private LocalDateTime date;
