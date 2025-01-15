@@ -1,6 +1,7 @@
 package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.Post;
+import com.drgym.drgym.model.PostCreateRequestWorkout;
 import com.drgym.drgym.model.PostCreateRequest;
 import com.drgym.drgym.model.Workout;
 import com.drgym.drgym.model.WorkoutCreateRequest;
@@ -32,6 +33,21 @@ public class PostService {
     }
 
     public ResponseEntity<String> createPost(PostCreateRequest postRequest) {
+        try {
+            Post post = new Post();
+            post.setUsername(postRequest.getUsername());
+            post.setTitle(postRequest.getTitle());
+            post.setContent(postRequest.getContent());
+            post.setDate(LocalDateTime.now());
+            post.setTraining(postRequest.getWorkoutId());
+            postRepository.save(post);
+            return ResponseEntity.ok("Post created successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Failed to create post");
+        }
+    }
+
+    public ResponseEntity<String> createPostWorkout(PostCreateRequestWorkout postRequest) {
         try {
             Post post = new Post();
             post.setUsername(postRequest.getUsername());
