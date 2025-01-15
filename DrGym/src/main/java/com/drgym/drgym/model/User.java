@@ -31,7 +31,7 @@ public class User {
     @Column(name = "verified")
     private boolean verified;
 
-    @Transient
+    @Column(name = "favorite_exercise")
     private Long favoriteExercise;
 
     @Transient
@@ -66,6 +66,15 @@ public class User {
 
     public User(String email) {
         this.email = email;
+    }
+
+    public User(String username, String name, String surname, Double weight, Double height, Long favoriteExercise) {
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.weight = weight;
+        this.height = height;
+        this.favoriteExercise = favoriteExercise;
     }
 
     public User(String email, String newPassword, String token) {
