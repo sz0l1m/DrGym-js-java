@@ -25,8 +25,9 @@ public class Post {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "workout_id")
-    private Long trainingId;
+    @OneToOne
+    @JoinColumn(name = "workout_id")
+    private Workout training;
 
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostReaction> reactions = new ArrayList<>();
@@ -60,9 +61,7 @@ public class Post {
         return content;
     }
 
-    public Long getTraining() {
-        return trainingId;
-    }
+    public Long getTraining() { return training.getId(); }
 
     public List<PostReaction> getReactions() {
         return reactions;
@@ -88,9 +87,7 @@ public class Post {
         this.content = content;
     }
 
-    public void setTraining(Long training) {
-        this.trainingId = training;
-    }
+    public void setTraining(Workout training) { this.training = training; }
 
     public void setReactions(List<PostReaction> reactions) {
         this.reactions = reactions;
