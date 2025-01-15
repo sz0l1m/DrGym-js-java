@@ -1,11 +1,10 @@
 package com.drgym.drgym.controller;
 
-import com.drgym.drgym.model.Post;
-import com.drgym.drgym.model.PostReaction;
-import com.drgym.drgym.model.PostCreateRequestWorkout;
-import com.drgym.drgym.model.PostCreateRequest;
+import com.drgym.drgym.model.*;
+import com.drgym.drgym.service.ExerciseService;
 import com.drgym.drgym.service.PostService;
 import com.drgym.drgym.service.PostReactionService;
+import com.drgym.drgym.service.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,14 +23,27 @@ public class PostController {
     @Autowired
     private PostReactionService postReactionService;
 
+    @Autowired
+    private WorkoutService workoutService;
+
+    @Autowired
+    private ExerciseService exerciseService;
+
     @GetMapping("/{postId}")
     public ResponseEntity<?> getPost(@PathVariable Long postId) {
         Optional<Post> postOptional = postService.findPostById(postId);
-        if (postOptional.isPresent()) {
-            return ResponseEntity.ok(postOptional.get());
-        } else {
+        if (postOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+
+        Post post = postOptional.get();
+        Workout workout = post.getTraining();
+        if (workout != null) {
+            List<Activity> activities = workoutService.findActivitiesByWorkoutId(workout.getId());
+            workout.setActivities(activities);
+        }
+
+        return ResponseEntity.ok(post);
     }
 
     @GetMapping("/user/{username}")
