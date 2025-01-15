@@ -185,7 +185,7 @@ export default function WorkoutForm({
     try {
       actions.setSubmitting(true);
       const response = await axiosInstance.put(`/api/workouts/update`, {
-        id: workout.workoutId,
+        id: workout.id,
         username: username,
         description: values.description,
         startDate: values.startDate.toISOString(),

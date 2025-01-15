@@ -6,7 +6,7 @@ import SkeletonCard from '@/components/SkeletonCard';
 import axiosInstance from '@/utils/axiosInstance';
 
 const PostList = ({ username, onlyThisUser, showAppMessage }) => {
-  const [workoutsData, setWorkoutsData] = useState([]);
+  const [postsData, setPostsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -15,18 +15,16 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
     const fetchWorkouts = async () => {
       try {
         setLoading(true);
+        let response;
         if (onlyThisUser) {
-          const response = await axiosInstance.get(
-            `/api/users/${username}/workouts`
-          );
-          setWorkoutsData(response.data);
+          response = await axiosInstance.get(`/api/posts/user/${username}`);
+          setPostsData(response.data);
         } else {
-          const response = await axiosInstance.get(
-            `/api/users/${username}/workouts`
-          );
-          setWorkoutsData(response.data);
+          response = await axiosInstance.get(`/api/posts/user/${username}`);
+          setPostsData(response.data);
         }
       } catch (err) {
+        console.error('Error fetching posts:', err);
         setError('Error fetching posts');
         showAppMessage({
           status: true,
@@ -54,12 +52,10 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
   if (error) return <Typography textAlign="center">{error}</Typography>;
   return (
     <Grid container direction="column" alignItems="center">
-      {workoutsData.length === 0 ? (
+      {postsData.length === 0 ? (
         <Typography variant="h6">There are no posts here yet.</Typography>
       ) : (
-        workoutsData.map((workout) => (
-          <Post key={workout.workoutId} workout={workout} />
-        ))
+        postsData.map((post) => <Post key={post.id} post={post} />)
       )}
     </Grid>
   );

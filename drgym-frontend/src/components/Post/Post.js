@@ -5,7 +5,8 @@ import WorkoutInfo from '@/components/WorkoutInfo';
 import { formatRelativeTime } from '@/utils/dateUtils';
 import UserHeader from '@/components/UserHeader';
 
-export default function Post({ workout }) {
+export default function Post({ post }) {
+  const workout = post.training;
   const realitveStartDate = formatRelativeTime(workout.startDate);
 
   return (
