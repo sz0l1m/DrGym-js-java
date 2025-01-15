@@ -1,10 +1,7 @@
 //author: Michał Pędziwiatr
 package com.drgym.drgym.model;
 
-
 import jakarta.persistence.*;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -13,16 +10,16 @@ public class Exercise {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "exercise_id")
+    @Column(name = "exercise_id")
     private Long id;
 
-    @Column (name = "type")
+    @Column(name = "type")
     private char type;
 
-    @Column (name = "kcal_burned")
+    @Column(name = "kcal_burned")
     private Long kcalBurned;
 
-    @Column (name = "name")
+    @Column(name = "name")
     private String name;
 
     @ElementCollection
@@ -33,22 +30,10 @@ public class Exercise {
     public Exercise() {
     }
 
-    public Exercise(Long id, char type, Long kcal_burned, String name, ArrayList<String> musclesWorked) {
-        this.id = id;
-        this.type = type;
-        this.kcalBurned = kcal_burned;
-        this.name = name;
-        if (musclesWorked != null) {
-            this.musclesWorked = new ArrayList<>(musclesWorked);
-        } else {
-            this.musclesWorked = new ArrayList<>();
-        }
-    }
-
-    public Exercise(String name, char type, Long kcalBurned, List<String> musclesWorked) {
-        this.name = name;
+    public Exercise(char type, Long kcalBurned, String name, List<String> musclesWorked) {
         this.type = type;
         this.kcalBurned = kcalBurned;
+        this.name = name;
         this.musclesWorked = musclesWorked;
     }
 
@@ -56,53 +41,39 @@ public class Exercise {
         return id;
     }
 
-    public void setId(Long newId) {
-        id = newId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public char getType() {
         return type;
     }
 
-    public void setType(char newType) {
-        type = newType;
+    public void setType(char type) {
+        this.type = type;
     }
 
-    public Long getKcal_burned() {
+    public Long getKcalBurned() {
         return kcalBurned;
     }
 
-    public void setKcal_burned(Long newKcal_burned) {
-        kcalBurned = newKcal_burned;
+    public void setKcalBurned(Long kcalBurned) {
+        this.kcalBurned = kcalBurned;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String newName) {
-        name = newName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public ArrayList<String> getMusclesWorked() {
-        return new ArrayList<>(musclesWorked);
+    public List<String> getMusclesWorked() {
+        return musclesWorked;
     }
 
-    public void setMusclesWorked(ArrayList<String> newMusclesWorked) {
-        musclesWorked = newMusclesWorked;
-    }
-
-    public void addToMusclesWorked(String newMuscle) {
-        musclesWorked.add(newMuscle);
-    }
-
-    public void removeFromMusclesWorked(String muscleToRemove) {
-        if (musclesWorked.contains(muscleToRemove)) {
-            musclesWorked.remove(muscleToRemove);
-        }
-    }
-
-    public void clearMusclesWorked() {
-        musclesWorked.clear();
+    public void setMusclesWorked(List<String> musclesWorked) {
+        this.musclesWorked = musclesWorked;
     }
 }
