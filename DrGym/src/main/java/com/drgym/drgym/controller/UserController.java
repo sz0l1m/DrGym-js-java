@@ -72,6 +72,17 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<?> updateUser(@RequestBody User updatedUser, HttpServletRequest request) {
+        String tokenUsername = getUsernameFromToken(request);
+        if (isTokenExpired(request) || !tokenUsername.equals(updatedUser.getUsername())) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+        return userService.updateUser(tokenUsername, updatedUser)
+                .map(user -> ResponseEntity.ok("User updated successfully"))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @GetMapping("/{username}/workouts")
     public ResponseEntity<?> getWorkoutsForUser(@PathVariable String username, HttpServletRequest request) {
         if (!tokenOwnerOrFriend(username, request)) {
