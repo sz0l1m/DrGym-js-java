@@ -1,6 +1,7 @@
 package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.*;
+import com.drgym.drgym.repository.ExerciseRepository;
 import com.drgym.drgym.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/api/posts")
@@ -31,6 +31,9 @@ public class PostController {
     @Autowired
     private FriendshipService friendshipService;
 
+    @Autowired
+    private ExerciseRepository exerciseRepository;
+
     @GetMapping("/{postId}")
     public ResponseEntity<?> getPost(@PathVariable Long postId, HttpServletRequest request) {
         Optional<Post> postOptional = postService.findPostById(postId);
@@ -47,6 +50,12 @@ public class PostController {
         Workout workout = post.getTraining();
         if (workout != null) {
             List<Activity> activities = workoutService.findActivitiesByWorkoutId(workout.getId());
+            activities.forEach(activity -> {
+                Exercise exercise = exerciseRepository.findById(activity.getExerciseId()).orElse(null);
+                if (exercise != null) {
+                    activity.setExerciseName(exercise.getName());
+                }
+            });
             workout.setActivities(activities);
         }
 
@@ -68,6 +77,12 @@ public class PostController {
             Workout workout = post.getTraining();
             if (workout != null) {
                 List<Activity> activities = workoutService.findActivitiesByWorkoutId(workout.getId());
+                activities.forEach(activity -> {
+                    Exercise exercise = exerciseRepository.findById(activity.getExerciseId()).orElse(null);
+                    if (exercise != null) {
+                        activity.setExerciseName(exercise.getName());
+                    }
+                });
                 workout.setActivities(activities);
             }
         });
@@ -90,7 +105,14 @@ public class PostController {
 
         friendsPosts.forEach(post -> {
             if (post.getTraining() != null) {
-                post.getTraining().setActivities(workoutService.findActivitiesByWorkoutId(post.getTraining().getId()));
+                List<Activity> activities = workoutService.findActivitiesByWorkoutId(post.getTraining().getId());
+                activities.forEach(activity -> {
+                    Exercise exercise = exerciseRepository.findById(activity.getExerciseId()).orElse(null);
+                    if (exercise != null) {
+                        activity.setExerciseName(exercise.getName());
+                    }
+                });
+                post.getTraining().setActivities(activities);
             }
         });
 
