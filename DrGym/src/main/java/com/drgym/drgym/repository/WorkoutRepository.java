@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface WorkoutRepository extends JpaRepository <Workout, Long>{
     List<Workout> findByUsername(String username);
+    List<Workout> findByUsernameAndIsPostedFalse(String username);
     @Query("SELECT a FROM Activity a WHERE a.workoutId = :workoutId")
     List<Activity> findActivitiesByWorkoutId(@Param("workoutId") Long workoutId);
 }
