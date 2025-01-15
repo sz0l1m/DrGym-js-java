@@ -94,37 +94,12 @@ public class UserController {
             return ResponseEntity.ok("[]");
         }
 
-        List<WorkoutResponse> workoutResponses = workouts.stream()
-                .map(workout -> {
-                    List<Activity> activities = workoutService.findActivitiesByWorkoutId(workout.getId());
+        workouts.forEach(workout -> {
+            List<Activity> activities = workoutService.findActivitiesByWorkoutId(workout.getId());
+            workout.setActivities(activities);
+        });
 
-                    return new WorkoutResponse(
-                            workout.getId(),
-                            workout.getStartDate(),
-                            workout.getUsername(),
-                            workout.getEndDate(),
-                            workout.getDescription(),
-                            activities.stream()
-                                    .map(a -> {
-                                        String exerciseName = exerciseService.findById(a.getExerciseId())
-                                                .map(exercise -> exercise.getName())
-                                                .orElse("Unknown Exercise");
-
-                                        return new ActivityResponse(
-                                                a.getId(),
-                                                a.getExerciseId(),
-                                                exerciseName,
-                                                a.getDuration(),
-                                                a.getWeight(),
-                                                a.getReps()
-                                        );
-                                    })
-                                    .toList()
-                    );
-                })
-                .toList();
-
-        return ResponseEntity.ok(workoutResponses);
+        return ResponseEntity.ok(workouts);
     }
 
     @GetMapping("/{username}/exercises")
@@ -168,42 +143,6 @@ public class UserController {
             return ResponseEntity.ok(exercisesJsonString);
         } catch (Exception e) {
             return ResponseEntity.status(500).body("ERROR while fetching daily exercise count.");
-        }
-    }
-
-    public record WorkoutResponse(
-            Long workoutId,
-            LocalDateTime startDate,
-            String username,
-            LocalDateTime endDate,
-            String description,
-            List<ActivityResponse> activities
-    ) {}
-
-    public record ActivityResponse(
-            Long activityId,
-            Long exerciseId,
-            String exerciseName,
-            LocalTime duration,
-            Long weight,
-            Long reps
-    ) {
-        public ActivityResponse(
-                Long activityId,
-                Long exerciseId,
-                String exerciseName,
-                Timestamp duration,
-                Long weight,
-                Long reps
-        ) {
-            this(
-                    activityId,
-                    exerciseId,
-                    exerciseName,
-                    (duration != null) ? duration.toLocalDateTime().toLocalTime() : null,
-                    weight,
-                    reps
-            );
         }
     }
 

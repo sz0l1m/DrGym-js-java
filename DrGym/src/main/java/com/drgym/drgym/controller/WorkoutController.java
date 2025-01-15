@@ -43,33 +43,10 @@ public class WorkoutController {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
         }
 
-
         List<Activity> activities = workoutService.findActivitiesByWorkoutId(id);
+        workout.setActivities(activities);
 
-        WorkoutResponse response = new WorkoutResponse(
-                workout.getId(),
-                workout.getStartDate(),
-                workout.getUsername(),
-                workout.getEndDate(),
-                workout.getDescription(),
-                activities.stream()
-                        .map(a -> {
-                            String exerciseName = exerciseService.findById(a.getExerciseId())
-                                    .map(Exercise::getName)
-                                    .orElse("Unknown Exercise");
-
-                            return new ActivityResponse(
-                                    a.getId(),
-                                    a.getExerciseId(),
-                                    exerciseName,
-                                    a.getDuration(),
-                                    a.getWeight(),
-                                    a.getReps()
-                            );
-                        })
-                        .toList());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(workout);
     }
 
     @PostMapping("/create")
@@ -109,41 +86,5 @@ public class WorkoutController {
         }
 
         return workoutService.updateWorkout(workoutRequest);
-    }
-
-    public record WorkoutResponse(
-            Long workoutId,
-            LocalDateTime startDate,
-            String username,
-            LocalDateTime endDate,
-            String description,
-            List<ActivityResponse> activities
-    ) {}
-
-    public record ActivityResponse(
-            Long activityId,
-            Long exerciseId,
-            String exerciseName,
-            LocalTime duration,
-            Long weight,
-            Long reps
-    ) {
-        public ActivityResponse(
-                Long activityId,
-                Long exerciseId,
-                String exerciseName,
-                Timestamp duration,
-                Long weight,
-                Long reps
-        ) {
-            this(
-                    activityId,
-                    exerciseId,
-                    exerciseName,
-                    (duration != null) ? duration.toLocalDateTime().toLocalTime() : null,
-                    weight,
-                    reps
-            );
-        }
     }
 }
