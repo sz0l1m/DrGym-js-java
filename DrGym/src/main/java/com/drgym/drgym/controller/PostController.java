@@ -1,10 +1,7 @@
 package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.*;
-import com.drgym.drgym.service.ExerciseService;
-import com.drgym.drgym.service.PostService;
-import com.drgym.drgym.service.PostReactionService;
-import com.drgym.drgym.service.WorkoutService;
+import com.drgym.drgym.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +27,9 @@ public class PostController {
 
     @Autowired
     private UserController userController;
+
+    @Autowired
+    private FriendshipService friendshipService;
 
     @GetMapping("/{postId}")
     public ResponseEntity<?> getPost(@PathVariable Long postId, HttpServletRequest request) {
@@ -73,6 +73,28 @@ public class PostController {
         });
 
         return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/friends/{username}")
+    public ResponseEntity<?> getFriendsPosts(@PathVariable String username, HttpServletRequest request) {
+        if (!userController.tokenOwner(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        List<String> friendsUsernames = friendshipService.getFriendsUsernames(username);
+        List<Post> friendsPosts = postService.findPostsByUsernames(friendsUsernames);
+
+        if (friendsPosts.isEmpty()) {
+            return ResponseEntity.ok("[]");
+        }
+
+        friendsPosts.forEach(post -> {
+            if (post.getTraining() != null) {
+                post.getTraining().setActivities(workoutService.findActivitiesByWorkoutId(post.getTraining().getId()));
+            }
+        });
+
+        return ResponseEntity.ok(friendsPosts);
     }
 
     @PostMapping("/create")
@@ -129,6 +151,23 @@ public class PostController {
         }
 
         postReactionService.removeReactionByUsername(postId, username);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<?> deletePost(@PathVariable Long postId, HttpServletRequest request) {
+        Optional<Post> postOptional = postService.findPostById(postId);
+        if (postOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Post post = postOptional.get();
+        String username = post.getUsername();
+        if (!userController.tokenOwner(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
 }
