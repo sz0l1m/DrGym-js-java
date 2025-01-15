@@ -28,6 +28,9 @@ public class Workout {
     @Column(name = "created_datetime")
     private LocalDateTime dateCreated;
 
+    @Column(name = "is_posted")
+    private boolean isPosted;
+
     @Transient
     private List<Activity> activities;
 
@@ -59,5 +62,6 @@ public class Workout {
     public void setDateCreated(LocalDateTime dateCreated) { this.dateCreated = dateCreated; }
     public List<Activity> getActivities() { return activities; }
     public void setActivities(List<Activity> activities) { this.activities = activities; }
-
+    public boolean isPosted() { return isPosted; }
+    public void setPosted(boolean posted) { isPosted = posted; }
 }
