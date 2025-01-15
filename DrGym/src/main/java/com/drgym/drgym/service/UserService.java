@@ -31,18 +31,23 @@ public class UserService {
         userRepository.deleteByUsername(username);
     }
 
-    public Optional<User> updateUser(String username, String new_name, Double height) {
-        return userRepository.findById(username).map(user -> {
-            user.setName(new_name);
-            return userRepository.save(user);
-        });
-    }
-
     public List<User> findBySearch(String search) {
         return userRepository.findByUsernameContaining(search);
     }
 
     public boolean areUsersFriends(String username1, String username2) {
         return userRepository.areUsersFriends(username1, username2);
+    }
+
+    @Transactional
+    public Optional<User> updateUser(String currentUsername, User updatedUser) {
+        return userRepository.findById(currentUsername).map(user -> {
+            user.setName(updatedUser.getName());
+            user.setSurname(updatedUser.getSurname());
+            user.setWeight(updatedUser.getWeight());
+            user.setHeight(updatedUser.getHeight());
+            user.setFavoriteExercise(updatedUser.getFavoriteExercise());
+            return userRepository.save(user);
+        });
     }
 }
