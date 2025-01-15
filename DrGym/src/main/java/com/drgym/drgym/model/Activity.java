@@ -29,6 +29,9 @@ public class Activity {
     @Column(name = "workout_id")
     private Long workoutId;
 
+    @Transient
+    private String exerciseName;
+
     public Activity(Long exercise_id, Long reps, Long weight, Timestamp duration, Long workoutId) {
         this.exercise_id = exercise_id;
         this.reps = reps;
@@ -51,6 +54,10 @@ public class Activity {
 
     public Timestamp getDuration() { return duration; }
 
+    public Long getWorkoutId() { return workoutId; }
+
+    public String getExerciseName() { return exerciseName; }
+
     // setters
 
     public void setId(Long id) { this.id = id; }
@@ -68,11 +75,11 @@ public class Activity {
         this.duration = Timestamp.valueOf(localTime.atDate(LocalDate.now()));
     }
 
+    public void setWorkoutId(Long workoutId) { this.workoutId = workoutId; }
+
+    public void setExerciseName(String exerciseName) { this.exerciseName = exerciseName; }
+
     public String durationToString() {
         return duration.toString();
     }
-
-    public Long getWorkoutId() { return workoutId; }
-
-    public void setWorkoutId(Long workoutId) { this.workoutId = workoutId; }
 }
