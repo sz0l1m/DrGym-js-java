@@ -2,6 +2,7 @@ package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.Post;
 import com.drgym.drgym.model.PostReaction;
+import com.drgym.drgym.model.PostCreateRequestWorkout;
 import com.drgym.drgym.model.PostCreateRequest;
 import com.drgym.drgym.service.PostService;
 import com.drgym.drgym.service.PostReactionService;
@@ -33,9 +34,14 @@ public class PostController {
         }
     }
 
-    @PostMapping("/create_with_workout")
+    @PostMapping("/create")
     public ResponseEntity<?> createPost(@RequestBody PostCreateRequest postRequest) {
         return postService.createPost(postRequest);
+    }
+
+    @PostMapping("/create_with_workout")
+    public ResponseEntity<?> createPost(@RequestBody PostCreateRequestWorkout postRequest) {
+        return postService.createPostWorkout(postRequest);
     }
 
     @GetMapping("/{postId}/reactions")
