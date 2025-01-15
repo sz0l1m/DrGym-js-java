@@ -1,10 +1,6 @@
 package com.drgym.drgym.service;
 
-import com.drgym.drgym.model.Post;
-import com.drgym.drgym.model.PostCreateRequestWorkout;
-import com.drgym.drgym.model.PostCreateRequest;
-import com.drgym.drgym.model.Workout;
-import com.drgym.drgym.model.WorkoutCreateRequest;
+import com.drgym.drgym.model.*;
 import com.drgym.drgym.repository.PostRepository;
 import com.drgym.drgym.repository.WorkoutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +25,17 @@ public class PostService {
     }
 
     public Optional<Post> findPostById(Long postId) {
-        return postRepository.findById(postId);
+        Optional<Post> postOptional = postRepository.findById(postId);
+        if (postOptional.isPresent()) {
+            Post post = postOptional.get();
+            Workout workout = post.getTraining();
+            if (workout != null) {
+                List<Activity> activities = workoutRepository.findActivitiesByWorkoutId(workout.getId());
+                workout.setActivities(activities);
+            }
+            return Optional.of(post);
+        }
+        return Optional.empty();
     }
 
     public ResponseEntity<String> createPost(PostCreateRequest postRequest) {
@@ -39,7 +45,12 @@ public class PostService {
             post.setTitle(postRequest.getTitle());
             post.setContent(postRequest.getContent());
             post.setDate(LocalDateTime.now());
-            post.setTraining(postRequest.getWorkoutId());
+
+            if (postRequest.getWorkoutId() != null) {
+                Workout workout = workoutRepository.findById(postRequest.getWorkoutId()).orElse(null);
+                post.setTraining(workout);
+            }
+
             postRepository.save(post);
             return ResponseEntity.ok("Post created successfully");
         } catch (Exception e) {
@@ -65,7 +76,7 @@ public class PostService {
                         LocalDateTime.now()
                 );
                 Workout savedWorkout = workoutRepository.save(workout);
-                post.setTraining(savedWorkout.getId());
+                post.setTraining(savedWorkout);
             }
 
             postRepository.save(post);
