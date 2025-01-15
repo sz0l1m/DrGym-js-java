@@ -128,6 +128,8 @@ public class UserController {
     @GetMapping("/{username}/daily-exercise-count")
     public ResponseEntity<?> getUserDailyExerciseCount(
             @PathVariable String username,
+            @RequestParam String startDate,
+            @RequestParam String endDate,
             HttpServletRequest request) {
 
         if (!tokenOwnerOrFriend(username, request)) {
@@ -135,7 +137,7 @@ public class UserController {
         }
 
         try {
-            Clob exercisesJson = exerciseService.getUserDailyExerciseCount(username);
+            Clob exercisesJson = exerciseService.getUserDailyExerciseCount(username, startDate, endDate);
             if (exercisesJson == null || exercisesJson.length() == 0) {
                 return ResponseEntity.ok("[]");
             }
