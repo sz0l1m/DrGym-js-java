@@ -54,36 +54,30 @@ export default function FriendDialog({
           type: 'success',
         });
         handleClose();
-      } else if (response.data === 'Already friends') {
+      } else if (
+        response.data === 'There is no account associated with this username.'
+      ) {
+        form.setFieldError('username', 'no account found');
         showAppMessage({
           status: true,
-          text: `You are already friends or an invitation has already been made.`,
+          text: response.data,
+          type: 'error',
+        });
+      } else {
+        showAppMessage({
+          status: true,
+          text: response.data,
           type: 'info',
         });
         handleClose();
-      } else {
-        form.setFieldError('username', 'no account found');
-        showAppMessage({
-          status: true,
-          text: 'There is no account associated with this username.',
-          type: 'error',
-        });
       }
     } catch (error) {
-      if (error.response?.data === 'User does not exist') {
-        form.setFieldError('username', 'no account found');
-        showAppMessage({
-          status: true,
-          text: 'There is no account associated with this username.',
-          type: 'error',
-        });
-      } else {
-        showAppMessage({
-          status: true,
-          text: 'Something went wrong.',
-          type: 'error',
-        });
-      }
+      console.error('Error sending friend request:', error);
+      showAppMessage({
+        status: true,
+        text: 'Something went wrong.',
+        type: 'error',
+      });
     } finally {
       setLoading(false);
     }

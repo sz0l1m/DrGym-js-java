@@ -68,7 +68,7 @@ const Workouts = ({ showAppMessage }) => {
             <SkeletonCard key={index} />
           ))
         ) : workoutsData.length === 0 ? (
-          <Typography variant="body1">
+          <Typography variant="h6">
             You have not added any workouts yet.
           </Typography>
         ) : (

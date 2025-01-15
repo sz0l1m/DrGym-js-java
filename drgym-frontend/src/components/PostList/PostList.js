@@ -55,7 +55,7 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
   return (
     <Grid container direction="column" alignItems="center">
       {workoutsData.length === 0 ? (
-        <Typography variant="body1">There are no posts here yet.</Typography>
+        <Typography variant="h6">There are no posts here yet.</Typography>
       ) : (
         workoutsData.map((workout) => (
           <Post key={workout.workoutId} workout={workout} />
