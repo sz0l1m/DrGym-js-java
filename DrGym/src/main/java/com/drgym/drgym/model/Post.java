@@ -61,7 +61,7 @@ public class Post {
         return content;
     }
 
-    public Long getTraining() { return training.getId(); }
+    public Workout getTraining() { return training; }
 
     public List<PostReaction> getReactions() {
         return reactions;
