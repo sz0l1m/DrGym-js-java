@@ -89,4 +89,8 @@ public class PostService {
     public void deletePost(Long postId) {
         postRepository.deleteById(postId);
     }
+
+    public List<Post> findPostsByUsernames(List<String> usernames) {
+        return postRepository.findByUsernameIn(usernames);
+    }
 }
