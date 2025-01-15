@@ -34,6 +34,15 @@ public class PostController {
         }
     }
 
+    @GetMapping("/user/{username}")
+    public ResponseEntity<?> getUserPosts(@PathVariable String username) {
+        List<Post> posts = postService.findPostsByUsername(username);
+        if (posts.isEmpty()) {
+            return ResponseEntity.ok("[]");
+        }
+        return ResponseEntity.ok(posts);
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createPost(@RequestBody PostCreateRequest postRequest) {
         return postService.createPost(postRequest);
@@ -57,7 +66,7 @@ public class PostController {
     public ResponseEntity<?> addReactionToPost(@PathVariable Long postId, @RequestBody PostReaction reaction) {
         reaction.setPostId(postId);
         PostReaction createdReaction = postReactionService.addReaction(reaction);
-        return ResponseEntity.ok(createdReaction);
+        return ResponseEntity.ok("Reaction added successfully.");
     }
 
     @DeleteMapping("/{postId}/reactions/{reactionId}")
@@ -65,11 +74,4 @@ public class PostController {
         postReactionService.removeReaction(reactionId);
         return ResponseEntity.noContent().build();
     }
-
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable Long postId) {
-        postService.deletePost(postId);
-        return ResponseEntity.noContent().build();
-    }
-
 }

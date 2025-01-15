@@ -171,30 +171,6 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{username}/posts/{postId}")
-    public ResponseEntity<?> deletePost(@PathVariable String username, @PathVariable Long postId) {
-        postService.deletePost(postId);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/{username}/posts")
-    public ResponseEntity<?> getUserPosts(@PathVariable String username) {
-        List<Post> posts = postService.findPostsByUsername(username);
-        if (posts.isEmpty()) {
-            return ResponseEntity.ok("[]");
-        }
-        return ResponseEntity.ok(posts);
-    }
-
-    @GetMapping("/{username}/posts/{postId}/reactions")
-    public ResponseEntity<?> getReactionsForPost(@PathVariable String username, @PathVariable Long postId) {
-        List<PostReaction> reactions = postReactionService.findByPostId(postId);
-        if (reactions.isEmpty()) {
-            return ResponseEntity.ok("[]");
-        }
-        return ResponseEntity.ok(reactions);
-    }
-
     public record WorkoutResponse(
             Long workoutId,
             LocalDateTime startDate,
