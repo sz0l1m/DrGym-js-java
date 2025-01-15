@@ -1,7 +1,6 @@
 package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.Exercise;
-import com.drgym.drgym.model.ExerciseCreateRequest;
 import com.drgym.drgym.service.ExerciseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,13 +28,8 @@ public class ExerciseController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Void> addExercise(@RequestBody ExerciseCreateRequest request) {
-        Exercise exercise = new Exercise();
-        exercise.setName(request.getName());
-        exercise.setType(request.getType());
-        exercise.setKcal_burned(request.getKcalBurned());
-        exercise.setMusclesWorked(request.getMusclesWorked());
-
+    public ResponseEntity<Void> addExercise(@RequestBody Exercise request) {
+        Exercise exercise = new Exercise(request.getType(), request.getKcalBurned(), request.getName(), request.getMusclesWorked());
         exerciseService.save(exercise);
         return ResponseEntity.ok().build();
     }
@@ -50,7 +44,7 @@ public class ExerciseController {
         Exercise exercise = exerciseOptional.get();
         exercise.setName(updatedExercise.getName());
         exercise.setType(updatedExercise.getType());
-        exercise.setKcal_burned(updatedExercise.getKcal_burned());
+        exercise.setKcalBurned(updatedExercise.getKcalBurned());
         exercise.setMusclesWorked(updatedExercise.getMusclesWorked());
 
         Exercise savedExercise = exerciseService.save(exercise);
