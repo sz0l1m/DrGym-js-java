@@ -25,7 +25,6 @@ const Workouts = ({ showAppMessage }) => {
         `/api/users/${username}/workouts`
       );
       setWorkoutsData(response.data);
-      console.log('response.data', response.data);
     } catch (err) {
       setError('fetch worokuts', err.message);
       showAppMessage({

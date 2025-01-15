@@ -20,7 +20,7 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
           response = await axiosInstance.get(`/api/posts/user/${username}`);
           setPostsData(response.data);
         } else {
-          response = await axiosInstance.get(`/api/posts/user/${username}`);
+          response = await axiosInstance.get(`/api/posts/friends/${username}`);
           setPostsData(response.data);
         }
       } catch (err) {
@@ -44,7 +44,7 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
   if (loading)
     return (
       <Grid container direction="column" alignItems="center">
-        {Array.from({ length: 3 }).map((_, index) => (
+        {Array.from({ length: 1 }).map((_, index) => (
           <SkeletonCard key={index} type="post" />
         ))}
       </Grid>

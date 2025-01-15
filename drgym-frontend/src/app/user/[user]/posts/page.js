@@ -6,8 +6,12 @@ import Typography from '@mui/material/Typography';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import PostList from '@/components/PostList';
 import { getUsername } from '@/utils/localStorage';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 const PostsContent = ({ showAppMessage }) => {
+  const [onlyThisUser, setOnlyThisUser] = useState(false);
+
   const username = getUsername();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -26,7 +30,31 @@ const PostsContent = ({ showAppMessage }) => {
     }
   }, [router, pathname, searchParams, showAppMessage]);
 
-  return <PostList username={username} showAppMessage={showAppMessage} />;
+  const handleChange = (event, newOption) => {
+    setOnlyThisUser(newOption === 'my');
+  };
+
+  return (
+    <>
+      <ToggleButtonGroup
+        color="info"
+        value={onlyThisUser ? 'my' : 'friends'}
+        exclusive
+        onChange={handleChange}
+        aria-label="Whose posts to show"
+        sx={{ py: 2 }}
+      >
+        <ToggleButton value="friends">Friends&apos; posts</ToggleButton>
+        <ToggleButton value="my">My posts</ToggleButton>
+      </ToggleButtonGroup>
+      <PostList
+        username={username}
+        onlyThisUser={onlyThisUser}
+        showAppMessage={showAppMessage}
+      />
+      ;
+    </>
+  );
 };
 
 const Posts = ({ showAppMessage }) => {

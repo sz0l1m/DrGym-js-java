@@ -10,7 +10,6 @@ import Grid from '@mui/material/Grid2';
 export default function Post({ post }) {
   const workout = post.training;
   const realitveStartDate = formatRelativeTime(workout.startDate);
-  console.log('Post', post);
 
   return (
     <>
