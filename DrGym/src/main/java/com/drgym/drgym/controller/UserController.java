@@ -171,12 +171,6 @@ public class UserController {
         }
     }
 
-    @PostMapping("/{username}/posts")
-    public ResponseEntity<?> createPost(@PathVariable String username, @RequestBody String content) {
-        Post createdPost = postService.createPost(username, content);
-        return ResponseEntity.ok(createdPost);
-    }
-
     @DeleteMapping("/{username}/posts/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable String username, @PathVariable Long postId) {
         postService.deletePost(postId);
