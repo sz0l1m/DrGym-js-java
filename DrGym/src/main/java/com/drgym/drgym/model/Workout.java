@@ -1,6 +1,8 @@
 package com.drgym.drgym.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -25,6 +27,9 @@ public class Workout {
 
     @Column(name = "created_datetime")
     private LocalDateTime dateCreated;
+
+    @Transient
+    private List<Activity> activities;
 
     public Workout() {
     }
@@ -52,4 +57,7 @@ public class Workout {
     public void setDescription(String description) { this.description = description; }
     public LocalDateTime getDateCreated() { return dateCreated; }
     public void setDateCreated(LocalDateTime dateCreated) { this.dateCreated = dateCreated; }
+    public List<Activity> getActivities() { return activities; }
+    public void setActivities(List<Activity> activities) { this.activities = activities; }
+
 }
