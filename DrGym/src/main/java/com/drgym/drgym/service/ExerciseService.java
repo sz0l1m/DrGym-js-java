@@ -39,8 +39,8 @@ public class ExerciseService {
         return exerciseRepository.getExercisesForUserInPeriod(username, startDate, endDate);
     }
 
-    public Clob getUserDailyExerciseCount(String username) {
-        return exerciseRepository.getUserDailyExerciseCount(username);
+    public Clob getUserDailyExerciseCount(String username, String startDate, String endDate) {
+        return exerciseRepository.getUserDailyExerciseCount(username, startDate, endDate);
     }
 
     public Map<String, List<ExerciseDTO>> getExercisesByType() {
