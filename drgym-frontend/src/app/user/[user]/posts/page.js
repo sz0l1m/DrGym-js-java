@@ -8,8 +8,12 @@ import PostList from '@/components/PostList';
 import { getUsername } from '@/utils/localStorage';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import Grid from '@mui/material/Grid2';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 
 const PostsContent = ({ showAppMessage }) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [onlyThisUser, setOnlyThisUser] = useState(false);
 
   const username = getUsername();
@@ -36,17 +40,30 @@ const PostsContent = ({ showAppMessage }) => {
 
   return (
     <>
-      <ToggleButtonGroup
-        color="info"
-        value={onlyThisUser ? 'my' : 'friends'}
-        exclusive
-        onChange={handleChange}
-        aria-label="Whose posts to show"
-        sx={{ py: 2 }}
+      <Grid
+        container
+        justifyContent="space-between"
+        alignItems="center"
+        sx={{ pt: 1, pb: 2 }}
       >
-        <ToggleButton value="friends">Friends&apos; posts</ToggleButton>
-        <ToggleButton value="my">My posts</ToggleButton>
-      </ToggleButtonGroup>
+        <ToggleButtonGroup
+          color="info"
+          value={onlyThisUser ? 'my' : 'friends'}
+          exclusive
+          onChange={handleChange}
+          aria-label="Whose posts to show"
+        >
+          <ToggleButton value="friends">Friends&apos; posts</ToggleButton>
+          <ToggleButton value="my">My posts</ToggleButton>
+        </ToggleButtonGroup>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={() => setDialogOpen(true)}
+        >
+          Add post
+        </Button>
+      </Grid>
       <PostList
         username={username}
         onlyThisUser={onlyThisUser}

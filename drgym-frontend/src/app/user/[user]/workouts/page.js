@@ -48,7 +48,9 @@ const Workouts = ({ showAppMessage }) => {
   if (error) return <Typography>Error: {error}</Typography>;
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box
+        sx={{ display: 'flex', justifyContent: 'space-between', pt: 1, pb: 2 }}
+      >
         <Typography variant="h5" gutterBottom>
           My Workouts
         </Typography>
