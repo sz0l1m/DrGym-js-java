@@ -2,6 +2,7 @@ package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.*;
 import com.drgym.drgym.repository.ActivityRepository;
+import com.drgym.drgym.repository.ExerciseRepository;
 import com.drgym.drgym.repository.WorkoutRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +22,42 @@ public class WorkoutService {
     @Autowired
     private ActivityRepository activityRepository;
 
-    public Optional<Workout> findById(Long id) { return workoutRepository.findById(id); }
+    @Autowired
+    private ExerciseRepository exerciseRepository;
+
+    public Optional<Workout> findById(Long id) {
+        Optional<Workout> workoutOptional = workoutRepository.findById(id);
+        if (workoutOptional.isPresent()) {
+            Workout workout = workoutOptional.get();
+            List<Activity> activities = activityRepository.findByWorkoutId(workout.getId());
+            activities.forEach(activity -> {
+                Exercise exercise = exerciseRepository.findById(activity.getExerciseId()).orElse(null);
+                if (exercise != null) {
+                    activity.setExerciseName(exercise.getName());
+                }
+            });
+            workout.setActivities(activities);
+        }
+        return workoutOptional;
+    }
 
     public List<Activity> findActivitiesByWorkoutId(Long workoutId) {
-        return activityRepository.findByWorkoutId(workoutId);
+        List<Activity> activities = activityRepository.findByWorkoutId(workoutId);
+        activities.forEach(activity -> {
+            Exercise exercise = exerciseRepository.findById(activity.getExerciseId()).orElse(null);
+            if (exercise != null) {
+                activity.setExerciseName(exercise.getName());
+            }
+        });
+        return activities;
     }
 
     public List<Workout> findByUsername(String username) {
         return workoutRepository.findByUsername(username);
     }
 
-    public Workout saveWorkout(Workout workout) {
-        return workoutRepository.save(workout);
+    public void saveWorkout(Workout workout) {
+        workoutRepository.save(workout);
     }
 
     public ResponseEntity<?> createWorkout(@RequestBody WorkoutCreateRequest request) {
