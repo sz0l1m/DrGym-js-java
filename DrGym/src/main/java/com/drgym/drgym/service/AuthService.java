@@ -2,19 +2,15 @@ package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.Token;
 import com.drgym.drgym.model.User;
-import com.drgym.drgym.model.UserRegistrationRequest;
 import com.drgym.drgym.repository.TokenRepository;
 import com.drgym.drgym.repository.UserRepository;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.Key;
 import java.util.Date;
@@ -108,20 +104,20 @@ public class AuthService {
         }
     }
 
-    public ResponseEntity<?> register(@RequestBody UserRegistrationRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
+    public ResponseEntity<?> register(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             return ResponseEntity.status(400).body("E-mail is already taken");
         }
-        if (userRepository.existsByUsername(request.getUsername())) {
+        if (userRepository.existsByUsername(user.getUsername())) {
             return ResponseEntity.status(400).body("Username is already taken");
         }
-        User user = new User(request.getUsername(), request.getName(), request.getSurname(), request.getEmail(), passwordEncoder.encode(request.getPassword()), request.getWeight(), request.getHeight());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         String verificationToken = UUID.randomUUID().toString();
-        Token token = new Token(request.getEmail(), verificationToken);
+        Token token = new Token(user.getEmail(), verificationToken);
         tokenRepository.save(token);
-        String link = "http://localhost:3000/auth/verification?email=" + request.getEmail() + "&token=" + verificationToken;
-        emailService.sendVerificationEmail(request.getEmail(), link);
+        String link = "http://localhost:3000/auth/verification?email=" + user.getEmail() + "&token=" + verificationToken;
+        emailService.sendVerificationEmail(user.getEmail(), link);
         return ResponseEntity.ok("User registered successfully");
     }
 
