@@ -1,10 +1,10 @@
 package com.drgym.drgym.model;
 
-public class PostCreateRequest {
+public class PostCreateRequestWorkout {
     private String username;
     private String title;
     private String content;
-    private Long workoutId;
+    private WorkoutCreateRequest workout;
 
     // Getters and setters
     public String getUsername() {
@@ -31,11 +31,11 @@ public class PostCreateRequest {
         this.content = content;
     }
 
-    public Long getWorkoutId() {
-        return workoutId;
+    public WorkoutCreateRequest getWorkout() {
+        return workout;
     }
 
-    public void setWorkoutId(Long workoutId) {
-        this.workoutId = workoutId;
+    public void setWorkout(WorkoutCreateRequest workout) {
+        this.workout = workout;
     }
 }
