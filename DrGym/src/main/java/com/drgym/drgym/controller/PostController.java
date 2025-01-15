@@ -189,6 +189,12 @@ public class PostController {
             return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
         }
 
+        Workout workout = post.getTraining();
+        if (workout != null) {
+            workout.setPosted(false);
+            workoutService.saveWorkout(workout);
+        }
+
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();
     }
