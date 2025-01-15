@@ -113,4 +113,19 @@ public class WorkoutService {
 
         return ResponseEntity.ok("Workout updated successfully");
     }
+
+    public List<Workout> findPrivateWorkoutsByUsername(String username) {
+        List<Workout> workouts = workoutRepository.findByUsernameAndIsPostedFalse(username);
+        workouts.forEach(workout -> {
+            List<Activity> activities = activityRepository.findByWorkoutId(workout.getId());
+            activities.forEach(activity -> {
+                Exercise exercise = exerciseRepository.findById(activity.getExerciseId()).orElse(null);
+                if (exercise != null) {
+                    activity.setExerciseName(exercise.getName());
+                }
+            });
+            workout.setActivities(activities);
+        });
+        return workouts;
+    }
 }
