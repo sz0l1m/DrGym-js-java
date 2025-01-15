@@ -58,16 +58,16 @@ public class FriendshipService {
     public String sendFriendRequest(String sender, String receiver) {
         if (friendshipRepository.existsByFriend1UsernameAndFriend2Username(sender, receiver) ||
                 friendshipRepository.existsByFriend1UsernameAndFriend2Username(receiver, sender)) {
-            return "Already friends";
+            return "You are already friends.";
         }
         if (friendshipInvitationRepository.existsInvitation(sender, receiver)) {
-            return "Invitation already sent";
+            return "Invitation already sent.";
         }
         if (friendshipInvitationRepository.existsInvitation(sender, receiver)) {
-            return "Receiver has already sent an invitation";
+            return "Receiver has already sent an invitation. Please accept it.";
         }
         if (!userRepository.existsByUsername(receiver)) {
-            return "User not found";
+            return "There is no account associated with this username.";
         }
         FriendshipInvitation invitation = new FriendshipInvitation();
         invitation.setWhoSendUsername(sender);
