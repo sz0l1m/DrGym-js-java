@@ -92,13 +92,11 @@ const Friends = ({ showAppMessage }) => {
   };
 
   const handleDeleteFriend = async (username) => {
-    console.log('Deleting friend:', username);
-    console.log('me:', getUsername());
     try {
       await axiosInstance.delete(`/api/friends/removeFriend`, {
         data: {
-          user1: 'mandrysz',
-          user2: 'milosz',
+          user1: getUsername(),
+          user2: username,
         },
       });
       setFriends((prevFriends) =>
