@@ -5,6 +5,7 @@ import com.drgym.drgym.repository.ActivityRepository;
 import com.drgym.drgym.repository.PostRepository;
 import com.drgym.drgym.repository.WorkoutRepository;
 import com.drgym.drgym.repository.ExerciseRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -119,6 +120,7 @@ public class PostService {
         }
     }
 
+    @Transactional
     public void deletePost(Long postId) {
         postRepository.deleteById(postId);
     }
