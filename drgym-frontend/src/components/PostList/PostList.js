@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Box, Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import Post from '@/components/Post';
@@ -10,34 +10,34 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const fetchPosts = useCallback(async () => {
+    try {
+      setLoading(true);
+      let response;
+      if (onlyThisUser) {
+        response = await axiosInstance.get(`/api/posts/user/${username}`);
+        setPostsData(response.data);
+      } else {
+        response = await axiosInstance.get(`/api/posts/friends/${username}`);
+        setPostsData(response.data);
+      }
+    } catch (err) {
+      console.error('Error fetching posts:', err);
+      setError('Error fetching posts');
+      showAppMessage({
+        status: true,
+        text: 'Something went wrong',
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [username, onlyThisUser, showAppMessage]);
+
   // FIXME
   useEffect(() => {
-    const fetchWorkouts = async () => {
-      try {
-        setLoading(true);
-        let response;
-        if (onlyThisUser) {
-          response = await axiosInstance.get(`/api/posts/user/${username}`);
-          setPostsData(response.data);
-        } else {
-          response = await axiosInstance.get(`/api/posts/friends/${username}`);
-          setPostsData(response.data);
-        }
-      } catch (err) {
-        console.error('Error fetching posts:', err);
-        setError('Error fetching posts');
-        showAppMessage({
-          status: true,
-          text: 'Something went wrong',
-          type: 'error',
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
     if (username) {
-      fetchWorkouts();
+      fetchPosts();
     }
   }, [username, onlyThisUser, showAppMessage]);
 
@@ -56,7 +56,13 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
         <Typography variant="h6">There are no posts here yet.</Typography>
       ) : (
         postsData.map((post) => (
-          <Post key={post.id} post={post} actions={onlyThisUser} />
+          <Post
+            key={post.id}
+            post={post}
+            actions={onlyThisUser}
+            onChanges={fetchPosts}
+            showAppMessage={showAppMessage}
+          />
         ))
       )}
     </Grid>

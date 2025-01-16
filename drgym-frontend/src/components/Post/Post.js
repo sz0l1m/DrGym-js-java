@@ -10,10 +10,36 @@ import { IconButton, Tooltip } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
+import axiosInstance from '@/utils/axiosInstance';
 
-export default function Post({ post, actions }) {
+export default function Post({ post, actions, onChanges, showAppMessage }) {
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const workout = post.training;
   const realitveStartDate = formatRelativeTime(workout.startDate);
+
+  const handleDeletePost = async () => {
+    try {
+      setDeleting(true);
+      await axiosInstance.delete(`/api/posts/${post.id}`);
+      onChanges();
+      showAppMessage({
+        status: true,
+        text: 'Post deleted successfully',
+        type: 'success',
+      });
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      showAppMessage({
+        status: true,
+        text: 'Error deleting post',
+        type: 'error',
+      });
+    } finally {
+      setDeleting(false);
+      setDeleteDialogOpen(false);
+    }
+  };
 
   return (
     <>
@@ -36,7 +62,7 @@ export default function Post({ post, actions }) {
                 <Tooltip title="Delete post" sx={{ ml: 1 }}>
                   <IconButton
                     aria-label="delete post"
-                    // onClick={handleDeleteClick}
+                    onClick={() => setDeleteDialogOpen(true)}
                   >
                     <DeleteIcon color="error" />
                   </IconButton>
@@ -57,7 +83,14 @@ export default function Post({ post, actions }) {
           <WorkoutInfo workout={workout} isPost />
         </Card>
       </Box>
-    <DeleteConfirmation open={true} />
+      <DeleteConfirmation
+        title="Delete Post"
+        message={`Are you sure you want to delete this post? Workout associated with this post will not be deleted.`}
+        open={deleteDialogOpen}
+        loading={deleting}
+        onConfirm={handleDeletePost}
+        onClose={() => setDeleteDialogOpen(false)}
+      />
     </>
   );
 }
