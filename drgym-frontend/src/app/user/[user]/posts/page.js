@@ -11,6 +11,7 @@ import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+import PostDialog from '@/components/PostDialog';
 
 const PostsContent = ({ showAppMessage }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -69,7 +70,11 @@ const PostsContent = ({ showAppMessage }) => {
         onlyThisUser={onlyThisUser}
         showAppMessage={showAppMessage}
       />
-      ;
+      <PostDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        showAppMessage={showAppMessage}
+      />
     </>
   );
 };
