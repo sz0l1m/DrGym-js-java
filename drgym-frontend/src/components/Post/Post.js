@@ -82,7 +82,12 @@ export default function Post({ post, actions, onChanges, showAppMessage }) {
           <Typography sx={{ pb: 1, pl: 2, m: 0 }} variant="body2" gutterBottom>
             {post.content}
           </Typography>
-          <WorkoutInfo workout={workout} isPost />
+          <WorkoutInfo
+            workout={workout}
+            isPost
+            post={post}
+            showAppMessage={showAppMessage}
+          />
         </Card>
       </Box>
       <DeleteConfirmation

@@ -18,6 +18,8 @@ import ActivityInfo from '@/components/ActivityInfo';
 import { formatDate, getDiffInHoursAndMinutes } from '@/utils/dateUtils';
 import style from './WorkoutInfo.module.css';
 import Grid from '@mui/material/Grid2';
+import { getUsername } from '@/utils/localStorage';
+import axiosInstance from '@/utils/axiosInstance';
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
@@ -43,20 +45,53 @@ const ExpandMore = styled((props) => {
   ],
 }));
 
-export default function WorkoutCard({ workout, isPost }) {
+export default function WorkoutCard({ workout, isPost, post, showAppMessage }) {
   const [expanded, setExpanded] = useState(false);
-  const [liked, setLiked] = useState(workout.liked || false);
-  const [likeCount, setLikeCount] = useState(workout.likes || 0);
+  const [liked, setLiked] = useState(post?.userReaction || false);
+  const [likeCount, setLikeCount] = useState(post?.reactionCount || 0);
+  const username = getUsername();
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
+  const handleAddLike = async () => {
+    try {
+      await axiosInstance.post(
+        `/api/posts/${post.id}/reactions?username=${username}`
+      );
+      setLikeCount((prev) => prev + 1);
+    } catch (error) {
+      setLiked(false);
+      showAppMessage({
+        status: true,
+        text: 'Error adding like',
+        type: 'error',
+      });
+    }
+  };
+
+  const handleRemoveLike = async () => {
+    try {
+      await axiosInstance.delete(
+        `/api/posts/${post.id}/reactions?username=${username}`
+      );
+      setLikeCount((prev) => prev - 1);
+    } catch (error) {
+      setLiked(true);
+      showAppMessage({
+        status: true,
+        text: 'Error removing like',
+        type: 'error',
+      });
+    }
+  };
+
   const handleLikeClick = () => {
     if (liked) {
-      setLikeCount((prev) => prev - 1);
+      handleRemoveLike();
     } else {
-      setLikeCount((prev) => prev + 1);
+      handleAddLike();
     }
     setLiked(!liked);
   };

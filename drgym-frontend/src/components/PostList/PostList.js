@@ -39,7 +39,7 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
     if (username) {
       fetchPosts();
     }
-  }, [username, onlyThisUser, showAppMessage]);
+  }, [username, onlyThisUser, showAppMessage, fetchPosts]);
 
   if (loading)
     return (
