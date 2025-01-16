@@ -29,7 +29,6 @@ const User = ({ params, showAppMessage }) => {
       try {
         setLoading(true);
         const response = await axiosInstance.get(`/api/users/${user}`);
-        console.log(response.data);
         setUserData(response.data);
         setAvatar(response.data?.avatar || null);
       } catch (err) {
@@ -69,18 +68,16 @@ const User = ({ params, showAppMessage }) => {
     checkFriendStatus();
   }, [router, user, username, showAppMessage]);
 
-  // FIXME
   const handleDeleteFriend = async (username) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      // const response = await axiosInstance.delete(
-      //   `/api/friends/delete}`
-      // );
-      setFriends((prevFriends) =>
-        prevFriends.filter((friend) => friend.username !== username)
-      );
+      await axiosInstance.delete(`/api/friends/removeFriend`, {
+        data: {
+          user1: getUsername(),
+          user2: username,
+        },
+      });
       router.replace(
-        `/posts?message=Removed ${username} from friends&type=success`
+        `/user/${getUsername()}/posts?message=Removed ${username} from friends&type=success`
       );
     } catch (err) {
       showAppMessage({
