@@ -12,6 +12,7 @@ const CustomInput = ({
   onChange,
   tabIndex,
   endAdornment,
+  ...rest
 }) => {
   const showError = !!error && (!!touched || !!value);
 
@@ -33,6 +34,7 @@ const CustomInput = ({
           ...(tabIndex === 1 && { autoFocus: true }),
         }}
         endAdornment={endAdornment}
+        {...rest}
       />
     </FormControl>
   );

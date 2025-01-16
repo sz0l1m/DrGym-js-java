@@ -12,12 +12,16 @@ import {
   FormControl,
   FormControlLabel,
   Checkbox,
+  Divider,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import axiosInstance from '@/utils/axiosInstance';
 import WorkoutCard from '@/components/WorkoutCard';
 import { getUsername } from '@/utils/localStorage';
+import CustomInput from '@/components/CustomInput';
+import { PostSchema, PostDefaultValues } from '@/utils/schemas/PostSchema';
 
 export default function PostDialog({
   open,
@@ -56,11 +60,6 @@ export default function PostDialog({
     }
   }, [open, username, showAppMessage, onClose]);
 
-  const validationSchema = Yup.object().shape({
-    title: Yup.string().required('Title is required'),
-    description: Yup.string().required('Description is required'),
-  });
-
   const handleWorkoutSelection = (workout) => {
     setSelectedWorkout((prev) => (prev?.id === workout.id ? null : workout));
   };
@@ -69,44 +68,57 @@ export default function PostDialog({
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Add New Post</DialogTitle>
       <Formik
-        initialValues={{
-          title: '',
-          description: '',
-        }}
-        validationSchema={validationSchema}
+        validationSchema={PostSchema}
+        initialValues={PostDefaultValues}
         onSubmit={(values, { setSubmitting }) => {
           onSubmit({ ...values, workout: selectedWorkout });
           setSubmitting(false);
           onClose();
         }}
       >
-        {({ values, errors, handleChange, handleBlur, isSubmitting }) => (
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          isSubmitting,
+        }) => (
           <Form>
             <DialogContent dividers>
-              <TextField
-                fullWidth
-                label="Title"
-                name="title"
-                value={values.title}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={!!errors.title}
-                helperText={errors.title}
-                margin="normal"
-              />
-              <TextField
-                fullWidth
-                label="Description"
-                name="description"
-                value={values.description}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={!!errors.description}
-                helperText={errors.description}
-                margin="normal"
-                multiline
-                rows={4}
-              />
+              <Grid container direction="column" spacing={2}>
+                <CustomInput
+                  label="Title"
+                  name="title"
+                  value={values.title}
+                  error={errors.title}
+                  touched={touched.title}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  tabIndex={2}
+                />
+                <CustomInput
+                  label="Description"
+                  name="description"
+                  value={values.description}
+                  error={errors.description}
+                  touched={touched.description}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  tabIndex={3}
+                  multiline
+                  rows={4}
+                />
+              </Grid>
+              {selectedWorkout && (
+                <Box sx={{ mt: 2 }}>
+                  <Typography variant="h6" gutterBottom sx={{ mb: 0 }}>
+                    Selected Workout
+                  </Typography>
+                  <WorkoutCard workout={selectedWorkout} />
+                </Box>
+              )}
+              <Divider sx={{ mt: 2 }} />
               <Box sx={{ mt: 2 }}>
                 <Typography variant="h6" gutterBottom>
                   Select a Workout
@@ -117,21 +129,12 @@ export default function PostDialog({
                   <Box>
                     {workouts.map((workout) => (
                       <Box key={workout.id} sx={{ mb: 2 }}>
-                        <WorkoutCard
-                          workout={workout}
-                          onDelete={() => {}}
-                          onEditWorkout={() => {}}
-                          showAppMessage={() => {}}
+                        <Checkbox
+                          checked={selectedWorkout?.id === workout.id}
+                          onChange={() => handleWorkoutSelection(workout)}
+                          sx={{ pb: 0 }}
                         />
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={selectedWorkout?.id === workout.id}
-                              onChange={() => handleWorkoutSelection(workout)}
-                            />
-                          }
-                          label="Select this workout"
-                        />
+                        <WorkoutCard workout={workout} disableActions />
                       </Box>
                     ))}
                   </Box>

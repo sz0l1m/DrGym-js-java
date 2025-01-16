@@ -21,6 +21,7 @@ export default function WorkoutCard({
   workout,
   onDelete,
   onEditWorkout,
+  disableActions,
   showAppMessage,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -70,9 +71,11 @@ export default function WorkoutCard({
         <Card sx={{ maxWidth: '100%' }}>
           <CardHeader
             action={
-              <IconButton aria-label="settings" onClick={handleMenuClick}>
-                <MoreVertIcon />
-              </IconButton>
+              !disableActions && (
+                <IconButton aria-label="settings" onClick={handleMenuClick}>
+                  <MoreVertIcon />
+                </IconButton>
+              )
             }
             title={
               <Grid container alignItems="center" gap={6}>
