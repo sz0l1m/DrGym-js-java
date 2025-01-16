@@ -69,13 +69,13 @@ export default function PostDialog({
     }
   }, [open, username, type, post?.training, showAppMessage, onClose]);
 
-  const handleAddPost = async (formData, form) => {
+  const handleAddPost = async (values, actions) => {
     try {
-      setLoading(true);
+      actions.setSubmitting(true);
       const response = await axiosInstance.post('/api/posts/create', {
         username: username,
-        title: formData.title,
-        content: formData.description,
+        title: values.title,
+        content: values.description,
         workoutId: selectedWorkout.id,
       });
       showAppMessage({
@@ -93,9 +93,37 @@ export default function PostDialog({
         type: 'error',
       });
     } finally {
-      setLoading(false);
+      actions.setSubmitting(false);
     }
   };
+
+  const handleEditPost = async (values, actions) => {
+    try {
+      actions.setSubmitting(true);
+      const response = await axiosInstance.put(`/api/posts/update`, {
+        id: post.id,
+        title: values.title,
+        content: values.description,
+        workoutId: selectedWorkout.id,
+      });
+      showAppMessage({
+        status: true,
+        text: 'Post edited successfully',
+        type: 'success',
+      });
+      onChange();
+      onClose();
+    } catch (error) {
+      console.error('Error editing post:', error);
+      showAppMessage({
+        status: true,
+        text: 'Error editing post',
+        type: 'error',
+      });
+    } finally {
+      actions.setSubmitting(false);
+    }
+  }
 
   const handleWorkoutSelection = (workout) => {
     if (selectedWorkout) {
@@ -132,7 +160,11 @@ export default function PostDialog({
               }
             : PostDefaultValues()
         }
-        onSubmit={handleAddPost}
+        onSubmit={(values, actions) =>
+          type === 'add'
+            ? handleAddPost(values, actions)
+            : handleEditPost(values, actions)
+        }
       >
         {({
           values,

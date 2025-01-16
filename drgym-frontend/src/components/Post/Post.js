@@ -99,7 +99,7 @@ export default function Post({ post, actions, onChanges, showAppMessage }) {
         post={post}
         open={editDialogOpen}
         onClose={() => setEditDialogOpen(false)}
-        onChange={() => console.log('onChange triggered')}
+        onChange={onChanges}
         showAppMessage={showAppMessage}
       />
     </>
