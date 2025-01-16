@@ -29,7 +29,14 @@ const User = ({ params, showAppMessage }) => {
       try {
         setLoading(true);
         const response = await axiosInstance.get(`/api/users/${user}`);
-        setUserData(response.data);
+        console.log(response.data);
+        setUserData({
+          name: response.data?.name,
+          surname: response.data?.surname,
+          weight: response.data?.weight,
+          height: response.data?.height,
+          'favourite Exercise': response.data?.favoriteExerciseName,
+        });
         setAvatar(response.data?.avatar || null);
       } catch (err) {
         showAppMessage({
