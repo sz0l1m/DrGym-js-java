@@ -40,7 +40,7 @@ export default function PostDialog({
       try {
         setLoading(true);
         const response = await axiosInstance.get(
-          `/api/users/${username}/workouts`
+          `/api/workouts/private`
         );
         const fetchedWorkouts = response.data;
 
@@ -140,7 +140,7 @@ export default function PostDialog({
   const getWorkoutMessage = () => {
     if (loading) return 'Loading workouts...';
     if (!selectedWorkout && workouts.length === 0)
-      return "You don't have any workouts. Please create one to add.";
+      return "You don't have any private workouts. Please create one to include it in your post.";
     if (selectedWorkout && workouts.length === 0)
       return 'There are no other workouts available.';
     if (selectedWorkout)

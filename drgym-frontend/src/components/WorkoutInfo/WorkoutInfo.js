@@ -45,7 +45,7 @@ const ExpandMore = styled((props) => {
 
 export default function WorkoutCard({ workout, isPost }) {
   const [expanded, setExpanded] = useState(false);
-  const [liked, setLiked] = useState(workout.liked || !isPost);
+  const [liked, setLiked] = useState(workout.liked || false);
   const [likeCount, setLikeCount] = useState(workout.likes || 0);
 
   const handleExpandClick = () => {
@@ -78,7 +78,7 @@ export default function WorkoutCard({ workout, isPost }) {
           </Tooltip>
           {getDiffInHoursAndMinutes(workout.startDate, workout.endDate)}
         </Box>
-        {workout.description && (
+        {workout.description && !isPost && (
           <Typography sx={{ mt: 3 }}>{workout.description}</Typography>
         )}
       </CardContent>
@@ -93,22 +93,23 @@ export default function WorkoutCard({ workout, isPost }) {
         >
           <ExpandMoreIcon />
         </ExpandMore>
-        <Grid container alignItems="center" gap={2} sx={{ pl: 4 }}>
-          <IconButton
-            disabled={!isPost}
-            onClick={handleLikeClick}
-            sx={{
-              color: liked ? 'red' : 'gray',
-              '&.Mui-disabled': {
-                color: 'red',
-              },
-              ml: 'auto',
-            }}
-          >
-            <FavoriteIcon />
-          </IconButton>
-          <Typography sx={{ ml: '-8px' }}>{likeCount}</Typography>
-        </Grid>
+        {workout.posted && (
+          <Grid container alignItems="center" gap={2} sx={{ pl: 4 }}>
+            <IconButton
+              onClick={handleLikeClick}
+              sx={{
+                color: liked ? 'red' : 'gray',
+                '&.Mui-disabled': {
+                  color: 'red',
+                },
+                ml: 'auto',
+              }}
+            >
+              <FavoriteIcon />
+            </IconButton>
+            <Typography sx={{ ml: '-8px' }}>{likeCount}</Typography>
+          </Grid>
+        )}
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>

@@ -29,8 +29,6 @@ export default function WorkoutCard({
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const isPost = false;
-
   const menuOpen = Boolean(anchorEl);
   const realitveStartDate = formatRelativeTime(workout.startDate);
 
@@ -78,13 +76,13 @@ export default function WorkoutCard({
               )
             }
             title={
-              <Grid container alignItems="center" gap={6}>
+              <Grid container alignItems="center" gap={8}>
                 <Typography variant="h5">
                   {formatDate(workout.startDate, 'd MMMM yyyy')}
                 </Typography>
                 <Chip
-                  label={isPost ? 'Public' : 'Private'}
-                  color={isPost ? 'success' : 'warning'}
+                  label={workout.posted ? 'Public' : 'Private'}
+                  color={workout.posted ? 'success' : 'warning'}
                   variant="outlined"
                 />
               </Grid>
