@@ -38,4 +38,12 @@ public class PostReactionService {
     public void removeReactionByUsername(Long postId, String username) {
         postReactionRepository.deleteByPostIdAndAuthorUsername(postId, username);
     }
+
+    public int countByPostId(Long postId) {
+        return postReactionRepository.countByPostId(postId);
+    }
+
+    public boolean existsByPostIdAndUsername(Long postId, String username) {
+        return postReactionRepository.existsByPostIdAndAuthorUsername(postId, username);
+    }
 }
