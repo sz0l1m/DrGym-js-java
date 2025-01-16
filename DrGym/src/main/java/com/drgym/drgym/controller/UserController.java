@@ -1,6 +1,7 @@
 package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.Activity;
+import com.drgym.drgym.model.Exercise;
 import com.drgym.drgym.model.User;
 import com.drgym.drgym.model.Workout;
 import com.drgym.drgym.service.ExerciseService;
@@ -50,8 +51,13 @@ public class UserController {
         }
 
         Optional<User> user = userService.findByUsername(username);
-        return user.map(u -> ResponseEntity.ok(new UserDTO(u.getUsername(), u.getName(), u.getSurname(), u.getWeight(), u.getHeight(), u.getFavoriteExercise())))
-                .orElse(ResponseEntity.notFound().build());
+        return user.map(u -> {
+            String exerciseName = null;
+            if (u.getFavoriteExercise() != null) {
+                exerciseName = exerciseService.findById(u.getFavoriteExercise()).map(Exercise::getName).orElse(null);
+            }
+            return ResponseEntity.ok(new UserDTO(u.getUsername(), u.getName(), u.getSurname(), u.getWeight(), u.getHeight(), u.getFavoriteExercise(), exerciseName));
+        }).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search/{search}")
@@ -148,7 +154,7 @@ public class UserController {
         }
     }
 
-    private record UserDTO(String username, String name, String surname, Double weight, Double height, Long favoriteExercise) {}
+    private record UserDTO(String username, String name, String surname, Double weight, Double height, Long favoriteExercise, String favoriteExerciseName) {}
 
     private String getJwtTokenFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
