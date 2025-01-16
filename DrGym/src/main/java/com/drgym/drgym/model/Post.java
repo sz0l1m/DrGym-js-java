@@ -32,6 +32,9 @@ public class Post {
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostReaction> reactions = new ArrayList<>();
 
+    @Transient
+    private Long workoutId;
+
     public Post() {}
 
     public Post(Long id, LocalDateTime date, String title, String content) {
@@ -39,6 +42,13 @@ public class Post {
         this.date = date;
         this.title = title;
         this.content = content;
+    }
+
+    public Post(Long id, String title, String content, Long workoutId) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.workoutId = workoutId;
     }
 
     public Long getId() {
@@ -101,5 +111,13 @@ public class Post {
     public void removeReaction(PostReaction reaction) {
         reactions.remove(reaction);
         reaction.setPostId(null);
+    }
+
+    public Long getWorkoutId() {
+        return workoutId;
+    }
+
+    public void setWorkoutId(Long workoutId) {
+        this.workoutId = workoutId;
     }
 }
