@@ -1,7 +1,6 @@
 package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.*;
-import com.drgym.drgym.service.ExerciseService;
 import com.drgym.drgym.service.WorkoutService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
