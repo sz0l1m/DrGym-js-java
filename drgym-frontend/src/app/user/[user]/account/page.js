@@ -17,6 +17,8 @@ import axiosInstance from '@/utils/axiosInstance';
 import { getUsername } from '@/utils/localStorage';
 import { signOut } from 'next-auth/react';
 import { removeUserData } from '@/utils/localStorage';
+import Autocomplete from '@mui/material/Autocomplete';
+import FormControl from '@mui/material/FormControl';
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   border: '2px dashed #ccc',
@@ -35,6 +37,7 @@ const AccountPage = ({ showAppMessage }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState(null);
+  const [exercises, setExercises] = useState([]);
   const [avatar, setAvatar] = useState(userData?.avatar || null);
   const [hasChanges, setHasChanges] = useState(false);
   const username = getUsername();
@@ -43,18 +46,33 @@ const AccountPage = ({ showAppMessage }) => {
     const fetchUserData = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(`/api/users/${username}`);
+
+        const userResponse = await axiosInstance.get(`/api/users/${username}`);
+        const exercisesResponse = await axiosInstance.get(
+          '/api/exercises/by-type'
+        );
+        const exerciseData = [
+          ...exercisesResponse.data.strength,
+          ...exercisesResponse.data.cardio,
+          ...exercisesResponse.data.crossfit,
+        ];
+        userResponse.data.favoriteExercise = exerciseData.find(
+          (exercise) => exercise.id === userResponse.data.favoriteExercise
+        );
         setUserData({
-          ...response.data,
-          firstName: response.data.name,
+          ...userResponse.data,
+          firstName: userResponse.data.name,
           avatar: null,
         });
-        setAvatar(response.data.avatar || null);
+        setExercises(exerciseData);
+
+        setAvatar(userResponse.data.avatar || null);
       } catch (err) {
-        setError(err.message);
+        console.error('Error fetching user data:', err);
+        setError('Error fetching user data');
         showAppMessage({
           status: true,
-          text: 'Error fetching user data',
+          text: 'Something went wrong',
           type: 'error',
         });
       } finally {
@@ -128,7 +146,7 @@ const AccountPage = ({ showAppMessage }) => {
     <>
       <Grid container direction="column">
         <Typography variant="h5" sx={{ my: 2 }}>
-          Account Settings
+          Account Settings for <strong>{username}</strong>
         </Typography>
         <Formik
           validationSchema={AccountSchema}
@@ -163,7 +181,7 @@ const AccountPage = ({ showAppMessage }) => {
                 >
                   <Avatar
                     src={avatar || undefined}
-                    alt={values.username.charAt(0).toUpperCase()}
+                    alt={username.charAt(0).toUpperCase()}
                     sx={{
                       width: 100,
                       height: 100,
@@ -172,7 +190,7 @@ const AccountPage = ({ showAppMessage }) => {
                       margin: '0 auto',
                     }}
                   >
-                    {!avatar && values.username.charAt(0).toUpperCase()}
+                    {!avatar && username.charAt(0).toUpperCase()}
                   </Avatar>
                   <DropzoneContainer {...getRootProps()} sx={{ mt: 2 }}>
                     <input {...getInputProps()} />
@@ -208,19 +226,6 @@ const AccountPage = ({ showAppMessage }) => {
                     },
                   }}
                 >
-                  <CustomInput
-                    label="Username"
-                    name="username"
-                    value={values.username}
-                    error={errors.username}
-                    touched={touched.username}
-                    onBlur={handleBlur}
-                    onChange={(e) => {
-                      handleChange(e);
-                      setHasChanges(true);
-                    }}
-                    tabIndex={2}
-                  />
                   <CustomInput
                     label="First Name"
                     name="firstName"
@@ -303,6 +308,33 @@ const AccountPage = ({ showAppMessage }) => {
                       },
                     }}
                   />
+                  <FormControl fullWidth>
+                    <Autocomplete
+                      options={exercises}
+                      getOptionLabel={(option) => option.name || ''}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value.id
+                      }
+                      value={values.exercise || null}
+                      onChange={(event, newValue) => {
+                        handleChange({
+                          target: {
+                            name: 'exercise',
+                            value: newValue,
+                          },
+                        });
+                      }}
+                      onBlur={handleBlur}
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          label={'Favourite Exercise'}
+                          name="exercise"
+                          onBlur={handleBlur}
+                        />
+                      )}
+                    />
+                  </FormControl>
                   <Box
                     sx={{
                       display: 'flex',

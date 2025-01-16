@@ -35,6 +35,7 @@ const AccountDefaultValues = (userData) => {
     surname: userData.surname || '',
     weight: userData.weight || '',
     height: userData.height || '',
+    exercise: userData.favoriteExercise,
   };
 };
 
