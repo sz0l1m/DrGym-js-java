@@ -3,15 +3,16 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
   Button,
   Box,
   CircularProgress,
   Typography,
   Divider,
   Checkbox,
+  IconButton,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
+import CloseIcon from '@mui/icons-material/Close';
 import { Formik, Form } from 'formik';
 import axiosInstance from '@/utils/axiosInstance';
 import WorkoutCard from '@/components/WorkoutCard';
@@ -52,14 +53,17 @@ export default function PostDialog({
       }
     };
     if (open) {
+      setSelectedWorkout(null);
       fetchWorkouts();
     }
   }, [open, username, showAppMessage, onClose]);
 
   const handleWorkoutSelection = (workout) => {
+    if (selectedWorkout) {
+      setWorkouts((prev) => [selectedWorkout, ...prev]);
+    }
     if (selectedWorkout?.id === workout.id) {
       setSelectedWorkout(null);
-      setWorkouts((prev) => [workout, ...prev]);
     } else {
       setSelectedWorkout(workout);
       setWorkouts((prev) => prev.filter((w) => w.id !== workout.id));
@@ -79,7 +83,6 @@ export default function PostDialog({
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
-      <DialogTitle>Add New Post</DialogTitle>
       <Formik
         validationSchema={PostSchema}
         initialValues={PostDefaultValues}
@@ -98,8 +101,31 @@ export default function PostDialog({
           isSubmitting,
         }) => (
           <Form>
+            <DialogTitle>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Typography variant="h6">Add New Post</Typography>
+                <IconButton onClick={onClose}>
+                  <CloseIcon />
+                </IconButton>
+              </Box>
+            </DialogTitle>
             <DialogContent dividers>
               <Grid container direction="column" spacing={2}>
+                <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={isSubmitting || !selectedWorkout}
+                  >
+                    {isSubmitting ? <CircularProgress size={24} /> : 'Add Post'}
+                  </Button>
+                </Box>
                 <CustomInput
                   label="Title"
                   name="title"
@@ -153,18 +179,6 @@ export default function PostDialog({
                   ))}
               </Box>
             </DialogContent>
-            <DialogActions>
-              <Button onClick={onClose} color="error">
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                variant="contained"
-                disabled={isSubmitting || !selectedWorkout}
-              >
-                {isSubmitting ? <CircularProgress size={24} /> : 'Add Post'}
-              </Button>
-            </DialogActions>
           </Form>
         )}
       </Formik>
