@@ -10,10 +10,11 @@ import { formatDate } from '@/utils/dateUtils';
 
 export default function ActivityInfo({ activity }) {
   const duration = formatDate(activity.duration, 'HH:mm:ss');
+  const type = activity.exerciseType;
 
   return (
     <Box className={style.activity}>
-      {duration !== '00:00:00' ? (
+      {type === 'C' ? (
         <>
           <Box sx={{ width: '200px' }} className={style.activityElement}>
             <Tooltip title="Cardio exercise">
@@ -30,7 +31,7 @@ export default function ActivityInfo({ activity }) {
           </Box>
           <Box sx={{ width: '100px' }} className={style.activityElement}></Box>
         </>
-      ) : (
+      ) : type === 'S' ? (
         <>
           <Box sx={{ width: '200px' }} className={style.activityElement}>
             <Tooltip title="Strength exercise">
@@ -53,6 +54,8 @@ export default function ActivityInfo({ activity }) {
             {activity.weight}
           </Box>
         </>
+      ) : (
+        <p>Other exercise type</p>
       )}
     </Box>
   );

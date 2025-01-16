@@ -106,6 +106,10 @@ export default function WorkoutForm({
           duration: values.duration
             ? formatDate(values.duration.toISOString(), 'HH:mm:ss')
             : '00:00:00',
+          exerciseType:
+            values.exerciseType === 'crossfit'
+              ? 'F'
+              : values.exerciseType.charAt(0).toUpperCase(),
         };
         setActivityList((prev) => [...prev, newActivity]);
         setFieldValue('exerciseType', '');
