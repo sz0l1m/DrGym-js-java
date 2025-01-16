@@ -128,4 +128,27 @@ public class PostService {
     public List<Post> findPostsByUsernames(List<String> usernames) {
         return postRepository.findByUsernameIn(usernames);
     }
+
+    public ResponseEntity<String> updatePost(Long postId, String title, String content, Long workoutId) {
+        Optional<Post> postOptional = postRepository.findById(postId);
+        if (postOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Post post = postOptional.get();
+        post.setTitle(title);
+        post.setContent(content);
+
+        if (workoutId != null) {
+            Workout workout = workoutRepository.findById(workoutId).orElse(null);
+            if (workout != null) {
+                post.setTraining(workout);
+            } else {
+                return ResponseEntity.badRequest().body("Invalid workout ID");
+            }
+        }
+
+        postRepository.save(post);
+        return ResponseEntity.ok("Post updated successfully");
+    }
 }
