@@ -32,6 +32,9 @@ public class Activity {
     @Transient
     private String exerciseName;
 
+    @Transient
+    private char exerciseType;
+
     public Activity(Long exercise_id, Long reps, Long weight, Timestamp duration, Long workoutId) {
         this.exercise_id = exercise_id;
         this.reps = reps;
@@ -82,4 +85,8 @@ public class Activity {
     public String durationToString() {
         return duration.toString();
     }
+
+    public char getExerciseType() { return exerciseType; }
+
+    public void setExerciseType(char exerciseType) { this.exerciseType = exerciseType; }
 }
