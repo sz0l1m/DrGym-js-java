@@ -176,6 +176,21 @@ public class PostController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<?> updatePost(@RequestBody Post updatedPost, HttpServletRequest request) {
+        Optional<Post> postOptional = postService.findPostById(updatedPost.getId());
+        if (postOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Post post = postOptional.get();
+        if (!userController.tokenOwner(post.getUsername(), request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        return postService.updatePost(updatedPost.getId(), updatedPost.getTitle(), updatedPost.getContent(), updatedPost.getWorkoutId());
+    }
+
     @DeleteMapping("/{postId}")
     public ResponseEntity<?> deletePost(@PathVariable Long postId, HttpServletRequest request) {
         Optional<Post> postOptional = postService.findPostById(postId);
