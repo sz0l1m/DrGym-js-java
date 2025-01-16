@@ -1,5 +1,6 @@
 package com.drgym.drgym.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
@@ -24,6 +25,7 @@ public class Activity {
     private Long weight;
 
     @Column(name = "duration")
+    @JsonSerialize(using = TimestampFormatted.class)
     private Timestamp duration;
 
     @Column(name = "workout_id")
