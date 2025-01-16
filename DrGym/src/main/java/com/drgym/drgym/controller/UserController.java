@@ -50,7 +50,7 @@ public class UserController {
         }
 
         Optional<User> user = userService.findByUsername(username);
-        return user.map(u -> ResponseEntity.ok(new UserDTO(u.getUsername(), u.getName(), u.getSurname(), u.getWeight(), u.getHeight())))
+        return user.map(u -> ResponseEntity.ok(new UserDTO(u.getUsername(), u.getName(), u.getSurname(), u.getWeight(), u.getHeight(), u.getFavoriteExercise())))
                 .orElse(ResponseEntity.notFound().build());
     }
 
@@ -148,7 +148,7 @@ public class UserController {
         }
     }
 
-    private record UserDTO(String username, String name, String surname, Double weight, Double height) {}
+    private record UserDTO(String username, String name, String surname, Double weight, Double height, Long favoriteExercise) {}
 
     private String getJwtTokenFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
