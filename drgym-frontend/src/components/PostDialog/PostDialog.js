@@ -39,9 +39,7 @@ export default function PostDialog({
     const fetchWorkouts = async () => {
       try {
         setLoading(true);
-        const response = await axiosInstance.get(
-          `/api/workouts/private`
-        );
+        const response = await axiosInstance.get(`/api/workouts/private`);
         const fetchedWorkouts = response.data;
 
         if (type === 'edit' && post?.training) {
@@ -123,7 +121,7 @@ export default function PostDialog({
     } finally {
       actions.setSubmitting(false);
     }
-  }
+  };
 
   const handleWorkoutSelection = (workout) => {
     if (selectedWorkout) {

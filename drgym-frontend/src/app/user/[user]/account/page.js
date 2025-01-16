@@ -19,6 +19,7 @@ import { signOut } from 'next-auth/react';
 import { removeUserData } from '@/utils/localStorage';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControl from '@mui/material/FormControl';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   border: '2px dashed #ccc',
@@ -34,6 +35,7 @@ const DropzoneContainer = styled(Box)(({ theme }) => ({
 const AccountPage = ({ showAppMessage }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState(null);
@@ -103,14 +105,27 @@ const AccountPage = ({ showAppMessage }) => {
     setHasChanges(true);
   };
 
-  const handleFormSubmit = (values, { resetForm }) => {
-    showAppMessage({
-      status: true,
-      text: 'Profile updated successfully!',
-      type: 'success',
-    });
-    setHasChanges(false);
-    resetForm();
+  const handleUpdateAccount = async (formData) => {
+    try {
+      const respone = await axiosInstance.put(`/api/users/update`, {
+        ...formData,
+        name: formData.firstName,
+        favoriteExercise: formData.exercise.id,
+      });
+      showAppMessage({
+        status: true,
+        text: 'Account updated successfully',
+        type: 'success',
+      });
+      setHasChanges(false);
+    } catch (err) {
+      console.error('Error updating account:', err);
+      showAppMessage({
+        status: true,
+        text: 'Failed to update account',
+        type: 'error',
+      });
+    }
   };
 
   const handleDeleteAccount = async () => {
@@ -151,7 +166,7 @@ const AccountPage = ({ showAppMessage }) => {
         <Formik
           validationSchema={AccountSchema}
           initialValues={AccountDefaultValues(userData)}
-          onSubmit={handleFormSubmit}
+          onSubmit={handleUpdateAccount}
         >
           {({
             values,
@@ -317,6 +332,7 @@ const AccountPage = ({ showAppMessage }) => {
                       }
                       value={values.exercise || null}
                       onChange={(event, newValue) => {
+                        setHasChanges(true);
                         handleChange({
                           target: {
                             name: 'exercise',
@@ -347,7 +363,7 @@ const AccountPage = ({ showAppMessage }) => {
                       variant="outlined"
                       color="primary"
                       onClick={() => handleResetFields(resetForm)}
-                      disabled={!hasChanges}
+                      disabled={!hasChanges || submitting}
                     >
                       Reset Changes
                     </Button>
@@ -355,7 +371,12 @@ const AccountPage = ({ showAppMessage }) => {
                       type="submit"
                       variant="contained"
                       color="primary"
-                      disabled={!hasChanges}
+                      disabled={!hasChanges || submitting}
+                      endIcon={
+                        submitting && (
+                          <CircularProgress color="secondary" size={18} />
+                        )
+                      }
                     >
                       Save Changes
                     </Button>
