@@ -75,6 +75,7 @@ const PostsContent = ({ showAppMessage }) => {
         key={refetch}
         username={username}
         onlyThisUser={onlyThisUser}
+        actions
         showAppMessage={showAppMessage}
       />
       <PostDialog

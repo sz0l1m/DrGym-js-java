@@ -5,7 +5,7 @@ import Post from '@/components/Post';
 import SkeletonCard from '@/components/SkeletonCard';
 import axiosInstance from '@/utils/axiosInstance';
 
-const PostList = ({ username, onlyThisUser, showAppMessage }) => {
+const PostList = ({ username, onlyThisUser, actions, showAppMessage }) => {
   const [postsData, setPostsData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -59,7 +59,7 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
           <Post
             key={post.id}
             post={post}
-            actions={onlyThisUser}
+            actions={actions && onlyThisUser}
             onChanges={fetchPosts}
             showAppMessage={showAppMessage}
           />

@@ -76,7 +76,12 @@ export default function WorkoutCard({ workout, isPost, post, showAppMessage }) {
       await axiosInstance.delete(
         `/api/posts/${post.id}/reactions?username=${username}`
       );
-      setLikeCount((prev) => prev - 1);
+      setLikeCount((prev) => {
+        if (prev > 0) {
+          return prev - 1;
+        }
+        return prev;
+      });
     } catch (error) {
       setLiked(true);
       showAppMessage({
@@ -128,7 +133,7 @@ export default function WorkoutCard({ workout, isPost, post, showAppMessage }) {
         >
           <ExpandMoreIcon />
         </ExpandMore>
-        {workout.posted && (
+        {isPost && (
           <Grid container alignItems="center" gap={2} sx={{ pl: 4 }}>
             <IconButton
               onClick={handleLikeClick}
