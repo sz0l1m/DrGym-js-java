@@ -14,15 +14,33 @@ import axiosInstance from '@/utils/axiosInstance';
 import PostList from '@/components/PostList';
 import { getUsername } from '@/utils/localStorage';
 import { withSnackbar } from '@/utils/snackbarProvider';
+import { Typography } from '@mui/material';
 
 const User = ({ params, showAppMessage }) => {
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useState(true);
   const { user } = React.use(params);
-  const [avatar, setAvatar] = React.useState(null);
+  const [userData, setUserData] = useState(null);
+  const [avatar, setAvatar] = useState(null);
   const router = useRouter();
   const username = getUsername();
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        setLoading(true);
+        const response = await axiosInstance.get(`/api/users/${user}`);
+        console.log(response.data);
+        setUserData(response.data);
+        setAvatar(response.data?.avatar || null);
+      } catch (err) {
+        showAppMessage({
+          status: true,
+          text: 'Failed to fetch user data',
+          type: 'error',
+        });
+      }
+    };
+
     const checkFriendStatus = async () => {
       try {
         setLoading(true);
@@ -34,7 +52,7 @@ const User = ({ params, showAppMessage }) => {
           `/api/friends/isFriend/${username}/${user}`
         );
         if (response.data) {
-          setAvatar(response.data?.avatar || null);
+          fetchUserData();
           setLoading(false);
         } else {
           router.replace(
@@ -49,7 +67,7 @@ const User = ({ params, showAppMessage }) => {
     };
 
     checkFriendStatus();
-  }, [router, user, username]);
+  }, [router, user, username, showAppMessage]);
 
   // FIXME
   const handleDeleteFriend = async (username) => {
@@ -81,12 +99,11 @@ const User = ({ params, showAppMessage }) => {
         width: '100%',
         maxWidth: '1000px',
         margin: '0 auto',
-        py: 2,
       }}
     >
       <Box sx={{ width: '100%', maxWidth: '1000px', margin: '0 auto', py: 2 }}>
         {!loading ? (
-          <Card sx={{ maxWidth: '100%', mt: 1, mb: 6 }}>
+          <Card sx={{ maxWidth: '100%', mt: 0, mb: 6 }}>
             <UserHeader
               username={user}
               avatar={null}
@@ -118,8 +135,30 @@ const User = ({ params, showAppMessage }) => {
         )}
         {!loading && (
           <Box display="flex" flexDirection="column" alignItems="center">
+            {userData && (
+              <Grid container justifyContent="center" gap={5} sx={{ mb: 5 }}>
+                {Object.entries(userData).map(
+                  ([key, value]) =>
+                    key !== 'username' && (
+                      <Grid xs={12} key={key}>
+                        <Typography variant="body1" color="textSecondary">
+                          {key.charAt(0).toUpperCase() + key.slice(1)}:
+                        </Typography>
+                        {value ? (
+                          <Typography variant="h6">{value}</Typography>
+                        ) : (
+                          <Typography color="textSecondary" variant="body2">
+                            Not specified
+                          </Typography>
+                        )}
+                      </Grid>
+                    )
+                )}
+              </Grid>
+            )}
+
             <Calendar username={user} />
-            <Box sx={{ my: 6 }}>
+            <Box sx={{ mt: 6, mb: 4 }}>
               <BodyHighlighter username={user} />
             </Box>
             <Box sx={{ width: '100%' }}>

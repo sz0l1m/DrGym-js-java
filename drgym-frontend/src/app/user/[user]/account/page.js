@@ -70,8 +70,7 @@ const AccountPage = ({ showAppMessage }) => {
 
         setAvatar(userResponse.data.avatar || null);
       } catch (err) {
-        console.error('Error fetching user data:', err);
-        setError('Error fetching user data');
+        setError('Could not fetch user data');
         showAppMessage({
           status: true,
           text: 'Something went wrong',
@@ -156,7 +155,7 @@ const AccountPage = ({ showAppMessage }) => {
   });
 
   if (loading) return <Typography>Loading...</Typography>;
-  if (error) return <Typography>Error: {error}</Typography>;
+  if (error) return <Typography>{error}</Typography>;
   return (
     <>
       <Grid container direction="column">
