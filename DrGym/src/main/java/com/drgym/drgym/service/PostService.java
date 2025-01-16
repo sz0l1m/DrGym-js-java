@@ -7,6 +7,7 @@ import com.drgym.drgym.repository.WorkoutRepository;
 import com.drgym.drgym.repository.ExerciseRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +30,7 @@ public class PostService {
     private ActivityRepository activityRepository;
 
     public List<Post> findPostsByUsername(String username) {
-        return postRepository.findByUsername(username);
+        return postRepository.findByUsername(username, Sort.by(Sort.Direction.DESC, "date"));
     }
 
     public Optional<Post> findPostById(Long postId) {
@@ -126,7 +127,7 @@ public class PostService {
     }
 
     public List<Post> findPostsByUsernames(List<String> usernames) {
-        return postRepository.findByUsernameIn(usernames);
+        return postRepository.findByUsernameIn(usernames, Sort.by(Sort.Direction.DESC, "date"));
     }
 
     public ResponseEntity<String> updatePost(Long postId, String title, String content, Long workoutId) {
