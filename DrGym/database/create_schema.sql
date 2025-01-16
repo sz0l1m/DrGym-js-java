@@ -3,16 +3,17 @@ create sequence TOKEN_SEQUENCE
 
 create table USERS
 (
-    USERNAME VARCHAR2(50)  not null
+    USERNAME          VARCHAR2(50)  not null
         primary key,
-    NAME     VARCHAR2(50)  not null,
-    SURNAME  VARCHAR2(50)  not null,
-    EMAIL    VARCHAR2(100) not null
+    NAME              VARCHAR2(50)  not null,
+    SURNAME           VARCHAR2(50)  not null,
+    EMAIL             VARCHAR2(100) not null
         unique,
-    PASSWORD VARCHAR2(100) not null,
-    WEIGHT   NUMBER(5, 2),
-    HEIGHT   NUMBER(5, 2),
-    VERIFIED NUMBER(1) default 0
+    PASSWORD          VARCHAR2(100) not null,
+    WEIGHT            NUMBER(5, 2),
+    HEIGHT            NUMBER(5, 2),
+    VERIFIED          NUMBER(1) default 0,
+    FAVORITE_EXERCISE NUMBER
 )
     /
 
@@ -49,20 +50,9 @@ create table TOKEN
 )
     /
 
-create table ACTIVITIES
-(
-    ACTIVITY_ID NUMBER generated as identity
-        primary key,
-    EXERCISE_ID NUMBER not null,
-    REPS        NUMBER,
-    WEIGHT      NUMBER,
-    DURATION    TIMESTAMP(6)
-)
-    /
-
 create table WORKOUTS
 (
-    WORKOUT_ID       NUMBER generated as identity
+    WORKOUT_ID       NUMBER default "Z13"."ISEQ$$_643017".nextval generated as identity
         primary key,
     START_DATETIME   TIMESTAMP(6),
     USERNAME         VARCHAR2(255)
@@ -71,22 +61,13 @@ create table WORKOUTS
                 on delete cascade,
     END_DATETIME     TIMESTAMP(6),
     DESCRIPTION      VARCHAR2(255),
-    CREATED_DATETIME TIMESTAMP(6)
+    CREATED_DATETIME TIMESTAMP(6),
+    IS_POSTED        NUMBER default 0
 )
     /
 
-create table WORKOUT_ACTIVITIES
-(
-    WORKOUT_ACTIVITY_ID NUMBER generated as identity
-        primary key,
-    WORKOUT_ID          NUMBER
-        constraint FK_WORKOUT_ACTIVITIES_WORKOUT_ID
-            references WORKOUTS
-            on delete cascade,
-    ACTIVITY_ID         NUMBER
-        constraint FK_TEMP_WORKOUT_ACTIVITIES_ACTIVITY_ID
-            references ACTIVITIES
-)
+create index IDX_WORKOUT_START_DATE_ORDER
+    on WORKOUTS (START_DATETIME)
     /
 
 create table EXERCISES
@@ -96,6 +77,24 @@ create table EXERCISES
     TYPE        CHAR,
     KCAL_BURNED NUMBER,
     NAME        VARCHAR2(255)
+)
+    /
+
+create table ACTIVITIES
+(
+    ACTIVITY_ID NUMBER generated as identity
+        primary key,
+    EXERCISE_ID NUMBER not null
+        constraint FK_EXERCISE
+            references EXERCISES
+            on delete cascade,
+    REPS        NUMBER,
+    WEIGHT      NUMBER,
+    DURATION    TIMESTAMP(6),
+    WORKOUT_ID  NUMBER
+        constraint FK_WORKOUT
+            references WORKOUTS
+            on delete cascade
 )
     /
 
@@ -118,11 +117,13 @@ create table FRIENDSHIPS
     ID               NUMBER generated as identity
         primary key,
     FRIEND1_USERNAME VARCHAR2(255)
-        constraint FK_FRIEND1
-            references USERS,
+        constraint FK_USER1
+            references USERS
+                on delete cascade,
     FRIEND2_USERNAME VARCHAR2(255)
-        constraint FK_FRIEND2
-            references USERS,
+        constraint FK_USER2
+            references USERS
+                on delete cascade,
     CREATED_AT       TIMESTAMP(6)
 )
     /
@@ -144,10 +145,12 @@ create table FRIENDSHIP_INVITATIONS
         primary key,
     WHO_SEND_USERNAME    VARCHAR2(255)
         constraint FK_WHO_SEND
-            references USERS,
+            references USERS
+                on delete cascade,
     WHO_RECEIVE_USERNAME VARCHAR2(255)
         constraint FK_WHO_RECEIVE
-            references USERS,
+            references USERS
+                on delete cascade,
     SEND_TIME            TIMESTAMP(6),
     constraint UNIQUE_FRIENDSHIP_INVITATION
         unique (WHO_SEND_USERNAME, WHO_RECEIVE_USERNAME)
@@ -178,15 +181,33 @@ create table POSTS
     POST_ID         NUMBER       default "Z13"."ISEQ$$_643189".nextval generated as identity
         primary key,
     AUTHOR_USERNAME VARCHAR2(50)  not null
-        references USERS,
+        constraint FK_USERNAME
+            references USERS
+                on delete cascade,
     POST_DATE       TIMESTAMP(6) default CURRENT_TIMESTAMP,
     TITLE           VARCHAR2(100) not null,
     WORKOUT_ID      NUMBER(8)
-        references WORKOUTS
-            on delete cascade,
+        constraint FK_WORKOUT_ID
+            references WORKOUTS
+                on delete cascade,
     CONTENT         VARCHAR2(200)
 )
     /
+
+create index IDX_POST_DATE_ORDER
+    on POSTS (POST_DATE)
+    /
+
+create trigger UPDATE_IS_POSTED
+    after insert
+    on POSTS
+    for each row
+BEGIN
+    UPDATE workouts
+    SET is_posted = 1
+    WHERE workout_id = :NEW.workout_id;
+END;
+/
 
 create table POST_COMMENTS
 (
@@ -209,11 +230,14 @@ create table POST_REACTIONS
         primary key,
     POST_ID          NUMBER(8)    not null
         constraint FK_REACTION_POST_ID
-            references POSTS,
+            references POSTS
+                on delete cascade,
     AUTHOR_USERNAME  VARCHAR2(40) not null
         constraint FK_REACTOR_USERNAME
             references USERS
-                on delete cascade
+                on delete cascade,
+    constraint UNIQUE_REACTION_AUTHOR
+        unique (POST_ID, AUTHOR_USERNAME)
 )
     /
 
@@ -269,18 +293,19 @@ SELECT
     )
 INTO data_json
 FROM EXERCISES exercises
-         JOIN WORKOUTS workouts ON workouts.USERNAME = p_username
-         JOIN WORKOUT_ACTIVITIES workout_activities ON workout_activities.WORKOUT_ID = workouts.WORKOUT_ID
-         JOIN ACTIVITIES activities ON activities.ACTIVITY_ID = workout_activities.ACTIVITY_ID
-WHERE workouts.START_DATETIME BETWEEN TO_DATE(p_start_date, 'YYYY-MM-DD') AND TO_DATE(p_end_date, 'YYYY-MM-DD')
-  AND activities.EXERCISE_ID = exercises.EXERCISE_ID;
+         JOIN ACTIVITIES activities ON activities.EXERCISE_ID = exercises.EXERCISE_ID
+         JOIN WORKOUTS workouts ON workouts.WORKOUT_ID = activities.WORKOUT_ID
+WHERE workouts.USERNAME = p_username
+  AND workouts.START_DATETIME BETWEEN TO_DATE(p_start_date, 'YYYY-MM-DD') AND TO_DATE(p_end_date, 'YYYY-MM-DD');
 
 RETURN data_json;
 END;
 /
 
 create FUNCTION GET_USER_DAILY_EXERCISE_COUNT(
-    p_username IN VARCHAR2
+    p_username IN VARCHAR2,
+    p_start_date IN VARCHAR2,
+    p_end_date IN VARCHAR2
 ) RETURN CLOB IS
          data_json CLOB;
 BEGIN
@@ -289,20 +314,20 @@ SELECT JSON_ARRAYAGG(
                        'date' VALUE TO_CHAR(workouts.END_DATETIME, 'YYYY-MM-DD'),
                        'count' VALUE COUNT(*),
                        'level' VALUE CASE
-                        WHEN COUNT(*) <= 0 THEN 0
-                        WHEN COUNT(*) <= 6 THEN 1
-                        WHEN COUNT(*) <= 12 THEN 2
-                        WHEN COUNT(*) <= 18 THEN 2
-                        ELSE 3
-                    END
+                                             WHEN COUNT(*) <= 0 THEN 0
+                                             WHEN COUNT(*) <= 6 THEN 1
+                                             WHEN COUNT(*) <= 12 THEN 2
+                                             WHEN COUNT(*) <= 18 THEN 2
+                                             ELSE 3
+                               END
                )
        )
 INTO data_json
 FROM WORKOUTS workouts
-         JOIN WORKOUT_ACTIVITIES workout_activities ON workout_activities.WORKOUT_ID = workouts.WORKOUT_ID
-         JOIN ACTIVITIES activities ON activities.ACTIVITY_ID = workout_activities.ACTIVITY_ID
+         JOIN ACTIVITIES activities ON activities.WORKOUT_ID = workouts.WORKOUT_ID
 WHERE workouts.USERNAME = p_username
-GROUP BY workouts.END_DATETIME
+  AND workouts.END_DATETIME BETWEEN TO_DATE(p_start_date, 'YYYY-MM-DD') AND TO_DATE(p_end_date, 'YYYY-MM-DD')
+GROUP BY TO_CHAR(workouts.END_DATETIME, 'YYYY-MM-DD')
 HAVING COUNT(*) > 0;
 
 RETURN data_json;
