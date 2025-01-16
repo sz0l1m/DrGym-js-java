@@ -243,7 +243,7 @@ export default function WorkoutForm({
                 exercise: '',
                 reps: '',
                 weight: '',
-                duration: null,
+                duration: '',
               }
             : {
                 startDate: new Date(workout.startDate),
@@ -253,7 +253,7 @@ export default function WorkoutForm({
                 exercise: '',
                 reps: '',
                 weight: '',
-                duration: null,
+                duration: '',
               }
         }
         onSubmit={(values, actions) =>

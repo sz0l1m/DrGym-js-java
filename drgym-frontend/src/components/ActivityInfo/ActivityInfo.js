@@ -5,11 +5,10 @@ import BalanceIcon from '@mui/icons-material/Balance';
 import LoopIcon from '@mui/icons-material/Loop';
 import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
+import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
 import style from './ActivityInfo.module.css';
-import { formatDate } from '@/utils/dateUtils';
 
 export default function ActivityInfo({ activity }) {
-  const duration = formatDate(activity.duration, 'HH:mm:ss');
   const type = activity.exerciseType;
 
   return (
@@ -27,7 +26,7 @@ export default function ActivityInfo({ activity }) {
             <Tooltip title="Duration">
               <TimerOutlinedIcon />
             </Tooltip>
-            {duration}
+            {activity.duration}
           </Box>
           <Box sx={{ width: '100px' }} className={style.activityElement}></Box>
         </>
@@ -55,7 +54,28 @@ export default function ActivityInfo({ activity }) {
           </Box>
         </>
       ) : (
-        <p>Other exercise type</p>
+        <>
+          <Box sx={{ width: '200px' }} className={style.activityElement}>
+            <Tooltip title="Crossfit exercise">
+              <SportsGymnasticsIcon />
+            </Tooltip>
+            {activity.exerciseName}
+          </Box>
+
+          <Box sx={{ width: '100px' }} className={style.activityElement}>
+            <Tooltip title="Duration">
+              <TimerOutlinedIcon />
+            </Tooltip>
+            {activity.duration}
+          </Box>
+
+          <Box sx={{ width: '100px' }} className={style.activityElement}>
+            <Tooltip title="Weight [kg]">
+              <BalanceIcon sx={{ ml: 4 }} />
+            </Tooltip>
+            {activity.weight}
+          </Box>
+        </>
       )}
     </Box>
   );
