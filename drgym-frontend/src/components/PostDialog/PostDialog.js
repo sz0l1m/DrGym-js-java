@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -21,6 +21,9 @@ import CustomInput from '@/components/CustomInput';
 import { PostSchema, PostDefaultValues } from '@/utils/schemas/PostSchema';
 
 export default function PostDialog({
+  title,
+  type,
+  post,
   open,
   onClose,
   onChange,
@@ -39,7 +42,15 @@ export default function PostDialog({
         const response = await axiosInstance.get(
           `/api/users/${username}/workouts`
         );
-        setWorkouts(response.data);
+        const fetchedWorkouts = response.data;
+
+        if (type === 'edit' && post?.training) {
+          setSelectedWorkout(post.training);
+          setWorkouts(fetchedWorkouts.filter((w) => w.id !== post.training.id));
+        } else {
+          setWorkouts(fetchedWorkouts);
+          setSelectedWorkout(null);
+        }
       } catch (error) {
         console.error('Error fetching workouts:', error);
         showAppMessage({
@@ -52,11 +63,11 @@ export default function PostDialog({
         setLoading(false);
       }
     };
+
     if (open) {
-      setSelectedWorkout(null);
       fetchWorkouts();
     }
-  }, [open, username, showAppMessage, onClose]);
+  }, [open, username, type, post?.training, showAppMessage, onClose]);
 
   const handleAddPost = async (formData, form) => {
     try {
@@ -113,7 +124,14 @@ export default function PostDialog({
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <Formik
         validationSchema={PostSchema()}
-        initialValues={PostDefaultValues()}
+        initialValues={
+          type === 'edit'
+            ? {
+                title: post.title,
+                description: post.content,
+              }
+            : PostDefaultValues()
+        }
         onSubmit={handleAddPost}
       >
         {({
@@ -133,7 +151,7 @@ export default function PostDialog({
                   alignItems: 'center',
                 }}
               >
-                <Typography variant="h6">Add New Post</Typography>
+                <Typography variant="h6">{title}</Typography>
                 <IconButton onClick={onClose}>
                   <CloseIcon />
                 </IconButton>
@@ -146,8 +164,14 @@ export default function PostDialog({
                     type="submit"
                     variant="contained"
                     disabled={isSubmitting || !selectedWorkout}
+                    endIcon={
+                      isSubmitting && (
+                        <CircularProgress color="secondary" size={18} />
+                      )
+                    }
+                    sx={{ mb: 1 }}
                   >
-                    {isSubmitting ? <CircularProgress size={24} /> : 'Add Post'}
+                    {type === 'add' ? 'Add Post' : 'Edit Post'}
                   </Button>
                 </Box>
                 <CustomInput

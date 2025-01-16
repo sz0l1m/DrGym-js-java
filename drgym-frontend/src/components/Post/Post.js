@@ -11,9 +11,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
 import axiosInstance from '@/utils/axiosInstance';
+import PostDialog from '@/components/PostDialog';
 
 export default function Post({ post, actions, onChanges, showAppMessage }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const workout = post.training;
   const realitveStartDate = formatRelativeTime(workout.startDate);
@@ -54,7 +56,7 @@ export default function Post({ post, actions, onChanges, showAppMessage }) {
                 <Tooltip title="Edit post">
                   <IconButton
                     aria-label="edit post"
-                    // onClick={handleDeleteClick}
+                    onClick={() => setEditDialogOpen(true)}
                   >
                     <EditIcon color="info" />
                   </IconButton>
@@ -90,6 +92,15 @@ export default function Post({ post, actions, onChanges, showAppMessage }) {
         loading={deleting}
         onConfirm={handleDeletePost}
         onClose={() => setDeleteDialogOpen(false)}
+      />
+      <PostDialog
+        title="Edit Post"
+        type="edit"
+        post={post}
+        open={editDialogOpen}
+        onClose={() => setEditDialogOpen(false)}
+        onChange={() => console.log('onChange triggered')}
+        showAppMessage={showAppMessage}
       />
     </>
   );

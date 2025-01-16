@@ -78,6 +78,8 @@ const PostsContent = ({ showAppMessage }) => {
         showAppMessage={showAppMessage}
       />
       <PostDialog
+        title="Add New Post"
+        type="add"
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         onChange={triggerRefetch}
