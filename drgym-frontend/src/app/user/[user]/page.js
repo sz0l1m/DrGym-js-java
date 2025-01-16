@@ -29,7 +29,6 @@ const User = ({ params, showAppMessage }) => {
       try {
         setLoading(true);
         const response = await axiosInstance.get(`/api/users/${user}`);
-        console.log(response.data);
         setUserData({
           name: response.data?.name,
           surname: response.data?.surname,
