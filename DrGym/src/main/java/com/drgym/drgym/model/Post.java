@@ -35,6 +35,12 @@ public class Post {
     @Transient
     private Long workoutId;
 
+    @Transient
+    private int reactionCount;
+
+    @Transient
+    private int userReaction;
+
     public Post() {}
 
     public Post(Long id, LocalDateTime date, String title, String content) {
@@ -119,5 +125,21 @@ public class Post {
 
     public void setWorkoutId(Long workoutId) {
         this.workoutId = workoutId;
+    }
+
+    public int getReactionCount() {
+        return reactionCount;
+    }
+
+    public void setReactionCount(int reactionCount) {
+        this.reactionCount = reactionCount;
+    }
+
+    public int getUserReaction() {
+        return userReaction;
+    }
+
+    public void setUserReaction(int userReaction) {
+        this.userReaction = userReaction;
     }
 }
