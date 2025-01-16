@@ -367,14 +367,21 @@ export default function WorkoutForm({
                     control={<Radio />}
                     label="Cardio"
                   />
+                  <FormControlLabel
+                    value="crossfit"
+                    control={<Radio />}
+                    label="Crossfit"
+                  />
                 </RadioGroup>
               </FormControl>
               <FormControl fullWidth sx={{ mt: 2 }} error={!!errors.exercise}>
                 <Autocomplete
                   options={
-                    values.exerciseType === 'cardio'
-                      ? exercises.cardio
-                      : exercises.strength
+                    values.exerciseType === 'strength'
+                      ? exercises.strength
+                      : values.exerciseType === 'cardio'
+                        ? exercises.cardio
+                        : exercises.crossfit
                   }
                   getOptionLabel={(option) => option.name || ''}
                   isOptionEqualToValue={(option, value) =>
@@ -473,6 +480,50 @@ export default function WorkoutForm({
                       }}
                     />
                   </LocalizationProvider>
+                </Box>
+              )}
+
+              {values.exerciseType === 'crossfit' && (
+                <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <TimeField
+                      format="HH:mm:ss"
+                      value={values.duration}
+                      onChange={(newValue) =>
+                        setFieldValue('duration', newValue)
+                      }
+                      label={errors.duration || 'Duration'}
+                      slotProps={{
+                        textField: {
+                          error: !!errors.duration,
+                        },
+                      }}
+                    />
+                  </LocalizationProvider>
+                  <TextField
+                    label={errors.weight || 'Weight (kg)'}
+                    name="weight"
+                    type="number"
+                    value={values.weight}
+                    onBlur={handleBlur}
+                    error={!!errors.weight}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      if (!value || parseInt(value, 10) >= 0) {
+                        handleChange(e);
+                      }
+                    }}
+                    slotProps={{
+                      input: {
+                        min: 0,
+                        onKeyDown: (e) => {
+                          if (e.key === '-' || e.key === 'e') {
+                            e.preventDefault();
+                          }
+                        },
+                      },
+                    }}
+                  />
                 </Box>
               )}
 
