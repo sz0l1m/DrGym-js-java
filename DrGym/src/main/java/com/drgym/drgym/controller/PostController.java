@@ -59,6 +59,9 @@ public class PostController {
             workout.setActivities(activities);
         }
 
+        post.setReactionCount(postReactionService.countByPostId(postId));
+        post.setUserReaction(postReactionService.existsByPostIdAndUsername(postId, userController.getUsernameFromToken(request)) ? 1 : 0);
+
         return ResponseEntity.ok(post);
     }
 
@@ -73,6 +76,7 @@ public class PostController {
             return ResponseEntity.ok("[]");
         }
 
+        String currentUsername = userController.getUsernameFromToken(request);
         posts.forEach(post -> {
             Workout workout = post.getTraining();
             if (workout != null) {
@@ -85,6 +89,8 @@ public class PostController {
                 });
                 workout.setActivities(activities);
             }
+            post.setReactionCount(postReactionService.countByPostId(post.getId()));
+            post.setUserReaction(postReactionService.existsByPostIdAndUsername(post.getId(), currentUsername) ? 1 : 0);
         });
 
         return ResponseEntity.ok(posts);
@@ -103,6 +109,7 @@ public class PostController {
             return ResponseEntity.ok("[]");
         }
 
+        String currentUsername = userController.getUsernameFromToken(request);
         friendsPosts.forEach(post -> {
             if (post.getTraining() != null) {
                 List<Activity> activities = workoutService.findActivitiesByWorkoutId(post.getTraining().getId());
@@ -114,6 +121,8 @@ public class PostController {
                 });
                 post.getTraining().setActivities(activities);
             }
+            post.setReactionCount(postReactionService.countByPostId(post.getId()));
+            post.setUserReaction(postReactionService.existsByPostIdAndUsername(post.getId(), currentUsername) ? 1 : 0);
         });
 
         return ResponseEntity.ok(friendsPosts);
