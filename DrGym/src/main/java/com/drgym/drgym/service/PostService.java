@@ -139,13 +139,23 @@ public class PostService {
         post.setTitle(title);
         post.setContent(content);
 
+        Workout oldWorkout = post.getTraining();
+        if (oldWorkout != null) {
+            oldWorkout.setPosted(false);
+            workoutRepository.save(oldWorkout);
+        }
+
         if (workoutId != null) {
-            Workout workout = workoutRepository.findById(workoutId).orElse(null);
-            if (workout != null) {
-                post.setTraining(workout);
+            Workout newWorkout = workoutRepository.findById(workoutId).orElse(null);
+            if (newWorkout != null) {
+                newWorkout.setPosted(true);
+                post.setTraining(newWorkout);
+                workoutRepository.save(newWorkout);
             } else {
                 return ResponseEntity.badRequest().body("Invalid workout ID");
             }
+        } else {
+            post.setTraining(null);
         }
 
         postRepository.save(post);
