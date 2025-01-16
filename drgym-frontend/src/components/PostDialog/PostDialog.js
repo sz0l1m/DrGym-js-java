@@ -20,7 +20,12 @@ import { getUsername } from '@/utils/localStorage';
 import CustomInput from '@/components/CustomInput';
 import { PostSchema, PostDefaultValues } from '@/utils/schemas/PostSchema';
 
-export default function PostDialog({ open, onClose, showAppMessage }) {
+export default function PostDialog({
+  open,
+  onClose,
+  onChange,
+  showAppMessage,
+}) {
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
@@ -67,6 +72,7 @@ export default function PostDialog({ open, onClose, showAppMessage }) {
         text: 'Post added successfully',
         type: 'success',
       });
+      onChange();
       onClose();
     } catch (error) {
       console.error('Error adding post:', error);

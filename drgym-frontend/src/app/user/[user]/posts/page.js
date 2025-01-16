@@ -12,10 +12,12 @@ import Grid from '@mui/material/Grid2';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import PostDialog from '@/components/PostDialog';
+import { ref } from 'yup';
 
 const PostsContent = ({ showAppMessage }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [onlyThisUser, setOnlyThisUser] = useState(false);
+  const [refetch, setRefetch] = useState(false);
 
   const username = getUsername();
   const router = useRouter();
@@ -34,6 +36,10 @@ const PostsContent = ({ showAppMessage }) => {
       });
     }
   }, [router, pathname, searchParams, showAppMessage]);
+
+  const triggerRefetch = () => {
+    setRefetch(!refetch);
+  };
 
   const handleChange = (event, newOption) => {
     setOnlyThisUser(newOption === 'my');
@@ -66,6 +72,7 @@ const PostsContent = ({ showAppMessage }) => {
         </Button>
       </Grid>
       <PostList
+        key={refetch}
         username={username}
         onlyThisUser={onlyThisUser}
         showAppMessage={showAppMessage}
@@ -73,6 +80,7 @@ const PostsContent = ({ showAppMessage }) => {
       <PostDialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
+        onChange={triggerRefetch}
         showAppMessage={showAppMessage}
       />
     </>
