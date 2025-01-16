@@ -18,7 +18,7 @@ export default function Post({ post, actions, onChanges, showAppMessage }) {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const workout = post.training;
-  const realitveStartDate = formatRelativeTime(workout.startDate);
+  const realitveStartDate = formatRelativeTime(post.date);
 
   const handleDeletePost = async () => {
     try {
@@ -73,7 +73,7 @@ export default function Post({ post, actions, onChanges, showAppMessage }) {
             )}
           </Grid>
           <UserHeader
-            username={workout.username}
+            username={post.username}
             subheader={
               realitveStartDate.charAt(0).toUpperCase() +
               realitveStartDate.slice(1)

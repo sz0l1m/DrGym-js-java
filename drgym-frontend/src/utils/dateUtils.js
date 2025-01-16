@@ -5,8 +5,13 @@ import {
   differenceInMinutes,
 } from 'date-fns';
 
-export const formatDate = (date, pattern = 'MMMM d, yyyy h:mm a') =>
-  format(parseISO(date), pattern);
+export const formatDate = (date, pattern = 'MMMM d, yyyy h:mm a') => {
+  try {
+    return format(parseISO(date), pattern);
+  } catch (e) {
+    return date;
+  }
+};
 
 export const formatRelativeTime = (date) =>
   formatDistanceToNow(parseISO(date), { addSuffix: true });

@@ -190,9 +190,7 @@ export default function WorkoutForm({
         description: values.description,
         startDate: values.startDate.toISOString(),
         endDate: values.endDate.toISOString(),
-        activitiesToAdd: activityList.filter(
-          (activity) => !activity.activityId
-        ),
+        activitiesToAdd: activityList.filter((activity) => !activity.id),
         activitiesToRemove: activitiesToDelete,
       });
 
@@ -510,9 +508,7 @@ export default function WorkoutForm({
                         edge="end"
                         color="error"
                         sx={{ mr: 1 }}
-                        onClick={() =>
-                          handleDeleteActivity(activity.activityId, index)
-                        }
+                        onClick={() => handleDeleteActivity(activity.id, index)}
                       >
                         <DeleteIcon />
                       </IconButton>

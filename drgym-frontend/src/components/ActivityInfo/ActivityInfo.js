@@ -6,11 +6,14 @@ import LoopIcon from '@mui/icons-material/Loop';
 import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined';
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 import style from './ActivityInfo.module.css';
+import { formatDate } from '@/utils/dateUtils';
 
 export default function ActivityInfo({ activity }) {
+  const duration = formatDate(activity.duration, 'HH:mm:ss');
+
   return (
     <Box className={style.activity}>
-      {activity.duration !== '00:00:00' ? (
+      {duration !== '00:00:00' ? (
         <>
           <Box sx={{ width: '200px' }} className={style.activityElement}>
             <Tooltip title="Cardio exercise">
@@ -23,7 +26,7 @@ export default function ActivityInfo({ activity }) {
             <Tooltip title="Duration">
               <TimerOutlinedIcon />
             </Tooltip>
-            {activity.duration}
+            {duration}
           </Box>
           <Box sx={{ width: '100px' }} className={style.activityElement}></Box>
         </>
