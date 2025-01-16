@@ -6,6 +6,7 @@ import com.drgym.drgym.repository.ExerciseRepository;
 import com.drgym.drgym.repository.WorkoutRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,7 +57,7 @@ public class WorkoutService {
     }
 
     public List<Workout> findByUsername(String username) {
-        return workoutRepository.findByUsername(username);
+        return workoutRepository.findByUsername(username, Sort.by(Sort.Direction.DESC, "startDate"));
     }
 
     public void saveWorkout(Workout workout) {
@@ -118,7 +119,7 @@ public class WorkoutService {
     }
 
     public List<Workout> findPrivateWorkoutsByUsername(String username) {
-        List<Workout> workouts = workoutRepository.findByUsernameAndIsPostedFalse(username);
+        List<Workout> workouts = workoutRepository.findByUsernameAndIsPostedFalse(username, Sort.by(Sort.Direction.DESC, "startDate"));
         workouts.forEach(workout -> {
             List<Activity> activities = activityRepository.findByWorkoutId(workout.getId());
             activities.forEach(activity -> {
