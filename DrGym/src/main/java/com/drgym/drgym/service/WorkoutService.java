@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.sql.Timestamp;
 
 @Service
 public class WorkoutService {
@@ -48,6 +49,8 @@ public class WorkoutService {
             if (exercise != null) {
                 activity.setExerciseName(exercise.getName());
             }
+            activity.setExerciseType(exercise.getType());
+            System.out.println(exercise.getType());
         });
         return activities;
     }
@@ -123,6 +126,8 @@ public class WorkoutService {
                 if (exercise != null) {
                     activity.setExerciseName(exercise.getName());
                 }
+                activity.setExerciseType(exercise.getType());
+                System.out.println(exercise.getType());
             });
             workout.setActivities(activities);
         });
