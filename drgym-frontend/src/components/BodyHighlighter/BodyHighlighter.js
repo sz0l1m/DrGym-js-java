@@ -60,14 +60,14 @@ const BodyHighlighter = ({ username }) => {
       <Grid container justifyContent="center">
         <Model
           data={bodyData}
-          highlightedColors={['#bbdefb', '#3a88d5', '#0d47a1']}
+          highlightedColors={['#bbdefb', '#3a88d5', '#0d47a1', '#08295e']}
           style={{ width: '15rem', padding: '1rem' }}
           onClick={handleClick}
         />
         <Model
           type="posterior"
           data={bodyData}
-          highlightedColors={['#bbdefb', '#3a88d5', '#0d47a1']}
+          highlightedColors={['#bbdefb', '#3a88d5', '#0d47a1', '#08295e']}
           style={{ width: '15rem', padding: '1rem' }}
           onClick={handleClick}
         />
