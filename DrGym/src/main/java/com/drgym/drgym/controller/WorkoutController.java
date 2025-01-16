@@ -9,9 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +18,6 @@ import java.util.Optional;
 public class WorkoutController {
     @Autowired
     private WorkoutService workoutService;
-
-    @Autowired
-    private ExerciseService exerciseService;
 
     @Autowired
     private UserController userController;
