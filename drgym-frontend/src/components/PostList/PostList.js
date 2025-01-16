@@ -55,7 +55,9 @@ const PostList = ({ username, onlyThisUser, showAppMessage }) => {
       {postsData.length === 0 ? (
         <Typography variant="h6">There are no posts here yet.</Typography>
       ) : (
-        postsData.map((post) => <Post key={post.id} post={post} />)
+        postsData.map((post) => (
+          <Post key={post.id} post={post} actions={onlyThisUser} />
+        ))
       )}
     </Grid>
   );
