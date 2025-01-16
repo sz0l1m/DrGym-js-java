@@ -20,12 +20,7 @@ import { getUsername } from '@/utils/localStorage';
 import CustomInput from '@/components/CustomInput';
 import { PostSchema, PostDefaultValues } from '@/utils/schemas/PostSchema';
 
-export default function PostDialog({
-  open,
-  onClose,
-  onSubmit,
-  showAppMessage,
-}) {
+export default function PostDialog({ open, onClose, showAppMessage }) {
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
@@ -58,6 +53,33 @@ export default function PostDialog({
     }
   }, [open, username, showAppMessage, onClose]);
 
+  const handleAddPost = async (formData, form) => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.post('/api/posts/create', {
+        username: username,
+        title: formData.title,
+        content: formData.description,
+        workoutId: selectedWorkout.id,
+      });
+      showAppMessage({
+        status: true,
+        text: 'Post added successfully',
+        type: 'success',
+      });
+      onClose();
+    } catch (error) {
+      console.error('Error adding post:', error);
+      showAppMessage({
+        status: true,
+        text: 'Error adding post',
+        type: 'error',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleWorkoutSelection = (workout) => {
     if (selectedWorkout) {
       setWorkouts((prev) => [selectedWorkout, ...prev]);
@@ -73,7 +95,7 @@ export default function PostDialog({
   const getWorkoutMessage = () => {
     if (loading) return 'Loading workouts...';
     if (!selectedWorkout && workouts.length === 0)
-      return 'You don’t have any workouts. Please create one to add.';
+      return "You don't have any workouts. Please create one to add.";
     if (selectedWorkout && workouts.length === 0)
       return 'There are no other workouts available.';
     if (selectedWorkout)
@@ -84,13 +106,9 @@ export default function PostDialog({
   return (
     <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <Formik
-        validationSchema={PostSchema}
-        initialValues={PostDefaultValues}
-        onSubmit={(values, { setSubmitting }) => {
-          onSubmit({ ...values, workout: selectedWorkout });
-          setSubmitting(false);
-          onClose();
-        }}
+        validationSchema={PostSchema()}
+        initialValues={PostDefaultValues()}
+        onSubmit={handleAddPost}
       >
         {({
           values,
