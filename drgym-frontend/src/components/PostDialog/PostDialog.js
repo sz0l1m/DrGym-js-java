@@ -4,19 +4,15 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  TextField,
   Button,
   Box,
   CircularProgress,
   Typography,
-  FormControl,
-  FormControlLabel,
-  Checkbox,
   Divider,
+  Checkbox,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
 import axiosInstance from '@/utils/axiosInstance';
 import WorkoutCard from '@/components/WorkoutCard';
 import { getUsername } from '@/utils/localStorage';
@@ -61,7 +57,24 @@ export default function PostDialog({
   }, [open, username, showAppMessage, onClose]);
 
   const handleWorkoutSelection = (workout) => {
-    setSelectedWorkout((prev) => (prev?.id === workout.id ? null : workout));
+    if (selectedWorkout?.id === workout.id) {
+      setSelectedWorkout(null);
+      setWorkouts((prev) => [workout, ...prev]);
+    } else {
+      setSelectedWorkout(workout);
+      setWorkouts((prev) => prev.filter((w) => w.id !== workout.id));
+    }
+  };
+
+  const getWorkoutMessage = () => {
+    if (loading) return 'Loading workouts...';
+    if (!selectedWorkout && workouts.length === 0)
+      return 'You don’t have any workouts. Please create one to add.';
+    if (selectedWorkout && workouts.length === 0)
+      return 'There are no other workouts available.';
+    if (selectedWorkout)
+      return 'Change your workout by selecting a different one from the list below.';
+    return 'Select a workout to include in your post.';
   };
 
   return (
@@ -95,7 +108,6 @@ export default function PostDialog({
                   touched={touched.title}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  tabIndex={2}
                 />
                 <CustomInput
                   label="Description"
@@ -105,7 +117,6 @@ export default function PostDialog({
                   touched={touched.description}
                   onBlur={handleBlur}
                   onChange={handleChange}
-                  tabIndex={3}
                   multiline
                   rows={4}
                 />
@@ -115,30 +126,31 @@ export default function PostDialog({
                   <Typography variant="h6" gutterBottom sx={{ mb: 0 }}>
                     Selected Workout
                   </Typography>
-                  <WorkoutCard workout={selectedWorkout} />
+                  <Checkbox
+                    checked
+                    onChange={() => handleWorkoutSelection(selectedWorkout)}
+                    sx={{ pb: 0 }}
+                  />
+                  <WorkoutCard workout={selectedWorkout} disableActions />
                 </Box>
               )}
               <Divider sx={{ mt: 2 }} />
               <Box sx={{ mt: 2 }}>
-                <Typography variant="h6" gutterBottom>
-                  Select a Workout
+                <Typography variant="body1" gutterBottom>
+                  {getWorkoutMessage()}
                 </Typography>
-                {loading ? (
-                  <CircularProgress />
-                ) : (
-                  <Box>
-                    {workouts.map((workout) => (
-                      <Box key={workout.id} sx={{ mb: 2 }}>
-                        <Checkbox
-                          checked={selectedWorkout?.id === workout.id}
-                          onChange={() => handleWorkoutSelection(workout)}
-                          sx={{ pb: 0 }}
-                        />
-                        <WorkoutCard workout={workout} disableActions />
-                      </Box>
-                    ))}
-                  </Box>
-                )}
+                {!loading &&
+                  workouts.map((workout) => (
+                    <Box key={workout.id} sx={{ mb: 2 }}>
+                      <Checkbox
+                        checked={selectedWorkout?.id === workout.id}
+                        onChange={() => handleWorkoutSelection(workout)}
+                        sx={{ pb: 0 }}
+                      />
+                      <WorkoutCard workout={workout} disableActions />
+                      <Divider sx={{ mt: 2 }} />
+                    </Box>
+                  ))}
               </Box>
             </DialogContent>
             <DialogActions>
