@@ -38,6 +38,7 @@ import {
 } from '@/utils/schemas/WorkoutSchema';
 import { formatDate } from '@/utils/dateUtils';
 import { getUsername } from '@/utils/localStorage';
+import CustomInput from '@/components/CustomInput';
 
 export default function WorkoutForm({
   dialogTitle,
@@ -248,7 +249,7 @@ export default function WorkoutForm({
             : {
                 startDate: new Date(workout.startDate),
                 endDate: new Date(workout.endDate),
-                description: workout.description,
+                description: workout.description || '',
                 exerciseType: '',
                 exercise: '',
                 reps: '',
@@ -266,6 +267,7 @@ export default function WorkoutForm({
         {({
           values,
           errors,
+          touched,
           handleBlur,
           handleChange,
           setFieldValue,
@@ -318,21 +320,20 @@ export default function WorkoutForm({
                   />
                 </LocalizationProvider>
               </Box>
-              <TextField
-                id="description"
-                label={
-                  !!errors.description ? `${errors.description}` : 'Description'
-                }
-                name="description"
-                error={!!errors.description}
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.description}
-                fullWidth
-                multiline
-                maxRows={4}
-                sx={{ my: 2 }}
-              />
+              <Box sx={{ my: 2 }}>
+                <CustomInput
+                  label="Description"
+                  name="description"
+                  type="text"
+                  value={values.description}
+                  error={errors.description}
+                  touched={touched.description}
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  tabIndex={3}
+                  multiline
+                />
+              </Box>
               {popupType === 'edit' && (
                 <>
                   <Divider sx={{ mb: 2, mt: 1 }} />

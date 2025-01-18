@@ -9,7 +9,7 @@ const schema = yup.object().shape({
     .date()
     .required('End Date is required')
     .typeError('Invalid date'),
-  description: yup.string().max(50, 'Description is too long (max 50 chars)'),
+  description: yup.string().max(50, "it's too long (max 50 chars)"),
 });
 
 const strengthActivitySchema = yup.object().shape({
