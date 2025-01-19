@@ -21,6 +21,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { HexColorPicker } from 'react-colorful';
 import CustomAvatar from '@/components/CustomAvatar';
 import { stringToColor } from '@/utils/avatar';
+import { useRouter } from 'next/navigation';
 
 const AccountPage = ({ showAppMessage }) => {
   const [userData, setUserData] = useState(null);
@@ -33,6 +34,7 @@ const AccountPage = ({ showAppMessage }) => {
   const [exercises, setExercises] = useState([]);
   const [hasChanges, setHasChanges] = useState(false);
   const username = getUsername();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -94,6 +96,7 @@ const AccountPage = ({ showAppMessage }) => {
         type: 'success',
       });
       setHasChanges(false);
+      router.refresh();
     } catch (err) {
       console.error('Error updating account:', err);
       showAppMessage({
