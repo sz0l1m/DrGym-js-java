@@ -134,7 +134,7 @@ const AccountPage = ({ showAppMessage }) => {
     <>
       <Grid container direction="column">
         <Typography variant="h5" sx={{ my: 2 }}>
-          Account Settings for <strong>{username}</strong>
+          Account Settings
         </Typography>
         <Formik
           validationSchema={AccountSchema}
@@ -154,29 +154,50 @@ const AccountPage = ({ showAppMessage }) => {
                 container
                 direction="row"
                 justifyContent="center"
-                gap={6}
+                alignItems="center"
+                gap={4}
                 sx={{ mt: 2 }}
               >
-                <Grid
+                <Box
                   sx={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 2,
                     width: {
                       xs: '100%',
-                      sm: '80%',
                       md: '50%',
                     },
                   }}
                   textAlign="center"
                 >
-                  <CustomAvatar
-                    username={username}
-                    color={color}
+                  <Box
                     sx={{
-                      width: 100,
-                      height: 100,
-                      fontSize: 40,
-                      margin: '0 auto',
+                      marginRight: {
+                        xs: 0,
+                        sm: 4,
+                      },
+                      width: {
+                        xs: '100%',
+                        sm: '150px',
+                      },
                     }}
-                  />
+                  >
+                    <CustomAvatar
+                      username={username}
+                      color={color}
+                      sx={{
+                        width: 100,
+                        height: 100,
+                        fontSize: 40,
+                        margin: '0 auto',
+                      }}
+                    />
+                    <Typography variant="h5" sx={{ my: 2 }}>
+                      <strong>{username}</strong>
+                    </Typography>
+                  </Box>
                   <HexColorPicker
                     color={color}
                     onChange={(color) => {
@@ -184,7 +205,7 @@ const AccountPage = ({ showAppMessage }) => {
                       setColor(color);
                     }}
                   />
-                </Grid>
+                </Box>
                 <Box
                   sx={{
                     flexGrow: 2,
@@ -310,6 +331,16 @@ const AccountPage = ({ showAppMessage }) => {
                       )}
                     />
                   </FormControl>
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    alignItems: 'center',
+                    width: '100%',
+                  }}
+                >
                   <Box
                     sx={{
                       display: 'flex',
@@ -345,7 +376,7 @@ const AccountPage = ({ showAppMessage }) => {
                     color="error"
                     onClick={() => setDeleteDialogOpen(true)}
                     sx={{
-                      mt: 2,
+                      mt: 1,
                     }}
                   >
                     Delete Account
