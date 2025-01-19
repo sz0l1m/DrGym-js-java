@@ -114,6 +114,27 @@ public class AuthService {
         }
     }
 
+    public static String stringToColor(String string) {
+        int hash = 0;
+
+        for (int i = 0; i < string.length(); i++) {
+            hash = string.charAt(i) + ((hash << 5) - hash);
+        }
+
+        StringBuilder color = new StringBuilder("#");
+
+        for (int i = 0; i < 3; i++) {
+            int value = (hash >> (i * 8)) & 0xFF;
+            String hex = Integer.toHexString(value);
+            if (hex.length() == 1) {
+                color.append('0');
+            }
+            color.append(hex);
+        }
+
+        return color.toString();
+    }
+
     public ResponseEntity<?> register(User user) {
         if (userRepository.existsByEmail(user.getEmail())) {
             return ResponseEntity.status(400).body("E-mail is already taken");
@@ -122,6 +143,7 @@ public class AuthService {
             return ResponseEntity.status(400).body("Username is already taken");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setAvatar(stringToColor(user.getUsername()));
         userRepository.save(user);
         String verificationToken = UUID.randomUUID().toString();
         Token token = new Token(user.getEmail(), verificationToken);
