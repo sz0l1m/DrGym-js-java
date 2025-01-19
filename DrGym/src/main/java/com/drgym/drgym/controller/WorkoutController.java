@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -50,7 +52,16 @@ public class WorkoutController {
         }
 
         List<Workout> privateWorkouts = workoutService.findPrivateWorkoutsByUsername(username);
-        return ResponseEntity.ok(privateWorkouts);
+        LocalDateTime now = LocalDateTime.now();
+        List<Workout> pastWorkouts = new ArrayList<>();
+
+        for (Workout workout : privateWorkouts) {
+            if (workout.getStartDate().isBefore(now)) {
+                pastWorkouts.add(workout);
+            }
+        }
+
+        return ResponseEntity.ok(pastWorkouts);
     }
 
     @PostMapping("/create")
