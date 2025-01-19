@@ -10,7 +10,13 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
@@ -27,27 +33,49 @@ public class FriendshipService {
     @Autowired
     private FriendshipInvitationRepository friendshipInvitationRepository;
 
-    @Transactional
+    @Autowired
+    private DataSource dataSource;
+
     public List<UserFriendDTO> getUserFriends(String username) {
-        List<Friendship> friendships = friendshipRepository.findByFriend1UsernameOrFriend2Username(username, username);
-        return friendships.stream()
-                .map(friendship -> {
-                    String friendUsername = friendship.getFriend1Username().equals(username) ? friendship.getFriend2Username() : friendship.getFriend1Username();
-                    String avatar = userRepository.findByUsername(friendUsername).map(User::getAvatar).orElse(null);
-                    return new UserFriendDTO(friendUsername, friendship.getCreatedAt(), avatar);
-                })
-                .collect(Collectors.toList());
+        List<UserFriendDTO> friends = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             CallableStatement callableStatement = connection.prepareCall("{call GET_USER_FRIENDS_WITH_AVATAR(?, ?)}")) {
+            callableStatement.setString(1, username);
+            callableStatement.registerOutParameter(2, java.sql.Types.REF_CURSOR);
+            callableStatement.execute();
+            try (ResultSet rs = (ResultSet) callableStatement.getObject(2)) {
+                while (rs.next()) {
+                    String friendUsername = rs.getString("FRIEND_USERNAME");
+                    String avatar = rs.getString("AVATAR");
+                    friends.add(new UserFriendDTO(friendUsername, null, avatar));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching friends with avatar", e);
+        }
+        return friends;
     }
 
-    @Transactional
     public List<FriendRequestDTO> getUserFriendshipInvitations(String username) {
-        List<FriendshipInvitation> invitations = friendshipInvitationRepository.findByWhoReceiveUsername(username);
-        return invitations.stream()
-                .map(invitation -> {
-                    String avatar = userRepository.findByUsername(invitation.getWhoSendUsername()).map(User::getAvatar).orElse(null);
-                    return new FriendRequestDTO(invitation.getId(), invitation.getWhoSendUsername(), invitation.getWhoReceiveUsername(), avatar);
-                })
-                .collect(Collectors.toList());
+        List<FriendRequestDTO> requests = new ArrayList<>();
+        try (Connection connection = dataSource.getConnection();
+             CallableStatement callableStatement = connection.prepareCall("{call GET_USER_FRIEND_REQUESTS_WITH_AVATAR(?, ?)}")) {
+            callableStatement.setString(1, username);
+            callableStatement.registerOutParameter(2, java.sql.Types.REF_CURSOR);
+            callableStatement.execute();
+            try (ResultSet rs = (ResultSet) callableStatement.getObject(2)) {
+                while (rs.next()) {
+                    Long id = rs.getLong("ID");
+                    String sender = rs.getString("WHO_SEND_USERNAME");
+                    String receiver = rs.getString("WHO_RECEIVE_USERNAME");
+                    String avatar = rs.getString("AVATAR");
+                    requests.add(new FriendRequestDTO(id, sender, receiver, avatar));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error fetching friend requests with avatar", e);
+        }
+        return requests;
     }
 
     @Transactional
