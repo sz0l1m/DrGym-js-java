@@ -41,6 +41,9 @@ public class Post {
     @Transient
     private int userReaction;
 
+    @Transient
+    private String avatar;
+
     public Post() {}
 
     public Post(Long id, LocalDateTime date, String title, String content) {
@@ -141,5 +144,13 @@ public class Post {
 
     public void setUserReaction(int userReaction) {
         this.userReaction = userReaction;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

@@ -1,10 +1,7 @@
 package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.*;
-import com.drgym.drgym.repository.ActivityRepository;
-import com.drgym.drgym.repository.PostRepository;
-import com.drgym.drgym.repository.WorkoutRepository;
-import com.drgym.drgym.repository.ExerciseRepository;
+import com.drgym.drgym.repository.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -29,8 +26,16 @@ public class PostService {
     @Autowired
     private ActivityRepository activityRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public List<Post> findPostsByUsername(String username) {
-        return postRepository.findByUsername(username, Sort.by(Sort.Direction.DESC, "date"));
+        List<Post> posts = postRepository.findByUsername(username, Sort.by(Sort.Direction.DESC, "date"));
+        posts.forEach(post -> {
+            Optional<User> userOptional = userRepository.findByUsername(post.getUsername());
+            userOptional.ifPresent(user -> post.setAvatar(user.getAvatar()));
+        });
+        return posts;
     }
 
     public Optional<Post> findPostById(Long postId) {
@@ -48,6 +53,8 @@ public class PostService {
                 });
                 workout.setActivities(activities);
             }
+            Optional<User> userOptional = userRepository.findByUsername(post.getUsername());
+            userOptional.ifPresent(user -> post.setAvatar(user.getAvatar()));
             return Optional.of(post);
         }
         return Optional.empty();
@@ -127,7 +134,12 @@ public class PostService {
     }
 
     public List<Post> findPostsByUsernames(List<String> usernames) {
-        return postRepository.findByUsernameIn(usernames, Sort.by(Sort.Direction.DESC, "date"));
+        List<Post> posts = postRepository.findByUsernameIn(usernames, Sort.by(Sort.Direction.DESC, "date"));
+        posts.forEach(post -> {
+            Optional<User> userOptional = userRepository.findByUsername(post.getUsername());
+            userOptional.ifPresent(user -> post.setAvatar(user.getAvatar()));
+        });
+        return posts;
     }
 
     public ResponseEntity<String> updatePost(Long postId, String title, String content, Long workoutId) {
