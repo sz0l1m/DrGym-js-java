@@ -28,11 +28,21 @@ export default function RootLayout({ children, session }) {
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
+                p: 2,
                 my: 14,
                 gap: 4,
               }}
             >
-              <Box sx={{ p: 2 }}>{children}</Box>
+              <Box
+                sx={{
+                  p: {
+                    xs: 0,
+                    sm: 2,
+                  },
+                }}
+              >
+                {children}
+              </Box>
             </Container>
           </ThemeProvider>
         </SessionProvider>
