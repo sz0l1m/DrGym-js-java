@@ -74,6 +74,7 @@ export default function Post({ post, actions, onChanges, showAppMessage }) {
           </Grid>
           <UserHeader
             username={post.username}
+            avatar={post.avatar}
             subheader={
               realitveStartDate.charAt(0).toUpperCase() +
               realitveStartDate.slice(1)

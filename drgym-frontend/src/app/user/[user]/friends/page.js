@@ -143,6 +143,7 @@ const Friends = ({ showAppMessage }) => {
                 <UserHeader
                   id={request.id}
                   username={request.sender}
+                  avater={request.avatar}
                   actions="request"
                   onAccept={handleAcceptRequest}
                   onDecline={handleDeclineRequest}
@@ -171,6 +172,7 @@ const Friends = ({ showAppMessage }) => {
               <Card key={friend.username} sx={{ maxWidth: '100%', my: 1 }}>
                 <UserHeader
                   username={friend.username}
+                  avatar={friend.avatar}
                   actions="friend"
                   onDelete={handleDeleteFriend}
                 />

@@ -109,7 +109,7 @@ const User = ({ params, showAppMessage }) => {
           <Card sx={{ maxWidth: '100%', mt: 0, mb: 6 }}>
             <UserHeader
               username={user}
-              avatar={null}
+              avatar={avatar}
               actions="friend"
               onDelete={handleDeleteFriend}
             />

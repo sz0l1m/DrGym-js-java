@@ -20,6 +20,7 @@ import FormControl from '@mui/material/FormControl';
 import CircularProgress from '@mui/material/CircularProgress';
 import { HexColorPicker } from 'react-colorful';
 import CustomAvatar from '@/components/CustomAvatar';
+import { stringToColor } from '@/utils/avatar';
 
 const AccountPage = ({ showAppMessage }) => {
   const [userData, setUserData] = useState(null);
@@ -43,7 +44,9 @@ const AccountPage = ({ showAppMessage }) => {
           ...userResponse.data,
           firstName: userResponse.data.name,
         });
-        setColor(getAvatar() || '#b01919');
+        const userAvatar = userResponse.data.avatar || stringToColor(username);
+        setColor(userAvatar);
+        // localStorage.setItem('avatar', userAvatar);
         const exercisesResponse = await axiosInstance.get(
           '/api/exercises/by-type'
         );

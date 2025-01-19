@@ -1,4 +1,5 @@
 import { Avatar } from '@mui/material';
+import { stringToColor } from '@/utils/avatar';
 
 const getContrastColor = (hexColor) => {
   const color = hexColor.replace('#', '');
@@ -13,7 +14,7 @@ const getContrastColor = (hexColor) => {
 };
 
 export default function ColoredAvatar({ username, color, ...props }) {
-  color = color || '#b01919';
+  color = color || stringToColor(username);
   const contrastColor = getContrastColor(color);
 
   return (
