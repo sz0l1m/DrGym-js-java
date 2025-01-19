@@ -13,13 +13,12 @@ import EmojiPeopleIcon from '@mui/icons-material/EmojiPeople';
 import DrGymLogo from '@/components/DrGymLogo';
 import CustomDrawer from '@/components/CustomDrawer';
 import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
-import red from '@mui/material/colors/red';
+import CustomAvatar from '@/components/CustomAvatar';
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import { removeUserData } from '@/utils/localStorage';
+import { getAvatar, removeUserData } from '@/utils/localStorage';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -162,9 +161,7 @@ export default function CustomAppBar() {
               <>
                 <Link href={`/user/${username}/account`}>
                   <IconButton aria-label="account">
-                    <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                      {username.charAt(0).toUpperCase()}
-                    </Avatar>
+                    <CustomAvatar username={username} color={getAvatar()} />
                   </IconButton>
                 </Link>
                 <Button

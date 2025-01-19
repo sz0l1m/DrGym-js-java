@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
-import { Box, Button, Avatar, Typography, TextField } from '@mui/material';
+import { Box, Button, Typography, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
@@ -19,11 +19,12 @@ import Autocomplete from '@mui/material/Autocomplete';
 import FormControl from '@mui/material/FormControl';
 import CircularProgress from '@mui/material/CircularProgress';
 import { HexColorPicker } from 'react-colorful';
+import CustomAvatar from '@/components/CustomAvatar';
 
 const AccountPage = ({ showAppMessage }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [color, setColor] = useState(getAvatar() || '#1976d2');
+  const [color, setColor] = useState(getAvatar() || '#b01919');
   const [submitting, setSubmitting] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -42,7 +43,7 @@ const AccountPage = ({ showAppMessage }) => {
           ...userResponse.data,
           firstName: userResponse.data.name,
         });
-        setColor(getAvatar() || '#1976d2');
+        setColor(getAvatar() || '#b01919');
         const exercisesResponse = await axiosInstance.get(
           '/api/exercises/by-type'
         );
@@ -72,7 +73,7 @@ const AccountPage = ({ showAppMessage }) => {
 
   const handleResetFields = (resetForm) => {
     resetForm();
-    setColor(getAvatar() || '#1976d2');
+    setColor(getAvatar() || '#b01919');
     setHasChanges(false);
   };
 
@@ -160,18 +161,16 @@ const AccountPage = ({ showAppMessage }) => {
                   }}
                   textAlign="center"
                 >
-                  <Avatar
-                    alt={username.charAt(0).toUpperCase()}
+                  <CustomAvatar
+                    username={username}
+                    color={color}
                     sx={{
                       width: 100,
                       height: 100,
                       fontSize: 40,
-                      backgroundColor: color,
                       margin: '0 auto',
                     }}
-                  >
-                    {username.charAt(0).toUpperCase()}
-                  </Avatar>
+                  />
                   <HexColorPicker
                     color={color}
                     onChange={(color) => {

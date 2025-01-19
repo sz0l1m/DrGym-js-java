@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import CardHeader from '@mui/material/CardHeader';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Link from 'next/link';
 import {
@@ -10,12 +9,12 @@ import {
   CircularProgress,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { red } from '@mui/material/colors';
 import { useRouter } from 'next/navigation';
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
+import CustomAvatar from '@/components/CustomAvatar';
 
 export default function UserHeader({
   username,
@@ -79,14 +78,7 @@ export default function UserHeader({
               padding: '5px',
             }}
           >
-            <Avatar
-              sx={{
-                bgcolor: red[900],
-              }}
-              aria-label="avatar"
-            >
-              {String(username).charAt(0).toUpperCase()}
-            </Avatar>
+            <CustomAvatar username={username} color={avatar} />
           </IconButton>
         }
         title={
