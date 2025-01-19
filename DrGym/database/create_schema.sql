@@ -1,4 +1,4 @@
-create sequence TOKEN_SEQUENCE
+CREATE sequence TOKEN_SEQUENCE
     /
 
 
@@ -161,7 +161,7 @@ CREATE OR REPLACE TRIGGER TG_DIFFERENT_USERS_CHECK
     for each row
 BEGIN
     IF :NEW.FRIEND1_USERNAME = :NEW.FRIEND2_USERNAME THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Friendship cannot be created with only 1 user!');
+        RAISE_APPLICATION_ERROR(-20001, 'Friendship cannot be CREATEd with only 1 user!');
 END IF;
 END;
 /
@@ -186,7 +186,7 @@ BEGIN
 END;
 /
 
-create trigger TG_DELETE_REACTIONS
+CREATE trigger TG_DELETE_REACTIONS
     after delete
     on POSTS
     for each row
@@ -196,7 +196,7 @@ BEGIN
 END;
 /
 
-create trigger TG_DELETE_COMMENTS
+CREATE trigger TG_DELETE_COMMENTS
     after delete
     on POSTS
     for each row
@@ -266,7 +266,7 @@ ALTER TRIGGER DELETE_INVITATION_AFTER_FRIENDSHIP ENABLE;
 ALTER TRIGGER TG_DIFFERENT_USERS_CHECK ENABLE;
 ALTER TRIGGER TG_DELETE_COMMENTS ENABLE;
 --FUNCTIONS-------------------------------------------------------------------------------------------------------------
-create FUNCTION ARE_FRIENDS (
+CREATE FUNCTION ARE_FRIENDS (
     user1 IN VARCHAR2,
     user2 IN VARCHAR2
 ) RETURN NUMBER IS
@@ -282,7 +282,7 @@ RETURN has_friends;
 END;
 /
 
-create FUNCTION GET_FRIENDS_COUNT (
+CREATE FUNCTION GET_FRIENDS_COUNT (
     username IN VARCHAR2
 ) RETURN NUMBER IS
          friend_count NUMBER;
@@ -297,7 +297,7 @@ RETURN friend_count;
 END;
 /
 
-create FUNCTION GET_USER_DAILY_EXERCISE_COUNT(
+CREATE FUNCTION GET_USER_DAILY_EXERCISE_COUNT(
     p_username IN VARCHAR2,
     p_start_date IN VARCHAR2,
     p_end_date IN VARCHAR2
@@ -329,12 +329,12 @@ RETURN data_json;
 END;
 /
 
-create or replace FUNCTION GET_USERS_EXERCISES_IN_PERIOD(
+CREATE OR REPLACE FUNCTION GET_USERS_EXERCISES_IN_PERIOD(
     p_username IN VARCHAR2,
     p_start_date IN VARCHAR2,
     p_end_date IN VARCHAR2
 ) RETURN CLOB IS
-    data_json CLOB;
+         data_json CLOB;
 BEGIN
 SELECT
     JSON_ARRAYAGG(
@@ -350,15 +350,15 @@ SELECT
     )
 INTO data_json
 FROM EXERCISES exercises
-         JOIN WORKOUTS workouts ON workouts.USERNAME = p_username
-         JOIN WORKOUT_ACTIVITIES workout_activities ON workout_activities.WORKOUT_ID = workouts.WORKOUT_ID
-         JOIN ACTIVITIES activities ON activities.ACTIVITY_ID = workout_activities.ACTIVITY_ID
-WHERE workouts.START_DATETIME BETWEEN TO_DATE(p_start_date, 'YYYY-MM-DD') AND TO_DATE(p_end_date, 'YYYY-MM-DD')
-  AND activities.EXERCISE_ID = exercises.EXERCISE_ID;
+         JOIN ACTIVITIES activities ON activities.EXERCISE_ID = exercises.EXERCISE_ID
+         JOIN WORKOUTS workouts ON workouts.WORKOUT_ID = activities.WORKOUT_ID
+WHERE workouts.USERNAME = p_username
+  AND workouts.START_DATETIME BETWEEN TO_DATE(p_start_date, 'YYYY-MM-DD') AND TO_DATE(p_end_date, 'YYYY-MM-DD');
 
 RETURN data_json;
 END;
 /
+
 --INDEXES---------------------------------------------------------------------------------------------------------------
 CREATE INDEX IDX_POST_DATE_ORDER ON POSTS (POST_DATE);
 
