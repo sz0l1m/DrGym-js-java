@@ -306,7 +306,7 @@ CREATE FUNCTION GET_USER_DAILY_EXERCISE_COUNT(
 BEGIN
 SELECT JSON_ARRAYAGG(
                JSON_OBJECT(
-                       'date' VALUE TO_CHAR(workouts.END_DATETIME, 'YYYY-MM-DD'),
+                       'date' VALUE TO_CHAR(workouts.START_DATETIME, 'YYYY-MM-DD'),
                        'count' VALUE COUNT(*),
                        'level' VALUE CASE
                                              WHEN COUNT(*) <= 0 THEN 0
@@ -321,8 +321,8 @@ INTO data_json
 FROM WORKOUTS workouts
          JOIN ACTIVITIES activities ON activities.WORKOUT_ID = workouts.WORKOUT_ID
 WHERE workouts.USERNAME = p_username
-  AND workouts.END_DATETIME BETWEEN TO_DATE(p_start_date, 'YYYY-MM-DD') AND TO_DATE(p_end_date, 'YYYY-MM-DD')
-GROUP BY TO_CHAR(workouts.END_DATETIME, 'YYYY-MM-DD')
+  AND workouts.START_DATETIME BETWEEN TO_DATE(p_start_date, 'YYYY-MM-DD') AND TO_DATE(p_end_date, 'YYYY-MM-DD')
+GROUP BY TO_CHAR(workouts.START_DATETIME, 'YYYY-MM-DD')
 HAVING COUNT(*) > 0;
 
 RETURN data_json;
