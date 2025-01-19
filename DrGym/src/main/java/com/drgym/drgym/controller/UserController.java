@@ -114,8 +114,8 @@ public class UserController {
         }
 
         Map<String, List<Workout>> response = new HashMap<>();
-        response.put("future", futureWorkouts);
-        response.put("past", pastWorkouts);
+        response.put("futureWorkouts", futureWorkouts);
+        response.put("pastWorkouts", pastWorkouts);
 
         return ResponseEntity.ok(response);
     }
