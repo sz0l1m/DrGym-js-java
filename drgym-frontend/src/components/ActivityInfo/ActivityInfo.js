@@ -12,6 +12,52 @@ import style from './ActivityInfo.module.css';
 export default function ActivityInfo({ activity }) {
   const type = activity.exerciseType;
 
+  const typeMapping = {
+    C: {
+      title: 'Cardio exercise',
+      icon: <MonitorHeartOutlinedIcon />,
+    },
+    S: {
+      title: 'Strength exercise',
+      icon: <FitnessCenterIcon />,
+    },
+    F: {
+      title: 'Crossfit exercise',
+      icon: <SportsGymnasticsIcon />,
+    },
+  };
+
+  const firstBox =
+    type === 'S' ? (
+      <>
+        <Tooltip title="Number of reps">
+          <LoopIcon />
+        </Tooltip>
+        {activity.reps}
+      </>
+    ) : (
+      <>
+        <Tooltip title="Duration">
+          <TimerOutlinedIcon />
+        </Tooltip>
+        {activity.duration}
+      </>
+    );
+
+  const secondBox =
+    type === 'C' ? (
+      <></>
+    ) : (
+      <>
+        <Tooltip title="Weight [kg]">
+          <BalanceIcon />
+        </Tooltip>
+        {activity.weight}
+      </>
+    );
+
+  const { title, icon } = typeMapping[type];
+
   return (
     <Grid
       container
@@ -23,94 +69,26 @@ export default function ActivityInfo({ activity }) {
         mr: 3,
       }}
     >
-      {type === 'C' ? (
-        <>
-          <Box
-            sx={{ width: { xs: '100%', sm: '200px' } }}
-            className={style.activityElement}
-          >
-            <Tooltip title="Cardio exercise">
-              <MonitorHeartOutlinedIcon />
-            </Tooltip>
-            {activity.exerciseName}
-          </Box>
+      <Box
+        sx={{ width: { xs: '100%', sm: '200px' } }}
+        className={style.activityElement}
+      >
+        <Tooltip title={title}>{icon}</Tooltip>
+        {activity.exerciseName}
+      </Box>
 
-          <Box
-            sx={{ width: '100px', pt: { xs: 2, sm: 0 } }}
-            className={style.activityElement}
-          >
-            <Tooltip title="Duration">
-              <TimerOutlinedIcon />
-            </Tooltip>
-            {activity.duration}
-          </Box>
-          <Box sx={{ width: '100px' }} className={style.activityElement}></Box>
-        </>
-      ) : type === 'S' ? (
-        <>
-          <Box
-            sx={{ width: { xs: '100%', sm: '200px' } }}
-            className={style.activityElement}
-          >
-            <Tooltip title="Strength exercise">
-              <FitnessCenterIcon />
-            </Tooltip>
-            {activity.exerciseName}
-          </Box>
-
-          <Box
-            sx={{ width: '100px', pt: { xs: 2, sm: 0 } }}
-            className={style.activityElement}
-          >
-            <Tooltip title="Number of reps">
-              <LoopIcon />
-            </Tooltip>
-            {activity.reps}
-          </Box>
-
-          <Box
-            sx={{ width: '100px', pt: { xs: 2, sm: 0 } }}
-            className={style.activityElement}
-          >
-            <Tooltip title="Weight [kg]">
-              <BalanceIcon sx={{ ml: 4 }} />
-            </Tooltip>
-            {activity.weight}
-          </Box>
-        </>
-      ) : (
-        <>
-          <Box
-            sx={{ width: { xs: '100%', sm: '200px' } }}
-            className={style.activityElement}
-          >
-            <Tooltip title="Crossfit exercise">
-              <SportsGymnasticsIcon />
-            </Tooltip>
-            {activity.exerciseName}
-          </Box>
-
-          <Box
-            sx={{ width: '100px', pt: { xs: 2, sm: 0 } }}
-            className={style.activityElement}
-          >
-            <Tooltip title="Duration">
-              <TimerOutlinedIcon />
-            </Tooltip>
-            {activity.duration}
-          </Box>
-
-          <Box
-            sx={{ width: '100px', pt: { xs: 2, sm: 0 } }}
-            className={style.activityElement}
-          >
-            <Tooltip title="Weight [kg]">
-              <BalanceIcon sx={{ ml: 4 }} />
-            </Tooltip>
-            {activity.weight}
-          </Box>
-        </>
-      )}
+      <Box
+        sx={{ width: '100px', mr: 4, pt: { xs: 2, sm: 0 } }}
+        className={style.activityElement}
+      >
+        {firstBox}
+      </Box>
+      <Box
+        sx={{ width: '100px', pt: { xs: 2, sm: 0 } }}
+        className={style.activityElement}
+      >
+        {secondBox}
+      </Box>
     </Grid>
   );
 }
