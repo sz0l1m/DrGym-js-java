@@ -17,9 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Clob;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.security.Key;
 
 
@@ -100,12 +99,25 @@ public class UserController {
             return ResponseEntity.ok("[]");
         }
 
-        workouts.forEach(workout -> {
+        List<Workout> futureWorkouts = new ArrayList<>();
+        List<Workout> pastWorkouts = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+
+        for (Workout workout : workouts) {
             List<Activity> activities = workoutService.findActivitiesByWorkoutId(workout.getId());
             workout.setActivities(activities);
-        });
+            if (workout.getStartDate().isAfter(now)) {
+                futureWorkouts.add(workout);
+            } else {
+                pastWorkouts.add(workout);
+            }
+        }
 
-        return ResponseEntity.ok(workouts);
+        Map<String, List<Workout>> response = new HashMap<>();
+        response.put("future", futureWorkouts);
+        response.put("past", pastWorkouts);
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{username}/exercises")
