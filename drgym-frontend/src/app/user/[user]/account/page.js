@@ -3,8 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import { Box, Button, Avatar, Typography, TextField } from '@mui/material';
-import { styled } from '@mui/system';
-import { useDropzone } from 'react-dropzone';
 import Grid from '@mui/material/Grid2';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
@@ -14,7 +12,7 @@ import {
   AccountDefaultValues,
 } from '@/utils/schemas/AccountSchema';
 import axiosInstance from '@/utils/axiosInstance';
-import { getUsername } from '@/utils/localStorage';
+import { getUsername, getAvatar } from '@/utils/localStorage';
 import { signOut } from 'next-auth/react';
 import { removeUserData } from '@/utils/localStorage';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -22,27 +20,15 @@ import FormControl from '@mui/material/FormControl';
 import CircularProgress from '@mui/material/CircularProgress';
 import { HexColorPicker } from 'react-colorful';
 
-const DropzoneContainer = styled(Box)(({ theme }) => ({
-  border: '2px dashed #ccc',
-  borderRadius: '8px',
-  padding: theme.spacing(3),
-  textAlign: 'center',
-  cursor: 'pointer',
-  '&:hover': {
-    borderColor: theme.palette.primary.main,
-  },
-}));
-
 const AccountPage = ({ showAppMessage }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [color, setColor] = useState('#1976d2');
+  const [color, setColor] = useState(getAvatar() || '#1976d2');
   const [submitting, setSubmitting] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState(null);
   const [exercises, setExercises] = useState([]);
-  const [avatar, setAvatar] = useState(userData?.avatar || null);
   const [hasChanges, setHasChanges] = useState(false);
   const username = getUsername();
 
@@ -52,6 +38,11 @@ const AccountPage = ({ showAppMessage }) => {
         setLoading(true);
 
         const userResponse = await axiosInstance.get(`/api/users/${username}`);
+        setUserData({
+          ...userResponse.data,
+          firstName: userResponse.data.name,
+        });
+        setColor(userResponse.data.color || '#1976d2');
         const exercisesResponse = await axiosInstance.get(
           '/api/exercises/by-type'
         );
@@ -63,14 +54,7 @@ const AccountPage = ({ showAppMessage }) => {
         userResponse.data.favoriteExercise = exerciseData.find(
           (exercise) => exercise.id === userResponse.data.favoriteExercise
         );
-        setUserData({
-          ...userResponse.data,
-          firstName: userResponse.data.name,
-          avatar: null,
-        });
         setExercises(exerciseData);
-
-        setAvatar(userResponse.data.avatar || null);
       } catch (err) {
         setError('Could not fetch user data');
         showAppMessage({
@@ -86,24 +70,10 @@ const AccountPage = ({ showAppMessage }) => {
     fetchUserData();
   }, [username, showAppMessage]);
 
-  const handleAvatarChange = (acceptedFiles) => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
-      const preview = URL.createObjectURL(file);
-      setAvatar(preview);
-      setHasChanges(true);
-    }
-  };
-
   const handleResetFields = (resetForm) => {
     resetForm();
-    setAvatar(userData.avatar || null);
+    setColor(getAvatar() || '#1976d2');
     setHasChanges(false);
-  };
-
-  const handleDeleteAvatar = () => {
-    setAvatar(null);
-    setHasChanges(true);
   };
 
   const handleUpdateAccount = async (formData) => {
@@ -150,12 +120,6 @@ const AccountPage = ({ showAppMessage }) => {
     setDeleteDialogOpen(false);
   };
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: 'image/*',
-    maxFiles: 1,
-    onDrop: handleAvatarChange,
-  });
-
   if (loading) return <Typography>Loading...</Typography>;
   if (error) return <Typography>{error}</Typography>;
   return (
@@ -196,7 +160,6 @@ const AccountPage = ({ showAppMessage }) => {
                   textAlign="center"
                 >
                   <Avatar
-                    src={avatar || undefined}
                     alt={username.charAt(0).toUpperCase()}
                     sx={{
                       width: 100,
@@ -206,27 +169,15 @@ const AccountPage = ({ showAppMessage }) => {
                       margin: '0 auto',
                     }}
                   >
-                    {!avatar && username.charAt(0).toUpperCase()}
+                    {username.charAt(0).toUpperCase()}
                   </Avatar>
-                  <HexColorPicker color={color} onChange={setColor} />
-                  <DropzoneContainer {...getRootProps()} sx={{ mt: 2 }}>
-                    <input {...getInputProps()} />
-                    <Typography variant="body1">
-                      Drag & drop your avatar here, or click to select
-                    </Typography>
-                    <Typography variant="caption">
-                      (Only one image file is allowed)
-                    </Typography>
-                  </DropzoneContainer>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={handleDeleteAvatar}
-                    disabled={!avatar}
-                    sx={{ mt: 2 }}
-                  >
-                    Delete Avatar
-                  </Button>
+                  <HexColorPicker
+                    color={color}
+                    onChange={(color) => {
+                      setHasChanges(true);
+                      setColor(color);
+                    }}
+                  />
                 </Grid>
                 <Box
                   sx={{
