@@ -47,6 +47,7 @@ public class UserService {
             user.setWeight(updatedUser.getWeight());
             user.setHeight(updatedUser.getHeight());
             user.setFavoriteExercise(updatedUser.getFavoriteExercise());
+            user.setAvatar(updatedUser.getAvatar());
             return userRepository.save(user);
         });
     }

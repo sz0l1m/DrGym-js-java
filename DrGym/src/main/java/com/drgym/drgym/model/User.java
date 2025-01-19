@@ -71,13 +71,14 @@ public class User {
         this.email = email;
     }
 
-    public User(String username, String name, String surname, Double weight, Double height, Long favoriteExercise) {
+    public User(String username, String name, String surname, Double weight, Double height, Long favoriteExercise, String avatar) {
         this.username = username;
         this.name = name;
         this.surname = surname;
         this.weight = weight;
         this.height = height;
         this.favoriteExercise = favoriteExercise;
+        this.avatar = avatar;
     }
 
     public User(String email, String newPassword, String token) {
