@@ -20,6 +20,7 @@ import { removeUserData } from '@/utils/localStorage';
 import Autocomplete from '@mui/material/Autocomplete';
 import FormControl from '@mui/material/FormControl';
 import CircularProgress from '@mui/material/CircularProgress';
+import { HexColorPicker } from 'react-colorful';
 
 const DropzoneContainer = styled(Box)(({ theme }) => ({
   border: '2px dashed #ccc',
@@ -35,6 +36,7 @@ const DropzoneContainer = styled(Box)(({ theme }) => ({
 const AccountPage = ({ showAppMessage }) => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [color, setColor] = useState('#1976d2');
   const [submitting, setSubmitting] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -200,12 +202,13 @@ const AccountPage = ({ showAppMessage }) => {
                       width: 100,
                       height: 100,
                       fontSize: 40,
-                      backgroundColor: 'primary.main',
+                      backgroundColor: color,
                       margin: '0 auto',
                     }}
                   >
                     {!avatar && username.charAt(0).toUpperCase()}
                   </Avatar>
+                  <HexColorPicker color={color} onChange={setColor} />
                   <DropzoneContainer {...getRootProps()} sx={{ mt: 2 }}>
                     <input {...getInputProps()} />
                     <Typography variant="body1">
