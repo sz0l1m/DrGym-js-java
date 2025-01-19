@@ -84,7 +84,7 @@ const Workouts = ({ showAppMessage }) => {
         )}
       </Grid>
       <WorkoutForm
-        dialogTitle="Add new workout"
+        dialogTitle="Add workout"
         popupType="new"
         popupStatus={dialogOpen}
         togglePopup={setDialogOpen}

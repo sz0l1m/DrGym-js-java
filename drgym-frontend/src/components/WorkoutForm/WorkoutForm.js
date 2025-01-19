@@ -151,15 +151,22 @@ export default function WorkoutForm({
     }
     try {
       actions.setSubmitting(true);
+      let activities;
+      if (popupType === 'new') {
+        activities = activityList;
+      } else {
+        activities = activityList.map(({ id, ...activity }) => activity);
+      }
+
       const response = await axiosInstance.post(`/api/workouts/create`, {
         username: username,
         description: values.description,
         startDate: values.startDate.toISOString(),
         endDate: values.endDate.toISOString(),
-        activities: activityList,
+        activities: activities,
       });
 
-      onAddWorkout();
+      popupType === 'new' ? onAddWorkout() : onEditWorkout();
       handleClose();
       showAppMessage({
         status: true,
@@ -167,6 +174,7 @@ export default function WorkoutForm({
         type: 'success',
       });
     } catch (error) {
+      console.error(error);
       showAppMessage({
         status: true,
         text: 'Error adding workout',
@@ -258,9 +266,9 @@ export default function WorkoutForm({
               }
         }
         onSubmit={(values, actions) =>
-          popupType === 'new'
-            ? handleAddWorkout(values, actions)
-            : handleEditWorkout(values, actions)
+          popupType === 'edit'
+            ? handleEditWorkout(values, actions)
+            : handleAddWorkout(values, actions)
         }
         validationSchema={schema}
       >
@@ -334,7 +342,7 @@ export default function WorkoutForm({
                   multiline
                 />
               </Box>
-              {popupType === 'edit' && (
+              {popupType !== 'new' && (
                 <>
                   <Divider sx={{ mb: 2, mt: 1 }} />
                   <Typography variant="h6" sx={{ mt: 0 }}>
@@ -582,14 +590,14 @@ export default function WorkoutForm({
                 type="submit"
                 variant="contained"
                 disabled={isSubmitting}
-                startIcon={popupType === 'new' ? <AddIcon /> : <EditIcon />}
+                startIcon={popupType === 'edit' ? <EditIcon /> : <AddIcon />}
                 endIcon={
                   isSubmitting && (
                     <CircularProgress color="secondary" size={18} />
                   )
                 }
               >
-                {popupType === 'new' ? 'Add Workout' : 'Edit Workout'}
+                {dialogTitle}
               </Button>
             </DialogActions>
           </Form>

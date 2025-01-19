@@ -12,6 +12,7 @@ import WorkoutForm from '@/components/WorkoutForm';
 import WorkoutInfo from '@/components/WorkoutInfo';
 import axiosInstance from '@/utils/axiosInstance';
 import DeleteConfirmation from '@/components/DeleteConfirmation';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { formatDate, formatRelativeTime } from '@/utils/dateUtils';
 import Grid from '@mui/material/Grid2';
 import { Typography } from '@mui/material';
@@ -27,6 +28,7 @@ export default function WorkoutCard({
   const [anchorEl, setAnchorEl] = useState(null);
   const [openDeleteConfirmation, setOpenDeleteConfirmation] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [popupType, setPopupType] = useState('');
   const [loading, setLoading] = useState(false);
 
   const menuOpen = Boolean(anchorEl);
@@ -105,9 +107,23 @@ export default function WorkoutCard({
               horizontal: 'right',
             }}
           >
-            <MenuItem onClick={() => setOpenDialog(true)}>
+            <MenuItem
+              onClick={() => {
+                setPopupType('edit');
+                setOpenDialog(true);
+              }}
+            >
               <EditIcon sx={{ mr: 1 }} />
               Edit
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setPopupType('copy');
+                setOpenDialog(true);
+              }}
+            >
+              <ContentCopyIcon sx={{ mr: 1 }} />
+              Copy
             </MenuItem>
             <MenuItem onClick={() => setOpenDeleteConfirmation(true)}>
               <DeleteForeverIcon sx={{ mr: 1 }} />
@@ -117,8 +133,8 @@ export default function WorkoutCard({
           <WorkoutInfo workout={workout} />
         </Card>
         <WorkoutForm
-          dialogTitle="Edit workout"
-          popupType="edit"
+          dialogTitle={popupType === 'edit' ? 'Edit workout' : 'Copy workout'}
+          popupType={popupType}
           popupStatus={openDialog}
           togglePopup={setOpenDialog}
           workout={workout}

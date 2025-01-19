@@ -31,8 +31,6 @@ const Calendar = ({ username }) => {
         ).toISOString(),
         'yyyy-MM-dd'
       );
-      console.log('currentDate', currentDate);
-      console.log('oneYearAgoDate', oneYearAgoDate);
       try {
         setLoading(true);
         // setTimeout(() => {
@@ -44,7 +42,6 @@ const Calendar = ({ username }) => {
         const response = await axiosInstance.get(
           `/api/users/${username}/daily-exercise-count?startDate=${oneYearAgoDate}&endDate=${currentDate}`
         );
-        console.log('response', response.data);
         setCalendarData(
           addStartAndEndDate(response.data, oneYearAgoDate, yesterdayDate)
         );
