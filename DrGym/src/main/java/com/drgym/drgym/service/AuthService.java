@@ -70,7 +70,7 @@ public class AuthService {
 
             response.addCookie(cookie);
 
-            return ResponseEntity.ok(new LoginResponse(user.getUsername()));
+            return ResponseEntity.ok(new LoginResponse(user.getUsername(), user.getAvatar()));
         } else {
             return ResponseEntity.status(401).body("Invalid credentials");
         }
@@ -90,9 +90,11 @@ public class AuthService {
 
     public static class LoginResponse {
         private String username;
+        private String avatar;
 
-        public LoginResponse(String username) {
+        public LoginResponse(String username, String avatar) {
             this.username = username;
+            this.avatar = avatar;
         }
 
         public String getUsername() {
@@ -101,6 +103,14 @@ public class AuthService {
 
         public void setUsername(String username) {
             this.username = username;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
         }
     }
 

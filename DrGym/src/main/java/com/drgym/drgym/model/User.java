@@ -34,6 +34,9 @@ public class User {
     @Column(name = "favorite_exercise")
     private Long favoriteExercise;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @Transient
     private String token;
 
@@ -160,4 +163,8 @@ public class User {
     public void setIdentifier(String identifier) { this.identifier = identifier; }
 
     public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
+
+    public String getAvatar() { return avatar; }
+
+    public void setAvatar(String avatar) { this.avatar = avatar; }
 }

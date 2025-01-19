@@ -12,8 +12,6 @@ import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import com.drgym.drgym.service.PostService;
-import com.drgym.drgym.service.PostReactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,18 +54,20 @@ public class UserController {
             if (u.getFavoriteExercise() != null) {
                 exerciseName = exerciseService.findById(u.getFavoriteExercise()).map(Exercise::getName).orElse(null);
             }
-            return ResponseEntity.ok(new UserDTO(u.getUsername(), u.getName(), u.getSurname(), u.getWeight(), u.getHeight(), u.getFavoriteExercise(), exerciseName));
+            return ResponseEntity.ok(new UserDTO(u.getUsername(), u.getName(), u.getSurname(), u.getWeight(), u.getHeight(), u.getFavoriteExercise(), exerciseName, u.getAvatar()));
         }).orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/search/{search}")
     public ResponseEntity<?> getUserSearch(@PathVariable String search) {
         List<User> users = userService.findBySearch(search);
-        List<String> usernames = users.stream()
-                .map(User::getUsername)
+        List<UserSearch> usernames = users.stream()
+                .map(user -> new UserSearch(user.getUsername(), user.getAvatar()))
                 .toList();
         return ResponseEntity.ok(usernames);
     }
+
+    private record UserSearch(String username, String avatar) {}
 
     @DeleteMapping("/{username}")
     public ResponseEntity<?> deleteUser(@PathVariable String username, HttpServletRequest request) {
@@ -154,7 +154,7 @@ public class UserController {
         }
     }
 
-    private record UserDTO(String username, String name, String surname, Double weight, Double height, Long favoriteExercise, String favoriteExerciseName) {}
+    private record UserDTO(String username, String name, String surname, Double weight, Double height, Long favoriteExercise, String favoriteExerciseName, String avatar) {}
 
     private String getJwtTokenFromCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
