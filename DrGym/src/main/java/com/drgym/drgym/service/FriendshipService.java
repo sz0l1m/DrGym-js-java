@@ -2,14 +2,12 @@ package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.Friendship;
 import com.drgym.drgym.model.FriendshipInvitation;
+import com.drgym.drgym.model.User;
 import com.drgym.drgym.repository.FriendshipRepository;
 import com.drgym.drgym.repository.FriendshipInvitationRepository;
 import com.drgym.drgym.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,7 +33,8 @@ public class FriendshipService {
         return friendships.stream()
                 .map(friendship -> {
                     String friendUsername = friendship.getFriend1Username().equals(username) ? friendship.getFriend2Username() : friendship.getFriend1Username();
-                    return new UserFriendDTO(friendUsername, friendship.getCreatedAt());
+                    String avatar = userRepository.findByUsername(friendUsername).map(User::getAvatar).orElse(null);
+                    return new UserFriendDTO(friendUsername, friendship.getCreatedAt(), avatar);
                 })
                 .collect(Collectors.toList());
     }
@@ -44,7 +43,10 @@ public class FriendshipService {
     public List<FriendRequestDTO> getUserFriendshipInvitations(String username) {
         List<FriendshipInvitation> invitations = friendshipInvitationRepository.findByWhoReceiveUsername(username);
         return invitations.stream()
-                .map(invitation -> new FriendRequestDTO(invitation.getId(), invitation.getWhoSendUsername(), invitation.getWhoReceiveUsername(), invitation.getSendTime()))
+                .map(invitation -> {
+                    String avatar = userRepository.findByUsername(invitation.getWhoSendUsername()).map(User::getAvatar).orElse(null);
+                    return new FriendRequestDTO(invitation.getId(), invitation.getWhoSendUsername(), invitation.getWhoReceiveUsername(), avatar);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -119,9 +121,11 @@ public class FriendshipService {
     public static class UserFriendDTO {
         private String username;
         private LocalDateTime date;
+        private String avatar;
 
-        public UserFriendDTO(String username, LocalDateTime date) {
+        public UserFriendDTO(String username, LocalDateTime date, String avatar) {
             this.username = username;
+            this.avatar = avatar;
             this.date = date;
         }
 
@@ -140,19 +144,25 @@ public class FriendshipService {
         public void setDate(LocalDateTime date) {
             this.date = date;
         }
+
+        public String getAvatar() { return avatar; }
+
+        public void setAvatar(String avatar) { this.avatar = avatar; }
     }
 
     public static class FriendRequestDTO {
         private Long id;
         private String sender;
         private String receiver;
+        private String avatar;
 
         public FriendRequestDTO() {}
 
-        public FriendRequestDTO(Long id, String sender, String receiver, LocalDateTime sendTime) {
+        public FriendRequestDTO(Long id, String sender, String receiver, String avatar) {
             this.id = id;
             this.sender = sender;
             this.receiver = receiver;
+            this.avatar = avatar;
         }
 
         public Long getId() {
@@ -178,5 +188,9 @@ public class FriendshipService {
         public void setReceiver(String receiver) {
             this.receiver = receiver;
         }
+
+        public String getAvatar() { return avatar; }
+
+        public void setAvatar(String avatar) { this.avatar = avatar; }
     }
 }
