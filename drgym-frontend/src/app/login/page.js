@@ -24,6 +24,7 @@ import { withSnackbar } from '@/utils/snackbarProvider';
 import CustomInput from '@/components/CustomInput';
 import { signIn } from 'next-auth/react';
 import axios from 'axios';
+import { string } from 'yup';
 
 const Root = styled('div')(({ theme }) => ({
   width: '100%',
@@ -86,9 +87,7 @@ const LoginContent = ({ csrfToken = null, showAppMessage }) => {
       }
 
       localStorage.setItem('username', username);
-      if (avatar) {
-        localStorage.setItem('avatar', avatar);
-      }
+      localStorage.setItem('avatar', avatar ? avatar : stringToColor(username));
 
       await signIn('credentials', {
         username: username,
@@ -115,6 +114,24 @@ const LoginContent = ({ csrfToken = null, showAppMessage }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const stringToColor = (string) => {
+    let hash = 0;
+    let i;
+
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+
+    return color;
   };
 
   return (

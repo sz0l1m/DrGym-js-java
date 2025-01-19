@@ -42,7 +42,7 @@ const AccountPage = ({ showAppMessage }) => {
           ...userResponse.data,
           firstName: userResponse.data.name,
         });
-        setColor(userResponse.data.color || '#1976d2');
+        setColor(getAvatar() || '#1976d2');
         const exercisesResponse = await axiosInstance.get(
           '/api/exercises/by-type'
         );
@@ -81,8 +81,9 @@ const AccountPage = ({ showAppMessage }) => {
       const respone = await axiosInstance.put(`/api/users/update`, {
         ...formData,
         name: formData.firstName,
-        favoriteExercise: formData.exercise.id,
+        favoriteExercise: formData.exercise?.id,
       });
+      localStorage.setItem('avatar', color);
       showAppMessage({
         status: true,
         text: 'Account updated successfully',
