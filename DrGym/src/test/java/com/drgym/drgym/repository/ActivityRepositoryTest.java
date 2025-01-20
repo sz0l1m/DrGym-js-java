@@ -37,7 +37,6 @@ class ActivityRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        // Create and save a test user
         testUser = new User();
         testUser.setUsername("testuser");
         testUser.setEmail("testuser@example.com");
@@ -47,11 +46,9 @@ class ActivityRepositoryTest {
         testUser.setVerified(true);
         userRepository.save(testUser);
 
-        // Create and save a test workout
         testWorkout = new Workout(LocalDateTime.now(), testUser.getUsername(), LocalDateTime.now().plusHours(1), "Test Description", LocalDateTime.now());
         workoutRepository.save(testWorkout);
 
-        // Create and save a test activity
         testActivity = new Activity(1L, 10L, 20L, Timestamp.valueOf(LocalDateTime.now()), testWorkout.getId());
         activityRepository.save(testActivity);
     }
