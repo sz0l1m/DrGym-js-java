@@ -30,6 +30,9 @@ Kolumny:
 - `favorite_exercise`: ulubione ćwiczenie
 - `avatar`: kolor tła awataru
 
+Wyzwalacze:
+- `update_token_on_verified`: ustawia wartość `verified` na `true` po weryfikacji konta
+
 #### **Token**
 Przechowuje informacje o tokenach potrzebnych do weryfikacji oraz resetowania hasła.
 
@@ -52,6 +55,9 @@ Relacje:
 - Klucz obcy `fk_who_receive` odnosi się do kolumny `username` w tabeli `users`.
 - Klucz obcy `fk_who_send` odnosi się do kolumny `username` w tabeli `users`.
 
+Wyzwalacze:
+- `tg_block_duplicate_invitations`: blokuje duplikaty zaproszeń
+
 #### **Friendships**
 Przechowuje informacje o znajomościach między użytkownikami.
 
@@ -64,6 +70,9 @@ Kolumny:
 Relacje:
 - Klucz obcy `fk_user1` odnosi się do kolumny `username` w tabeli `users`.
 - Klucz obcy `fk_user2` odnosi się do kolumny `username` w tabeli `users`.
+
+Wyzwalacze:
+- `delete_invitation_after_friendship`: usuwa zaproszenie po zaakceptowaniu znajomości
 
 #### **Exercises**
 Przechowuje informacje o bazowych ćwiczeniach.
@@ -138,6 +147,9 @@ Relacje:
 - Klucz obcy `fk_username` odnosi się do kolumny `username` w tabeli `users`.
 - Klucz obcy `fk_workout_id` odnosi się do kolumny `workout_id` w tabeli `workouts`.
 
+Wyzwalacze:
+- `update_is_posted`: ustawia wartość `is_posted` w konkretnym treningu na `true` po dodaniu posta
+
 #### **Post_reactions**
 Przechowuje informacje o reakcjach użytkowników na posty.
 
@@ -163,3 +175,25 @@ Kolumny:
 Relacje:
 - Klucz obcy `fk_author_username` odnosi się do kolumny `username` w tabeli `users`.
 - Klucz obcy `fk_post_id` odnosi się do kolumny `post_id` w tabeli `posts`.
+
+### Funkcje
+
+#### **Are_friends**
+Sprawdza, czy dwaj użytkownicy są znajomymi.
+
+#### **Get_friends_count**
+Zwraca liczbę znajomych danego użytkownika.
+
+#### **Get_user_daily_exercise_count**
+Zwraca liczbę aktywności danego użytkownika w ciągu jednego dnia dla konkretnego okresu.
+
+#### **Get_user_exercises_in_period**
+Zwraca liczbę aktywności i przećwiczonych mięśni w konkretnym okresie.
+
+### Procedury
+
+#### **Get_user_friend_requests_with_avatar**
+Zwraca listę zaproszeń do znajomych z awatarem (kolorem) każdego użytkownika.
+
+#### **Get_user_friends_with_avatar**
+Zwraca listę znajomych z awatarem (kolorem) każdego użytkownika.
