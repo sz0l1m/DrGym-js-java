@@ -1,6 +1,7 @@
 package com.drgym.drgym.repository;
 
 import com.drgym.drgym.model.Post;
+import com.drgym.drgym.model.PostReaction;
 import com.drgym.drgym.model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +16,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-class PostRepositoryTest {
+class PostReactionRepositoryTest {
+
+    @Autowired
+    private PostReactionRepository postReactionRepository;
 
     @Autowired
     private PostRepository postRepository;
@@ -27,6 +30,7 @@ class PostRepositoryTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private PostReaction testReaction;
     private Post testPost;
     private User testUser;
 
@@ -47,10 +51,18 @@ class PostRepositoryTest {
         testPost.setTitle("Test Title");
         testPost.setContent("Test Content");
         postRepository.save(testPost);
+
+        testReaction = new PostReaction();
+        testReaction.setPostId(testPost.getId());
+        testReaction.setAuthorUsername("testuser");
+        postReactionRepository.save(testReaction);
     }
 
     @AfterEach
     void tearDown() {
+        if (testReaction != null) {
+            postReactionRepository.delete(testReaction);
+        }
         if (testPost != null) {
             postRepository.delete(testPost);
         }
@@ -60,16 +72,21 @@ class PostRepositoryTest {
     }
 
     @Test
-    void testFindByUsername() {
-        List<Post> posts = postRepository.findByUsername("testuser", Sort.by(Sort.Direction.DESC, "date"));
-        assertFalse(posts.isEmpty());
-        assertEquals("testuser", posts.get(0).getUsername());
+    void testFindByPostId() {
+        List<PostReaction> reactions = postReactionRepository.findByPostId(testPost.getId());
+        assertFalse(reactions.isEmpty());
+        assertEquals("testuser", reactions.get(0).getAuthorUsername());
     }
 
     @Test
-    void testFindByUsernameIn() {
-        List<Post> posts = postRepository.findByUsernameIn(List.of("testuser"), Sort.by(Sort.Direction.DESC, "date"));
-        assertFalse(posts.isEmpty());
-        assertEquals("testuser", posts.get(0).getUsername());
+    void testCountByPostId() {
+        int count = postReactionRepository.countByPostId(testPost.getId());
+        assertEquals(1, count);
+    }
+
+    @Test
+    void testExistsByPostIdAndAuthorUsername() {
+        boolean exists = postReactionRepository.existsByPostIdAndAuthorUsername(testPost.getId(), "testuser");
+        assertTrue(exists);
     }
 }
