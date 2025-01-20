@@ -1,4 +1,3 @@
-// src/test/java/com/drgym/drgym/service/PostReactionServiceTest.java
 package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.PostReaction;
