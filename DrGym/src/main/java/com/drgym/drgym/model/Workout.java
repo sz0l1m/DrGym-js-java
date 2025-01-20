@@ -50,6 +50,7 @@ public class Workout {
 
     // getters and setters
     public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     public LocalDateTime getStartDate() { return startDate; }
     public void setStartDate(LocalDateTime startDate) { this.startDate = startDate; }
     public LocalDateTime getEndDate() { return endDate; }
