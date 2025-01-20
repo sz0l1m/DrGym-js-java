@@ -155,17 +155,6 @@ CREATE TABLE POST_REACTIONS
 )
     /
 --TRIGGERS--------------------------------------------------------------------------------------------------------------
-CREATE OR REPLACE TRIGGER TG_DIFFERENT_USERS_CHECK
-    before insert
-    on FRIENDSHIPS
-    for each row
-BEGIN
-    IF :NEW.FRIEND1_USERNAME = :NEW.FRIEND2_USERNAME THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Friendship cannot be CREATEd with only 1 user!');
-END IF;
-END;
-/
-
 CREATE OR REPLACE TRIGGER DELETE_INVITATION_AFTER_FRIENDSHIP
 AFTER INSERT ON FRIENDSHIPS
 FOR EACH ROW
