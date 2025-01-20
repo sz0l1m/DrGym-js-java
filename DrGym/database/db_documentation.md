@@ -2,6 +2,15 @@
 
 ---
 
+## Opis rozwiązania
+Baza danych przechowuje informacje potrzebne do działania aplikacji DrGym.
+Zawiera informacje o użytkownikach, znajomościach między nimi, bazowych ćwiczeniach z połączonymi mięśniami, aktywnościach i treningach użytkowników, ich postach oraz reakcjach na posty.
+Każdy użytkownik ma możliwość dodawania znajomych, tworzenia treningów dodając do nich własne aktywności, publikowania postów z utworzonymi treningami oraz reagowania na posty innych użytkowników.
+Posty użytkowników są dostępne tylko dla ich znajomych.
+Użytkownik, zakładając konto, otrzymuje token weryfikacyjny na podany adres e-mail, który musi potwierdzić, aby móc korzystać z aplikacji.
+
+---
+
 ## Struktura bazy danych
 
 ### Tabele
@@ -20,6 +29,15 @@ Kolumny:
 - `verified`: czy konto zostało zweryfikowane przez e-mail
 - `favorite_exercise`: ulubione ćwiczenie
 - `avatar`: kolor tła awataru
+
+#### **Token**
+Przechowuje informacje o tokenach potrzebnych do weryfikacji oraz resetowania hasła.
+
+Kolumny:
+- `email`: adres e-mail
+- `verification_token`: token weryfikacyjny e-mail
+- `reset_token`: token resetowania hasła
+- `reset_expiry`: data ważności tokenu resetowania hasła
 
 #### **Friendship_invitations**
 Przechowuje informacje o zaproszeniach do znajomych.
@@ -132,3 +150,16 @@ Relacje:
 - Klucz obcy `fk_reaction_post_id` odnosi się do kolumny `post_id` w tabeli `posts`.
 - Klucz obcy `fk_reaction_username` odnosi się do kolumny `username` w tabeli `users`.
 
+#### **Post_comments**
+Przechowuje informacje o komentarzach użytkowników pod postami.
+
+Kolumny:
+- `post_comment_id`: unikalny identyfikator
+- `post_id`: identyfikator posta
+- `author_username`: nazwa autora komentarza
+- `content`: treść komentarza
+- `post_comment_date`: data utworzenia
+
+Relacje:
+- Klucz obcy `fk_author_username` odnosi się do kolumny `username` w tabeli `users`.
+- Klucz obcy `fk_post_id` odnosi się do kolumny `post_id` w tabeli `posts`.
