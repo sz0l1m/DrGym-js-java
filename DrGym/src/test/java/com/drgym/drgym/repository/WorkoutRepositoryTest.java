@@ -35,7 +35,6 @@ class WorkoutRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        // Create and save a test user
         testUser = new User();
         testUser.setUsername("testuser");
         testUser.setEmail("testuser@example.com");
