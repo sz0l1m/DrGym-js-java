@@ -44,7 +44,6 @@ class AuthServiceTest {
 
     @Test
     void testLogin() {
-        // Create a user for testing
         testUser = new User();
         testUser.setEmail("test@example.com");
         testUser.setUsername("testuser");
@@ -54,7 +53,6 @@ class AuthServiceTest {
         testUser.setVerified(true);
         userRepository.save(testUser);
 
-        // Attempt to login
         MockHttpServletResponse mockResponse = new MockHttpServletResponse();
         ResponseEntity<?> responseEntity = authService.login("test@example.com", "testpassword", mockResponse);
 
@@ -81,7 +79,6 @@ class AuthServiceTest {
 
     @Test
     void testVerify() {
-        // Create a user and token for testing
         testUser = new User();
         testUser.setEmail("verify@example.com");
         testUser.setUsername("verifyuser");
@@ -94,7 +91,6 @@ class AuthServiceTest {
         Token token = new Token(testUser.getEmail(), verificationToken);
         tokenRepository.save(token);
 
-        // Attempt to verify
         ResponseEntity<?> responseEntity = authService.verify(testUser.getEmail(), verificationToken);
 
         assertEquals(200, responseEntity.getStatusCodeValue());
