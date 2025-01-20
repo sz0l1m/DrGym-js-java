@@ -11,4 +11,6 @@ public interface TokenRepository extends JpaRepository<Token, String> {
 
     @Query("SELECT t FROM Token t WHERE t.email = :email AND t.resetToken = :token AND t.resetTokenExpiry > CURRENT_TIMESTAMP")
     Token findByEmailAndResetToken(@Param("email") String email, @Param("token") String token);
+
+    void deleteAllByEmail(String email);
 }
