@@ -1,5 +1,50 @@
 import { requestToBodyStream } from 'next/dist/server/body-streams';
 
+const videos = {
+  cardio: [
+    {
+      name: 'Sprinting',
+      videoId: '_JoblP7fggo',
+    },
+    {
+      name: 'Jogging',
+      videoId: 'NH4bYCenMxQ',
+    },
+    {
+      name: 'Cycling',
+      videoId: 'okNiCOOAHLE',
+    },
+  ],
+  strength: [
+    {
+      name: 'Pull up',
+      videoId: 'okNiCOOAHLE',
+    },
+    {
+      name: 'Machine tricep extension',
+      videoId: '_JoblP7fggo',
+    },
+    {
+      name: 'Barbell squat',
+      videoId: 'NH4bYCenMxQ',
+    },
+  ],
+  crossfit: [
+    {
+      name: 'Burpees',
+      videoId: 'NH4bYCenMxQ',
+    },
+    {
+      name: 'Kettlebell swings',
+      videoId: '_JoblP7fggo',
+    },
+    {
+      name: 'Wall balls',
+      videoId: 'okNiCOOAHLE',
+    },
+  ],
+};
+
 const cardioExercises = [
   {
     exerciseId: 71,
@@ -122,7 +167,14 @@ const calendarData = [
   { date: '2024-12-31', count: 10, level: 3 },
 ];
 
-export { bodyData, cardioExercises, strengthExercises, calendarData, friends };
+export {
+  videos,
+  bodyData,
+  cardioExercises,
+  strengthExercises,
+  calendarData,
+  friends,
+};
 
 // const calendarData = [
 //   { date: '2024-01-01', count: 2, level: 1 },
