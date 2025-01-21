@@ -16,6 +16,7 @@ import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined';
 import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
 
 const HomePage = () => {
+  const [expanded, setExpanded] = useState(false);
   const [exerciseType, setExerciseType] = useState('strength');
   const [exerciseData, setExerciseData] = useState({
     cardio: [],
@@ -34,6 +35,10 @@ const HomePage = () => {
 
   const handleTypeChange = (event, newType) => {
     setExerciseType(newType);
+  };
+
+  const handleAccordionChange = (panel) => (event, newExpanded) => {
+    setExpanded(newExpanded ? panel : false);
   };
 
   return (
@@ -68,7 +73,11 @@ const HomePage = () => {
 
       <Box sx={{ width: '100%', margin: '0 auto', my: 4 }}>
         {exerciseData[exerciseType].map((exercise, index) => (
-          <Accordion key={index}>
+          <Accordion
+            key={index}
+            expanded={expanded === index}
+            onChange={handleAccordionChange(index)}
+          >
             <AccordionSummary
               expandIcon={<ExpandMoreIcon />}
               aria-controls={`panel${index + 1}-content`}
