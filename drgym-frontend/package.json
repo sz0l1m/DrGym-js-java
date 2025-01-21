@@ -26,6 +26,7 @@
     "react-colorful": "^5.6.1",
     "react-dom": "^18.3.1",
     "react-dropzone": "^14.3.5",
+    "react-youtube": "^10.1.0",
     "yup": "^1.4.0",
     "yup-password": "^0.4.0"
   },
