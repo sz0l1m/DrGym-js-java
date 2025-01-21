@@ -294,7 +294,7 @@ export default function WorkoutForm({
                     }}
                     name="startDate"
                     value={values.startDate}
-                    maxDate={values.endDate || undefined}
+                    maxDateTime={values.endDate || undefined}
                     onChange={(newValue) => {
                       setFieldValue('startDate', newValue);
                     }}
@@ -314,7 +314,7 @@ export default function WorkoutForm({
                     }}
                     name="endDate"
                     value={values.endDate}
-                    minDate={values.startDate || undefined}
+                    minDateTime={values.startDate || undefined}
                     onChange={(newValue) => {
                       setFieldValue('endDate', newValue);
                     }}
