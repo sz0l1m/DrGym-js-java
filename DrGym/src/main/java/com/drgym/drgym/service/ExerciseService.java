@@ -48,15 +48,15 @@ public class ExerciseService {
         Map<String, List<ExerciseDTO>> exercisesByType = new HashMap<>();
         exercisesByType.put("strength", exercises.stream()
                 .filter(exercise -> exercise.getType() == 'S')
-                .map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName()))
+                .map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName(), exercise.getVideoId()))
                 .collect(Collectors.toList()));
         exercisesByType.put("cardio", exercises.stream()
                 .filter(exercise -> exercise.getType() == 'C')
-                .map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName()))
+                .map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName(), exercise.getVideoId()))
                 .collect(Collectors.toList()));
         exercisesByType.put("crossfit", exercises.stream()
                 .filter(exercise -> exercise.getType() == 'F')
-                .map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName()))
+                .map(exercise -> new ExerciseDTO(exercise.getId(), exercise.getName(), exercise.getVideoId()))
                 .collect(Collectors.toList()));
         return exercisesByType;
     }
@@ -69,10 +69,12 @@ public class ExerciseService {
     public static class ExerciseDTO {
         private Long id;
         private String name;
+        private String videoId;
 
-        public ExerciseDTO(Long id, String name) {
+        public ExerciseDTO(Long id, String name, String videoId) {
             this.id = id;
             this.name = name;
+            this.videoId = videoId;
         }
 
         public Long getId() {
@@ -82,5 +84,7 @@ public class ExerciseService {
         public String getName() {
             return name;
         }
+
+        public String getVideoId() { return videoId; }
     }
 }
