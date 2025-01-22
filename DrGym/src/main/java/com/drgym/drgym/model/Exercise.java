@@ -22,6 +22,9 @@ public class Exercise {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "video_id")
+    private String videoId;
+
     @ElementCollection
     @CollectionTable(name = "exercises_muscles", joinColumns = @JoinColumn(name = "exercise_id"))
     @Column(name = "muscle_id")
@@ -35,6 +38,14 @@ public class Exercise {
         this.kcalBurned = kcalBurned;
         this.name = name;
         this.musclesWorked = musclesWorked;
+    }
+
+    public Exercise(char type, Long kcalBurned, String name, List<String> musclesWorked, String videoId) {
+        this.type = type;
+        this.kcalBurned = kcalBurned;
+        this.name = name;
+        this.musclesWorked = musclesWorked;
+        this.videoId = videoId;
     }
 
     public Long getId() {
@@ -75,5 +86,13 @@ public class Exercise {
 
     public void setMusclesWorked(List<String> musclesWorked) {
         this.musclesWorked = musclesWorked;
+    }
+
+    public String getVideoId() {
+        return videoId;
+    }
+
+    public void setVideoId(String videoId) {
+        this.videoId = videoId;
     }
 }
