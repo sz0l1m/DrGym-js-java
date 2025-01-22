@@ -31,16 +31,16 @@ public class WorkoutScheduler {
 
         for (Workout workout : workouts) {
             Workout newWorkout = new Workout();
-            newWorkout.setStartDate(workout.getStartDate().plusWeeks(1));
-            newWorkout.setEndDate(workout.getEndDate().plusWeeks(1));
+            newWorkout.setStartDate(workout.getStartDate().plusDays(workout.getSchedule()));
+            newWorkout.setEndDate(workout.getEndDate().plusDays(workout.getSchedule()));
             newWorkout.setUsername(workout.getUsername());
             newWorkout.setDescription(workout.getDescription());
             newWorkout.setDateCreated(LocalDateTime.now());
             newWorkout.setPosted(false);
-            newWorkout.setSchedule(true);
+            newWorkout.setSchedule(workout.getSchedule());
             workoutRepository.save(newWorkout);
 
-            workout.setSchedule(false);
+            workout.setSchedule(0);
             workoutRepository.save(workout);
         }
     }
