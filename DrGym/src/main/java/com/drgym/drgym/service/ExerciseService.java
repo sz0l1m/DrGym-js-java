@@ -66,6 +66,10 @@ public class ExerciseService {
         return ResponseEntity.ok("Exercise created successfully");
     }
 
+    public Clob getExerciseRanking(String username, int exerciseId) {
+        return exerciseRepository.getExerciseRanking(username, exerciseId);
+    }
+
     public static class ExerciseDTO {
         private Long id;
         private String name;

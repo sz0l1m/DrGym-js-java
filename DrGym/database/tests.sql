@@ -58,6 +58,14 @@ BEGIN
 END;
 /
 
+DECLARE
+    result_clob CLOB;
+BEGIN
+    result_clob := GET_EXERCISE_RANKING('skuter', 1);
+    DBMS_OUTPUT.PUT_LINE(result_clob);
+END;
+/
+
 -- procedury
 DECLARE
 friends SYS_REFCURSOR;

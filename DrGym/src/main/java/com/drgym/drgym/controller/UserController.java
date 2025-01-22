@@ -143,6 +143,28 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{username}/ranking")
+    public ResponseEntity<?> getExerciseRanking(
+            @PathVariable String username,
+            @RequestParam int exerciseId,
+            HttpServletRequest request) {
+
+        if (!tokenOwner(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        try {
+            Clob rankingJson = exerciseService.getExerciseRanking(username, exerciseId);
+            if (rankingJson == null || rankingJson.length() == 0) {
+                return ResponseEntity.ok("[]");
+            }
+            String rankingJsonString = rankingJson.getSubString(1, (int) rankingJson.length());
+            return ResponseEntity.ok(rankingJsonString);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("ERROR while fetching exercise ranking.");
+        }
+    }
+
     @GetMapping("/{username}/daily-exercise-count")
     public ResponseEntity<?> getUserDailyExerciseCount(
             @PathVariable String username,
