@@ -82,6 +82,7 @@ Kolumny:
 - `type`: typ ćwiczenia (C - cardio, S - strength, F - crossfit)
 - `kcal_burned`: ilość spalonych kalorii na godzinę
 - `name`: nazwa ćwiczenia
+- `video_id`: identyfikator wideo z YouTube z instruktażem
 
 #### **Muscles**
 Przechowuje informacje o mięśniach.
@@ -128,6 +129,7 @@ Kolumny:
 - `description`: opis treningu
 - `created_datetime`: data utworzenia
 - `is_posted`: czy trening został opublikowany
+- `scheduled`: co ile dni trening ma się powtarzać
 
 Relacje:
 - Klucz obcy `fk_workout_username` odnosi się do kolumny `username` w tabeli `users`.
@@ -189,6 +191,9 @@ Zwraca liczbę aktywności danego użytkownika w ciągu jednego dnia dla konkret
 
 #### **Get_user_exercises_in_period**
 Zwraca liczbę aktywności i przećwiczonych mięśni w konkretnym okresie.
+
+#### **Get_exercise_ranking**
+Zwraca ranking ciężarów wybranego ćwiczenia dla konkretnego użytkownika i jego znajomych.
 
 ### Procedury
 
