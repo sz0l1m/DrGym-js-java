@@ -15,6 +15,6 @@ public interface WorkoutRepository extends JpaRepository <Workout, Long>{
     List<Workout> findByUsernameAndIsPostedFalse(String username, Sort sort);
     @Query("SELECT a FROM Activity a WHERE a.workoutId = :workoutId")
     List<Activity> findActivitiesByWorkoutId(@Param("workoutId") Long workoutId);
-    @Query("SELECT w FROM Workout w WHERE w.schedule = true AND w.startDate <= :endOfDay")
+    @Query("SELECT w FROM Workout w WHERE w.schedule > 0 AND w.startDate <= :endOfDay")
     List<Workout> findWorkoutsToSchedule(@Param("endOfDay") LocalDateTime endOfDay);
 }
