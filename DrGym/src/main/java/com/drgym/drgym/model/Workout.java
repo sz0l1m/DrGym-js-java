@@ -32,7 +32,7 @@ public class Workout {
     private boolean isPosted;
 
     @Column(name = "schedule")
-    private boolean schedule;
+    private int schedule;
 
     @Transient
     private List<Activity> activities;
@@ -51,7 +51,7 @@ public class Workout {
         this.dateCreated = dateCreated;
     }
 
-    public Workout(LocalDateTime startDate, String username, LocalDateTime endDate, String description, LocalDateTime dateCreated, boolean schedule) {
+    public Workout(LocalDateTime startDate, String username, LocalDateTime endDate, String description, LocalDateTime dateCreated, int schedule) {
         if (startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("Start date cannot be after end date");
         }
@@ -80,6 +80,6 @@ public class Workout {
     public void setActivities(List<Activity> activities) { this.activities = activities; }
     public boolean isPosted() { return isPosted; }
     public void setPosted(boolean posted) { isPosted = posted; }
-    public boolean getSchedule() { return schedule; }
-    public void setSchedule(boolean schedule) { this.schedule = schedule; }
+    public int getSchedule() { return schedule; }
+    public void setSchedule(int schedule) { this.schedule = schedule; }
 }
