@@ -1,17 +1,15 @@
 package com.drgym.drgym.controller;
 
-import com.drgym.drgym.model.Activity;
-import com.drgym.drgym.model.Workout;
-import com.drgym.drgym.model.Exercise;
-import com.drgym.drgym.service.ExerciseService;
+import com.drgym.drgym.model.*;
 import com.drgym.drgym.service.WorkoutService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpServletRequest;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,10 +21,10 @@ public class WorkoutController {
     private WorkoutService workoutService;
 
     @Autowired
-    private ExerciseService exerciseService;
+    private UserController userController;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getTraining(@PathVariable Long id) {
+    public ResponseEntity<?> getWorkout(@PathVariable Long id, HttpServletRequest request) {
         Optional<Workout> workoutOptional = workoutService.findById(id);
 
         if (workoutOptional.isEmpty()) {
@@ -34,97 +32,73 @@ public class WorkoutController {
         }
 
         Workout workout = workoutOptional.get();
+        String username = workout.getUsername();
+
+        if (!userController.tokenOwnerOrFriend(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
         List<Activity> activities = workoutService.findActivitiesByWorkoutId(id);
+        workout.setActivities(activities);
 
-        WorkoutResponse response = new WorkoutResponse(
-                workout.getId(),
-                workout.getDateStart(),
-                workout.getUsername(),
-                workout.getDateEnd(),
-                workout.getDescription(),
-                activities.stream()
-                        .map(a -> {
-                            String exerciseName = exerciseService.findById(a.getExerciseId())
-                                    .map(Exercise::getName)
-                                    .orElse("Unknown Exercise");
-
-                            return new ActivityResponse(
-                                    a.getId(),
-                                    a.getExerciseId(),
-                                    exerciseName,
-                                    a.getDuration(),
-                                    a.getWeight(),
-                                    a.getReps()
-                            );
-                        })
-                        .toList());
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(workout);
     }
 
-    @PostMapping
-    public ResponseEntity<Workout> createWorkout(@RequestBody Workout workout) {
-        Workout savedWorkout = workoutService.saveWorkout(workout);
-        return ResponseEntity.ok(savedWorkout);
+    @GetMapping("/private")
+    public ResponseEntity<?> getPrivateWorkouts(HttpServletRequest request) {
+        String username = userController.getUsernameFromToken(request);
+        if (userController.isTokenExpired(request) || username == null) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        List<Workout> privateWorkouts = workoutService.findPrivateWorkoutsByUsername(username);
+        LocalDateTime now = LocalDateTime.now();
+        List<Workout> pastWorkouts = new ArrayList<>();
+
+        for (Workout workout : privateWorkouts) {
+            if (workout.getStartDate().isBefore(now)) {
+                pastWorkouts.add(workout);
+            }
+        }
+
+        return ResponseEntity.ok(pastWorkouts);
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<?> createWorkout(@RequestBody WorkoutCreateRequest workoutRequest, HttpServletRequest request) {
+        String tokenUsername = userController.getUsernameFromToken(request);
+        if (userController.isTokenExpired(request) || !tokenUsername.equals(workoutRequest.getUsername())) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        return workoutService.createWorkout(workoutRequest);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteWorkout(@PathVariable Long id) {
+    public ResponseEntity<?> deleteWorkout(@PathVariable Long id, HttpServletRequest request) {
         Optional<Workout> workoutOptional = workoutService.findById(id);
 
         if (workoutOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        workoutService.deleteWorkout(id);
-        return ResponseEntity.noContent().build();
-    }
+        Workout workout = workoutOptional.get();
+        String username = workout.getUsername();
 
-    @PostMapping("/{workoutId}/activities/{activityId}")
-    public ResponseEntity<?> addActivityToWorkout(@PathVariable Long workoutId, @PathVariable Long activityId) {
-        workoutService.addActivityToWorkout(workoutId, activityId);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{workoutId}/activities/{activityId}")
-    public ResponseEntity<?> removeActivityFromWorkout(@PathVariable Long workoutId, @PathVariable Long activityId) {
-        workoutService.removeActivityFromWorkout(workoutId, activityId);
-        return ResponseEntity.noContent().build();
-    }
-
-    public record WorkoutResponse(
-            Long workoutId,
-            LocalDateTime startDate,
-            String username,
-            LocalDateTime endDate,
-            String description,
-            List<ActivityResponse> activities
-    ) {}
-
-    public record ActivityResponse(
-            Long activityId,
-            Long exerciseId,
-            String exerciseName,
-            LocalTime duration,
-            Long weight,
-            Long reps
-    ) {
-        public ActivityResponse(
-                Long activityId,
-                Long exerciseId,
-                String exerciseName,
-                Timestamp duration,
-                Long weight,
-                Long reps
-        ) {
-            this(
-                    activityId,
-                    exerciseId,
-                    exerciseName,
-                    (duration != null) ? duration.toLocalDateTime().toLocalTime() : null,
-                    weight,
-                    reps
-            );
+        if (!userController.tokenOwner(username, request)) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
         }
+
+        return workoutService.deleteWorkout(id);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateWorkout(@RequestBody WorkoutUpdateRequest workoutRequest, HttpServletRequest request) {
+        String tokenUsername = userController.getUsernameFromToken(request);
+        if (userController.isTokenExpired(request) || !tokenUsername.equals(workoutRequest.getUsername())) {
+            return ResponseEntity.status(HttpServletResponse.SC_UNAUTHORIZED).body("Unauthorized");
+        }
+
+        return workoutService.updateWorkout(workoutRequest);
     }
 }

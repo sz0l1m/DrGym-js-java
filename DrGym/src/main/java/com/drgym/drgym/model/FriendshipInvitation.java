@@ -1,20 +1,33 @@
 // author: ksiemion
 package com.drgym.drgym.model;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name="friendship_invitations")
 public class FriendshipInvitation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
-    private Long whoSendId;
-    private Long whoReceiveId;
+
+    @Column(name = "who_send_username")
+    private String whoSendUsername;
+
+    @Column(name = "who_receive_username")
+    private String whoReceiveUsername;
+
+    @Column(name = "send_time")
     private LocalDateTime sendTime;
 
     public FriendshipInvitation() {}
 
-    public FriendshipInvitation(Long id, Long whoSendId, Long whoReceiveId, LocalDateTime sendTime) {
+    public FriendshipInvitation(Long id, String whoSendUsername, String whoReceiveUsername, LocalDateTime sendTime) {
         this.id = id;
-        this.whoSendId = whoSendId;
-        this.whoReceiveId = whoReceiveId;
+        this.whoSendUsername = whoSendUsername;
+        this.whoReceiveUsername = whoReceiveUsername;
         this.sendTime = sendTime;
     }
 
@@ -26,20 +39,20 @@ public class FriendshipInvitation {
         this.id = id;
     }
 
-    public Long getWhoSendId() {
-        return whoSendId;
+    public String getWhoSendUsername() {
+        return whoSendUsername;
     }
 
-    public void setWhoSendId(Long whoSendId) {
-        this.whoSendId = whoSendId;
+    public void setWhoSendUsername(String whoSendUsername) {
+        this.whoSendUsername = whoSendUsername;
     }
 
-    public Long getWhoReceiveId() {
-        return whoReceiveId;
+    public String getWhoReceiveUsername() {
+        return whoReceiveUsername;
     }
 
-    public void setWhoReceiveId(Long whoReceiveId) {
-        this.whoReceiveId = whoReceiveId;
+    public void setWhoReceiveUsername(String whoReceiveUsername) {
+        this.whoReceiveUsername = whoReceiveUsername;
     }
 
     public LocalDateTime getSendTime() {

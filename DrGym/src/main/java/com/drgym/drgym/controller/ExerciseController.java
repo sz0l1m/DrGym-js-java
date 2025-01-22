@@ -2,18 +2,24 @@ package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.Exercise;
 import com.drgym.drgym.service.ExerciseService;
+import com.drgym.drgym.service.ExerciseService.ExerciseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/exercises")
 public class ExerciseController {
     @Autowired
     private ExerciseService exerciseService;
+
+    @GetMapping("/by-type")
+    public ResponseEntity<Map<String, List<ExerciseDTO>>> getExercisesByType() {
+        Map<String, List<ExerciseDTO>> exercisesByType = exerciseService.getExercisesByType();
+        return ResponseEntity.ok(exercisesByType);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getExerciseById(@PathVariable Long id) {
@@ -22,16 +28,11 @@ public class ExerciseController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping
-    public ResponseEntity<List<Exercise>> getAllExercises() {
-        List<Exercise> exercises = exerciseService.findAll();
-        return ResponseEntity.ok(exercises);
-    }
-
-    @PostMapping
-    public ResponseEntity<Exercise> createExercise(@RequestBody Exercise exercise) {
-        Exercise savedExercise = exerciseService.save(exercise);
-        return ResponseEntity.ok(savedExercise);
+    @PostMapping("/create")
+    public ResponseEntity<Void> addExercise(@RequestBody Exercise request) {
+        Exercise exercise = new Exercise(request.getType(), request.getKcalBurned(), request.getName(), request.getMusclesWorked());
+        exerciseService.save(exercise);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
@@ -44,7 +45,7 @@ public class ExerciseController {
         Exercise exercise = exerciseOptional.get();
         exercise.setName(updatedExercise.getName());
         exercise.setType(updatedExercise.getType());
-        exercise.setKcal_burned(updatedExercise.getKcal_burned());
+        exercise.setKcalBurned(updatedExercise.getKcalBurned());
         exercise.setMusclesWorked(updatedExercise.getMusclesWorked());
 
         Exercise savedExercise = exerciseService.save(exercise);

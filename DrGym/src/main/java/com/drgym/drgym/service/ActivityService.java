@@ -28,4 +28,8 @@ public class ActivityService {
     public void deleteActivity(Long id) {
         activityRepository.deleteById(id);
     }
+
+    public void deleteActivitiesByWorkoutId(Long workoutId) {
+        activityRepository.deleteByWorkoutId(workoutId);
+    }
 }

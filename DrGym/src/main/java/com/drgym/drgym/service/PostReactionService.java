@@ -1,13 +1,12 @@
 package com.drgym.drgym.service;
 
 import com.drgym.drgym.model.PostReaction;
-import com.drgym.drgym.model.User;
 import com.drgym.drgym.repository.PostReactionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostReactionService {
@@ -33,5 +32,18 @@ public class PostReactionService {
 
     public void removeReaction(Long reactionId) {
         postReactionRepository.deleteById(reactionId);
+    }
+
+    @Transactional
+    public void removeReactionByUsername(Long postId, String username) {
+        postReactionRepository.deleteByPostIdAndAuthorUsername(postId, username);
+    }
+
+    public int countByPostId(Long postId) {
+        return postReactionRepository.countByPostId(postId);
+    }
+
+    public boolean existsByPostIdAndUsername(Long postId, String username) {
+        return postReactionRepository.existsByPostIdAndAuthorUsername(postId, username);
     }
 }

@@ -4,7 +4,9 @@ import com.drgym.drgym.model.User;
 import com.drgym.drgym.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,13 +26,28 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUser(String username) {
-        userRepository.deleteById(username);
+        userRepository.deleteByUsername(username);
     }
 
-    public Optional<User> updateUser(String username, String new_name, Double height) {
-        return userRepository.findById(username).map(user -> {
-            user.setName(new_name);
+    public List<User> findBySearch(String search) {
+        return userRepository.findByUsernameContaining(search);
+    }
+
+    public boolean areUsersFriends(String username1, String username2) {
+        return userRepository.areUsersFriends(username1, username2);
+    }
+
+    @Transactional
+    public Optional<User> updateUser(String currentUsername, User updatedUser) {
+        return userRepository.findById(currentUsername).map(user -> {
+            user.setName(updatedUser.getName());
+            user.setSurname(updatedUser.getSurname());
+            user.setWeight(updatedUser.getWeight());
+            user.setHeight(updatedUser.getHeight());
+            user.setFavoriteExercise(updatedUser.getFavoriteExercise());
+            user.setAvatar(updatedUser.getAvatar());
             return userRepository.save(user);
         });
     }

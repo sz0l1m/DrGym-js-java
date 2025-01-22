@@ -9,6 +9,7 @@ import java.util.List;
 @Table(name="posts")
 public class Post {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id")
     private Long id;
 
@@ -24,11 +25,24 @@ public class Post {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "workout_id")
-    private Long trainingId;
+    @OneToOne
+    @JoinColumn(name = "workout_id")
+    private Workout training;
 
     @OneToMany(mappedBy = "postId", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostReaction> reactions = new ArrayList<>();
+
+    @Transient
+    private Long workoutId;
+
+    @Transient
+    private int reactionCount;
+
+    @Transient
+    private int userReaction;
+
+    @Transient
+    private String avatar;
 
     public Post() {}
 
@@ -37,6 +51,13 @@ public class Post {
         this.date = date;
         this.title = title;
         this.content = content;
+    }
+
+    public Post(Long id, String title, String content, Long workoutId) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.workoutId = workoutId;
     }
 
     public Long getId() {
@@ -59,9 +80,7 @@ public class Post {
         return content;
     }
 
-    public Long getTraining() {
-        return trainingId;
-    }
+    public Workout getTraining() { return training; }
 
     public List<PostReaction> getReactions() {
         return reactions;
@@ -87,9 +106,7 @@ public class Post {
         this.content = content;
     }
 
-    public void setTraining(Long training) {
-        this.trainingId = training;
-    }
+    public void setTraining(Workout training) { this.training = training; }
 
     public void setReactions(List<PostReaction> reactions) {
         this.reactions = reactions;
@@ -103,5 +120,37 @@ public class Post {
     public void removeReaction(PostReaction reaction) {
         reactions.remove(reaction);
         reaction.setPostId(null);
+    }
+
+    public Long getWorkoutId() {
+        return workoutId;
+    }
+
+    public void setWorkoutId(Long workoutId) {
+        this.workoutId = workoutId;
+    }
+
+    public int getReactionCount() {
+        return reactionCount;
+    }
+
+    public void setReactionCount(int reactionCount) {
+        this.reactionCount = reactionCount;
+    }
+
+    public int getUserReaction() {
+        return userReaction;
+    }
+
+    public void setUserReaction(int userReaction) {
+        this.userReaction = userReaction;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

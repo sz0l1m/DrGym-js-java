@@ -1,7 +1,6 @@
 package com.drgym.drgym.controller;
 
 import com.drgym.drgym.model.*;
-import com.drgym.drgym.repository.UserRepository;
 import com.drgym.drgym.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +15,9 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserLoginRequest request, HttpServletResponse response) {
-        return authService.login(request.getIdentifier(), request.getPassword(), response);
+    public ResponseEntity<?> login(@RequestBody User user, HttpServletResponse response) {
+        return authService.login(user.getIdentifier(), user.getPassword(), response);
     }
 
     @PostMapping("/logout")
@@ -32,18 +30,18 @@ public class AuthController {
         return authService.verify(email, token);
     }
 
-        @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody UserRegistrationRequest request) {
-        return authService.register(request);
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody User user) {
+        return authService.register(user);
     }
 
     @PostMapping("/forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestBody UserForgotPasswordRequest request) {
-        return authService.forgotPassword(request.getEmail());
+    public ResponseEntity<?> forgotPassword(@RequestBody User user) {
+        return authService.forgotPassword(user.getEmail());
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<?> resetPassword(@RequestBody UserResetPasswordRequest request) {
-        return authService.resetPassword(request.getEmail(), request.getNewPassword(), request.getToken());
+    public ResponseEntity<?> resetPassword(@RequestBody User user) {
+        return authService.resetPassword(user.getEmail(), user.getNewPassword(), user.getToken());
     }
 }
