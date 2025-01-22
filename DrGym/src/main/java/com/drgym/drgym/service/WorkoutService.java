@@ -72,7 +72,8 @@ public class WorkoutService {
                 request.getUsername(),
                 request.getEndDate(),
                 request.getDescription(),
-                LocalDateTime.now()
+                LocalDateTime.now(),
+                request.getSchedule()
         );
         Workout savedWorkout = workoutRepository.save(workout);
 
@@ -110,6 +111,8 @@ public class WorkoutService {
 
         List<Activity> savedNewActivities = activityRepository.saveAll(request.getActivitiesToAdd());
         savedNewActivities.forEach(activity -> activity.setWorkoutId(workout.getId()));
+
+        workout.setSchedule(request.getSchedule());
 
         workoutRepository.save(workout);
 
