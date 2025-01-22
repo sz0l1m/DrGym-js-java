@@ -30,7 +30,7 @@ CREATE TABLE EXERCISES
     TYPE        CHAR(1)     default 'S',
     KCAL_BURNED NUMBER(4) default 0,
     NAME        VARCHAR2(40) not null,
-    VIDE_ID     VARCHAR2(11)
+    VIDEO_ID     VARCHAR2(11)
 )
     /
 
