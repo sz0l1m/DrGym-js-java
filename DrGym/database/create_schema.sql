@@ -351,6 +351,39 @@ WHERE workouts.USERNAME = p_username
 RETURN data_json;
 END;
 /
+
+CREATE OR REPLACE FUNCTION GET_EXERCISE_RANKING(p_username VARCHAR2, p_exercise_id NUMBER)
+    RETURN CLOB IS
+    result_clob CLOB;
+BEGIN
+    SELECT JSON_ARRAYAGG(
+                   JSON_OBJECT(
+                           'username' VALUE result.USERNAME,
+                           'max_weight' VALUE result.MAX_WEIGHT
+                   )
+           )
+    INTO result_clob
+    FROM (
+             SELECT w.USERNAME, MAX(a.WEIGHT) AS MAX_WEIGHT
+             FROM ACTIVITIES a
+                      JOIN WORKOUTS w ON a.WORKOUT_ID = w.WORKOUT_ID
+             WHERE a.EXERCISE_ID = p_exercise_id
+               AND (w.USERNAME = p_username OR w.USERNAME IN (
+                 SELECT
+                     CASE
+                         WHEN f.FRIEND1_USERNAME = p_username THEN f.FRIEND2_USERNAME
+                         WHEN f.FRIEND2_USERNAME = p_username THEN f.FRIEND1_USERNAME
+                         END AS FRIEND_USERNAME
+                 FROM FRIENDSHIPS f
+                 WHERE f.FRIEND1_USERNAME = p_username OR f.FRIEND2_USERNAME = p_username
+             ))
+             GROUP BY w.USERNAME
+             ORDER BY MAX_WEIGHT DESC
+                 FETCH FIRST 10 ROWS ONLY
+         ) result;
+    RETURN result_clob;
+END;
+/
 --PROCEDURES------------------------------------------------------------------------------------------------------------
 CREATE OR REPLACE PROCEDURE GET_USER_FRIENDS_WITH_AVATAR (
     p_username IN VARCHAR2,
