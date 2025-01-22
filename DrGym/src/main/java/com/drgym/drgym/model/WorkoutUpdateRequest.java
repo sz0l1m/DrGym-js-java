@@ -11,11 +11,12 @@ public class WorkoutUpdateRequest {
     private LocalDateTime endDate;
     private List<Long> activitiesToRemove;
     private List<Activity> activitiesToAdd;
+    private int schedule;
 
     public WorkoutUpdateRequest() {
     }
 
-    public WorkoutUpdateRequest(Long id, String username, String description, LocalDateTime startDate, LocalDateTime endDate, List<Long> activitiesToRemove, List<Activity> activitiesToAdd) {
+    public WorkoutUpdateRequest(Long id, String username, String description, LocalDateTime startDate, LocalDateTime endDate, List<Long> activitiesToRemove, List<Activity> activitiesToAdd, int schedule) {
         this.id = id;
         this.username = username;
         this.description = description;
@@ -23,6 +24,7 @@ public class WorkoutUpdateRequest {
         this.endDate = endDate;
         this.activitiesToRemove = activitiesToRemove;
         this.activitiesToAdd = activitiesToAdd;
+        this.schedule = schedule;
     }
 
     public Long getId() {
@@ -79,5 +81,13 @@ public class WorkoutUpdateRequest {
 
     public void setActivitiesToAdd(List<Activity> activitiesToAdd) {
         this.activitiesToAdd = activitiesToAdd;
+    }
+
+    public int getSchedule() {
+        return schedule;
+    }
+
+    public void setSchedule(int schedule) {
+        this.schedule = schedule;
     }
 }
