@@ -61,6 +61,22 @@ public class ExerciseService {
         return exercisesByType;
     }
 
+    public Map<String, List<ExerciseRanking>> getExercisesWithRankingForUser(String username) {
+        List<Exercise> exercises = exerciseRepository.findExercisesWithRanking(username);
+        Map<String, List<ExerciseRanking>> exercisesByType = new HashMap<>();
+        List<ExerciseRanking> strengthExercises = exercises.stream()
+                .filter(exercise -> exercise.getType() == 'S')
+                .map(exercise -> new ExerciseRanking(exercise.getId(), exercise.getName()))
+                .collect(Collectors.toList());
+        List<ExerciseRanking> crossfitExercises = exercises.stream()
+                .filter(exercise -> exercise.getType() == 'F')
+                .map(exercise -> new ExerciseRanking(exercise.getId(), exercise.getName()))
+                .collect(Collectors.toList());
+        exercisesByType.put("strength", strengthExercises);
+        exercisesByType.put("crossfit", crossfitExercises);
+        return exercisesByType;
+    }
+
     public ResponseEntity<?> createExercise(@RequestBody Exercise request) {
         exerciseRepository.save(request);
         return ResponseEntity.ok("Exercise created successfully");
@@ -90,5 +106,23 @@ public class ExerciseService {
         }
 
         public String getVideoId() { return videoId; }
+    }
+
+    public static class ExerciseRanking {
+        private Long id;
+        private String name;
+
+        public ExerciseRanking(Long id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }

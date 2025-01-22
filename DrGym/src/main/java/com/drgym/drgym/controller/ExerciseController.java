@@ -3,6 +3,8 @@ package com.drgym.drgym.controller;
 import com.drgym.drgym.model.Exercise;
 import com.drgym.drgym.service.ExerciseService;
 import com.drgym.drgym.service.ExerciseService.ExerciseDTO;
+import com.drgym.drgym.service.ExerciseService.ExerciseRanking;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,9 +17,22 @@ public class ExerciseController {
     @Autowired
     private ExerciseService exerciseService;
 
+    @Autowired
+    private UserController userController;
+
     @GetMapping("/by-type")
     public ResponseEntity<Map<String, List<ExerciseDTO>>> getExercisesByType() {
         Map<String, List<ExerciseDTO>> exercisesByType = exerciseService.getExercisesByType();
+        return ResponseEntity.ok(exercisesByType);
+    }
+
+    @GetMapping("/with-ranking")
+    public ResponseEntity<Map<String, List<ExerciseRanking>>> getExercisesWithRanking(HttpServletRequest request) {
+        String username = userController.getUsernameFromToken(request);
+        if (username == null) {
+            return ResponseEntity.status(401).body(null);
+        }
+        Map<String, List<ExerciseRanking>> exercisesByType = exerciseService.getExercisesWithRankingForUser(username);
         return ResponseEntity.ok(exercisesByType);
     }
 
