@@ -229,6 +229,20 @@ export default function WorkoutForm({
     }
   };
 
+  const handleRegularChange = (setFieldValue) => {
+    if (!isRegular) {
+      setFieldValue('startDate', null);
+      setFieldValue('endDate', null);
+      showAppMessage({
+        status: true,
+        text: 'Please select start and end date from the future',
+        type: 'info',
+      });
+    }
+    setFieldValue('frequency', '');
+    setRegular(!isRegular);
+  };
+
   const handleClose = () => {
     togglePopup(false);
   };
@@ -294,10 +308,7 @@ export default function WorkoutForm({
                   control={
                     <Switch
                       checked={isRegular}
-                      onChange={() => {
-                        setRegular(!isRegular);
-                        setFieldValue('frequency', '');
-                      }}
+                      onChange={() => handleRegularChange(setFieldValue)}
                       aria-label="Regular"
                       color="secondary"
                     />
@@ -333,6 +344,15 @@ export default function WorkoutForm({
                   </Box>
                 )}
               </Box>
+              {isRegular && (
+                <Typography
+                  color="textSecondary"
+                  variant="body2"
+                  sx={{ mb: 1 }}
+                >
+                  You can only select start and end date from the future
+                </Typography>
+              )}
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DateTimePicker
@@ -344,14 +364,22 @@ export default function WorkoutForm({
                     name="startDate"
                     value={values.startDate}
                     maxDateTime={values.endDate || undefined}
+                    disablePast={isRegular}
                     onChange={(newValue) => {
                       setFieldValue('startDate', newValue);
                     }}
                     onBlur={handleBlur}
-                    label={errors.startDate || 'Start Date'}
+                    label={
+                      !!errors.startDate &&
+                      (!!touched.startDate || !!values.startDate)
+                        ? errors.startDate
+                        : 'Start Date'
+                    }
                     slotProps={{
                       textField: {
-                        error: !!errors.startDate,
+                        error:
+                          !!errors.startDate &&
+                          (!!touched.startDate || !!values.startDate),
                       },
                     }}
                   />
@@ -364,14 +392,22 @@ export default function WorkoutForm({
                     name="endDate"
                     value={values.endDate}
                     minDateTime={values.startDate || undefined}
+                    disablePast={isRegular}
                     onChange={(newValue) => {
                       setFieldValue('endDate', newValue);
                     }}
                     onBlur={handleBlur}
-                    label={errors.endDate || 'End Date'}
+                    label={
+                      !!errors.endDate &&
+                      (!!touched.endDate || !!values.endDate)
+                        ? errors.endDate
+                        : 'End Date'
+                    }
                     slotProps={{
                       textField: {
-                        error: !!errors.endDate,
+                        error:
+                          !!errors.endDate &&
+                          (!!touched.endDate || !!values.endDate),
                       },
                     }}
                   />
