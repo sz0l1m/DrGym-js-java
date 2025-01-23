@@ -48,7 +48,7 @@ const AccountPage = ({ showAppMessage }) => {
         });
         const userAvatar = userResponse.data.avatar || stringToColor(username);
         setColor(userAvatar);
-        // localStorage.setItem('avatar', userAvatar);
+        localStorage.setItem('avatar', userAvatar);
         const exercisesResponse = await axiosInstance.get(
           '/api/exercises/by-type'
         );
@@ -88,6 +88,7 @@ const AccountPage = ({ showAppMessage }) => {
         ...formData,
         name: formData.firstName,
         favoriteExercise: formData.exercise?.id,
+        avatar: color,
       });
       localStorage.setItem('avatar', color);
       showAppMessage({
