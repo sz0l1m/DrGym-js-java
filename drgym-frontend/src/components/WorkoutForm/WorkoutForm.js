@@ -76,14 +76,23 @@ export default function WorkoutForm({
     };
 
     if (popupType !== 'new' && workout.activities) {
+      setRegular(workout.schedule > 0);
       setActivityList(workout.activities);
     } else {
+      setRegular(false);
       setActivityList([]);
     }
     if (popupStatus) {
       fetchExercises();
     }
-  }, [popupType, workout.activities, popupStatus, togglePopup, showAppMessage]);
+  }, [
+    popupType,
+    workout.activities,
+    workout.schedule,
+    popupStatus,
+    togglePopup,
+    showAppMessage,
+  ]);
 
   const handleAddActivity = (values, setFieldValue, setErrors) => {
     const activitySchema =
@@ -167,6 +176,7 @@ export default function WorkoutForm({
         startDate: values.startDate.toISOString(),
         endDate: values.endDate.toISOString(),
         activities: activities,
+        schedule: isRegular ? values.frequency : 0,
       });
 
       popupType === 'new' ? onAddWorkout() : onEditWorkout();
@@ -206,6 +216,7 @@ export default function WorkoutForm({
         description: values.description,
         startDate: values.startDate.toISOString(),
         endDate: values.endDate.toISOString(),
+        schedule: isRegular ? values.frequency : 0,
         activitiesToAdd: activityList.filter((activity) => !activity.id),
         activitiesToRemove: activitiesToDelete,
       });
@@ -229,8 +240,11 @@ export default function WorkoutForm({
     }
   };
 
-  const handleRegularChange = (setFieldValue) => {
-    if (!isRegular) {
+  const handleRegularChange = (values, setFieldValue) => {
+    if (
+      !isRegular &&
+      (values.startDate < new Date() || values.endDate < new Date())
+    ) {
       setFieldValue('startDate', null);
       setFieldValue('endDate', null);
       showAppMessage({
@@ -276,7 +290,7 @@ export default function WorkoutForm({
                 startDate: new Date(workout.startDate),
                 endDate: new Date(workout.endDate),
                 description: workout.description || '',
-                frequency: '',
+                frequency: workout.schedule > 0 ? workout.schedule : '',
                 exerciseType: '',
                 exercise: '',
                 reps: '',
@@ -308,7 +322,9 @@ export default function WorkoutForm({
                   control={
                     <Switch
                       checked={isRegular}
-                      onChange={() => handleRegularChange(setFieldValue)}
+                      onChange={() =>
+                        handleRegularChange(values, setFieldValue)
+                      }
                       aria-label="Regular"
                       color="secondary"
                     />
