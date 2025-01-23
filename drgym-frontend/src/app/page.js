@@ -28,7 +28,7 @@ const HomePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosInstance.get('/api1/exercises/by-type');
+        const response = await axiosInstance.get('/api/exercises/by-type');
         setExerciseData(response.data);
       } catch (err) {
         setError('Failed to fetch exercises');

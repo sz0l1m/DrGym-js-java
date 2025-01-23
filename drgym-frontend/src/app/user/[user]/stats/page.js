@@ -4,15 +4,18 @@ import React from 'react';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
 import Calendar from '@/components/Calendar';
+import { withSnackbar } from '@/utils/snackbarProvider';
 import BodyHighlighter from '@/components/BodyHighlighter';
+import Ranking from '@/components/Ranking';
 
-const Stats = ({ params }) => {
+const Stats = ({ params, showAppMessage }) => {
   const { user } = React.use(params);
 
   return (
     <Grid
       container
       justifyContent="center"
+      direction="column"
       sx={{
         width: '100%',
         maxWidth: '1000px',
@@ -27,8 +30,11 @@ const Stats = ({ params }) => {
       <Grid sx={{ mt: 6 }}>
         <BodyHighlighter username={user} />
       </Grid>
+      <Grid sx={{ mt: 6 }}>
+        <Ranking showAppMessage={showAppMessage} />
+      </Grid>
     </Grid>
   );
 };
 
-export default Stats;
+export default withSnackbar(Stats);
