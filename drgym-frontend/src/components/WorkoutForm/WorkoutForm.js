@@ -251,6 +251,7 @@ export default function WorkoutForm({
                 startDate: null,
                 endDate: null,
                 description: '',
+                frequency: '',
                 exerciseType: '',
                 exercise: '',
                 reps: '',
@@ -261,6 +262,7 @@ export default function WorkoutForm({
                 startDate: new Date(workout.startDate),
                 endDate: new Date(workout.endDate),
                 description: workout.description || '',
+                frequency: '',
                 exerciseType: '',
                 exercise: '',
                 reps: '',
@@ -273,7 +275,7 @@ export default function WorkoutForm({
             ? handleEditWorkout(values, actions)
             : handleAddWorkout(values, actions)
         }
-        validationSchema={schema}
+        validationSchema={schema(isRegular)}
       >
         {({
           values,
@@ -292,7 +294,10 @@ export default function WorkoutForm({
                   control={
                     <Switch
                       checked={isRegular}
-                      onChange={() => setRegular(!isRegular)}
+                      onChange={() => {
+                        setRegular(!isRegular);
+                        setFieldValue('frequency', '');
+                      }}
                       aria-label="Regular"
                       color="secondary"
                     />
