@@ -176,7 +176,7 @@ export default function WorkoutForm({
         startDate: values.startDate.toISOString(),
         endDate: values.endDate.toISOString(),
         activities: activities,
-        schedule: isRegular ? values.frequency : 0,
+        schedule: isRegular ? values.interval : 0,
       });
 
       popupType === 'new' ? onAddWorkout() : onEditWorkout();
@@ -216,7 +216,7 @@ export default function WorkoutForm({
         description: values.description,
         startDate: values.startDate.toISOString(),
         endDate: values.endDate.toISOString(),
-        schedule: isRegular ? values.frequency : 0,
+        schedule: isRegular ? values.interval : 0,
         activitiesToAdd: activityList.filter((activity) => !activity.id),
         activitiesToRemove: activitiesToDelete,
       });
@@ -253,7 +253,7 @@ export default function WorkoutForm({
         type: 'info',
       });
     }
-    setFieldValue('frequency', '');
+    setFieldValue('interval', '');
     setRegular(!isRegular);
   };
 
@@ -279,7 +279,7 @@ export default function WorkoutForm({
                 startDate: null,
                 endDate: null,
                 description: '',
-                frequency: '',
+                interval: '',
                 exerciseType: '',
                 exercise: '',
                 reps: '',
@@ -290,7 +290,7 @@ export default function WorkoutForm({
                 startDate: new Date(workout.startDate),
                 endDate: new Date(workout.endDate),
                 description: workout.description || '',
-                frequency: workout.schedule > 0 ? workout.schedule : '',
+                interval: workout.schedule > 0 ? workout.schedule : '',
                 exerciseType: '',
                 exercise: '',
                 reps: '',
@@ -334,12 +334,12 @@ export default function WorkoutForm({
                 {isRegular && (
                   <Box sx={{ mt: 2 }}>
                     <TextField
-                      label={errors.frequency || 'Frequency (days)'}
-                      name="frequency"
+                      label={errors.interval || 'Interval (days)'}
+                      name="interval"
                       type="number"
-                      value={values.frequency}
+                      value={values.interval}
                       onBlur={handleBlur}
-                      error={!!errors.frequency}
+                      error={!!errors.interval}
                       onChange={(e) => {
                         const value = e.target.value;
                         if (!value || parseInt(value, 10) >= 0) {

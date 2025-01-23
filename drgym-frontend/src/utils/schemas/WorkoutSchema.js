@@ -11,14 +11,14 @@ const schema = (isRegular) =>
       .required('End Date is required')
       .typeError('Invalid date'),
     description: yup.string().max(50, "it's too long (max 50 chars)"),
-    frequency: yup
+    interval: yup
       .number()
-      .typeError('Frequency must be a number')
-      .min(1, 'Frequency must be at least 1')
-      .max(99, 'Frequency must be less than 100')
+      .typeError('Interval must be a number')
+      .min(1, 'Interval must be at least 1')
+      .max(99, 'Interval must be less than 100')
       .when([], {
         is: () => isRegular,
-        then: (schema) => schema.required('Frequency is required'),
+        then: (schema) => schema.required('Interval is required'),
         otherwise: (schema) => schema.notRequired(),
       }),
   });
