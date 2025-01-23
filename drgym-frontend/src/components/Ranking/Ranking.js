@@ -10,12 +10,13 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import axiosInstance from '@/utils/axiosInstance';
 
-export default function Ranking({ showAppMessage }) {
+export default function Ranking({ username, showAppMessage }) {
   const [loading, setLoading] = useState(true);
+  const [loadingRanking, setLoadingRanking] = useState(true);
   const [error, setError] = useState(null);
   const [exerciseType, setExerciseType] = useState('strength');
   const [exercise, setExercise] = useState('');
-  const [exercisesNames, setExercisesNames] = useState(null);
+  const [exercisesNames, setExercisesNames] = useState({});
   const [ranking, setRanking] = useState(null);
 
   useEffect(() => {
@@ -23,7 +24,7 @@ export default function Ranking({ showAppMessage }) {
       try {
         setLoading(true);
         const response = await axiosInstance.get(`/api/exercises/with-ranking`);
-        console.log(response.data);
+        console.log('exercises', response.data);
         setExercisesNames(response.data);
       } catch (err) {
         setError('Failed to fetch exercises');
@@ -39,8 +40,35 @@ export default function Ranking({ showAppMessage }) {
     fetchExercises();
   }, [showAppMessage]);
 
+  useEffect(() => {
+    const fetchRanking = async (exercise) => {
+      try {
+        setLoadingRanking(true);
+        const response = await axiosInstance.get(
+          `/api/users/${username}/ranking?exerciseId=${exercise.id}`
+        );
+        console.log('exerciseType', exerciseType);
+        console.log('ranking', response.data);
+        setRanking(response.data);
+      } catch (err) {
+        setError('Failed to fetch ranking');
+        showAppMessage({
+          status: true,
+          text: 'Something went wrong',
+          type: 'error',
+        });
+      } finally {
+        setLoadingRanking(false);
+      }
+    };
+    if (exercise) {
+      fetchRanking(exercise);
+    } else if (exercisesNames[exerciseType]?.length > 0)
+      fetchRanking(exercisesNames[exerciseType][0]);
+  }, [exercise, exerciseType, exercisesNames, username, showAppMessage]);
+
   if (loading) {
-    return <Typography textAlign="center">Loading ranking...</Typography>;
+    return <Typography textAlign="center">Loading rankings...</Typography>;
   }
   if (error) {
     return (
@@ -85,6 +113,11 @@ export default function Ranking({ showAppMessage }) {
         <Typography color="textSecondary">
           There are no rankings yet for this type of exercise
         </Typography>
+      )}
+      {!loadingRanking ? (
+        <Typography textAlign="center">Loaded...</Typography>
+      ) : (
+        <Typography textAlign="center">Loading ranking...</Typography>
       )}
     </>
   );

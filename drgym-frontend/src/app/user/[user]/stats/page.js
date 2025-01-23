@@ -31,7 +31,7 @@ const Stats = ({ params, showAppMessage }) => {
         <BodyHighlighter username={user} />
       </Grid>
       <Grid sx={{ mt: 6 }}>
-        <Ranking showAppMessage={showAppMessage} />
+        <Ranking username={user} showAppMessage={showAppMessage} />
       </Grid>
     </Grid>
   );
