@@ -19,6 +19,8 @@ import {
   IconButton,
   Tooltip,
   Typography,
+  Switch,
+  InputAdornment,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { DateTimePicker, TimeField } from '@mui/x-date-pickers';
@@ -55,6 +57,7 @@ export default function WorkoutForm({
   const [activityList, setActivityList] = useState([]);
   const [activitiesToDelete, setActivitiesToDelete] = useState([]);
   const [exercises, setExercises] = useState([]);
+  const [isRegular, setRegular] = useState(false);
   const username = getUsername();
 
   useEffect(() => {
@@ -284,6 +287,47 @@ export default function WorkoutForm({
         }) => (
           <Form>
             <DialogContent sx={{ p: 3 }}>
+              <Box sx={{ mt: -2, mb: 2 }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={isRegular}
+                      onChange={() => setRegular(!isRegular)}
+                      aria-label="Regular"
+                      color="secondary"
+                    />
+                  }
+                  label="Repeat this workout"
+                />
+                {isRegular && (
+                  <Box sx={{ mt: 2 }}>
+                    <TextField
+                      label={errors.frequency || 'Frequency (days)'}
+                      name="frequency"
+                      type="number"
+                      value={values.frequency}
+                      onBlur={handleBlur}
+                      error={!!errors.frequency}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (!value || parseInt(value, 10) >= 0) {
+                          handleChange(e);
+                        }
+                      }}
+                      slotProps={{
+                        input: {
+                          min: 0,
+                          onKeyDown: (e) => {
+                            if (e.key === '-' || e.key === 'e') {
+                              e.preventDefault();
+                            }
+                          },
+                        },
+                      }}
+                    />
+                  </Box>
+                )}
+              </Box>
               <Box sx={{ display: 'flex', gap: 2 }}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DateTimePicker

@@ -10,6 +10,12 @@ const schema = yup.object().shape({
     .required('End Date is required')
     .typeError('Invalid date'),
   description: yup.string().max(50, "it's too long (max 50 chars)"),
+  frequency: yup
+    .number()
+    .typeError('Frequency must be a number')
+    .min(1, 'Frequency must be at least 1')
+    .max(99, 'Frequency must be less than 100'),
+  // .required('Frequency is required'),
 });
 
 const strengthActivitySchema = yup.object().shape({
