@@ -16,6 +16,7 @@ import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
 import axiosInstance from '@/utils/axiosInstance';
 
 const HomePage = () => {
+  const [error, setError] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [exerciseType, setExerciseType] = useState('strength');
   const [exerciseData, setExerciseData] = useState({
@@ -26,9 +27,12 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axiosInstance.get('/api/exercises/by-type');
-      console.log(response.data);
-      setExerciseData(response.data);
+      try {
+        const response = await axiosInstance.get('/api1/exercises/by-type');
+        setExerciseData(response.data);
+      } catch (err) {
+        setError('Failed to fetch exercises');
+      }
     };
     fetchData();
   }, []);
@@ -51,49 +55,55 @@ const HomePage = () => {
         Explore our exercises to improve your workouts and achieve your goals.
       </Typography>
 
-      <ToggleButtonGroup
-        color="info"
-        value={exerciseType}
-        exclusive
-        onChange={handleTypeChange}
-        aria-label="Exercise Type Selector"
-      >
-        <ToggleButton value="strength">
-          <FitnessCenterIcon sx={{ mr: 1 }} />
-          Strength
-        </ToggleButton>
-        <ToggleButton value="cardio">
-          <MonitorHeartOutlinedIcon sx={{ mr: 1 }} />
-          Cardio
-        </ToggleButton>
-        <ToggleButton value="crossfit">
-          <SportsGymnasticsIcon sx={{ mr: 1 }} />
-          CrossFit
-        </ToggleButton>
-      </ToggleButtonGroup>
-
-      <Box sx={{ width: '100%', margin: '0 auto', my: 4 }}>
-        {exerciseData[exerciseType].map((exercise, index) => (
-          <Accordion
-            key={index}
-            expanded={expanded === index}
-            onChange={handleAccordionChange(index)}
+      {error ? (
+        <Typography color="error">{error}</Typography>
+      ) : (
+        <>
+          <ToggleButtonGroup
+            color="info"
+            value={exerciseType}
+            exclusive
+            onChange={handleTypeChange}
+            aria-label="Exercise Type Selector"
           >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls={`panel${index + 1}-content`}
-              id={`panel${index + 1}-header`}
-            >
-              <Typography component="span">{exercise.name}</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              {expanded === index && (
-                <YouTubePlayer videoId={exercise.videoId} />
-              )}
-            </AccordionDetails>
-          </Accordion>
-        ))}
-      </Box>
+            <ToggleButton value="strength">
+              <FitnessCenterIcon sx={{ mr: 1 }} />
+              Strength
+            </ToggleButton>
+            <ToggleButton value="cardio">
+              <MonitorHeartOutlinedIcon sx={{ mr: 1 }} />
+              Cardio
+            </ToggleButton>
+            <ToggleButton value="crossfit">
+              <SportsGymnasticsIcon sx={{ mr: 1 }} />
+              CrossFit
+            </ToggleButton>
+          </ToggleButtonGroup>
+
+          <Box sx={{ width: '100%', margin: '0 auto', my: 4 }}>
+            {exerciseData[exerciseType].map((exercise, index) => (
+              <Accordion
+                key={index}
+                expanded={expanded === index}
+                onChange={handleAccordionChange(index)}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls={`panel${index + 1}-content`}
+                  id={`panel${index + 1}-header`}
+                >
+                  <Typography component="span">{exercise.name}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  {expanded === index && (
+                    <YouTubePlayer videoId={exercise.videoId} />
+                  )}
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Box>
+        </>
+      )}
     </>
   );
 };
