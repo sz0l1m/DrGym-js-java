@@ -65,6 +65,19 @@ export default function WorkoutCard({
     }
   };
 
+  const getIntervalDescription = (interval) => {
+    switch (interval) {
+      case 1:
+        return 'Everyday';
+      case 7:
+        return 'Weekly';
+      case 30:
+        return 'Monthly';
+      default:
+        return `Every ${interval} days`;
+    }
+  };
+
   return (
     <>
       <Box sx={{ width: '100%', maxWidth: '1000px', margin: '0 auto', py: 2 }}>
@@ -78,8 +91,8 @@ export default function WorkoutCard({
               )
             }
             title={
-              <Grid container alignItems="center" gap={8}>
-                <Typography variant="h5">
+              <Grid container alignItems="center">
+                <Typography variant="h5" sx={{ mr: 8 }}>
                   {formatDate(workout.startDate, 'd MMMM yyyy')}
                 </Typography>
                 <Chip
@@ -87,6 +100,14 @@ export default function WorkoutCard({
                   color={workout.posted ? 'success' : 'warning'}
                   variant="outlined"
                 />
+                {workout.schedule !== 0 && (
+                  <Chip
+                    label={getIntervalDescription(workout.schedule)}
+                    color="info"
+                    variant="outlined"
+                    sx={{ ml: 1 }}
+                  />
+                )}
               </Grid>
             }
             subheader={

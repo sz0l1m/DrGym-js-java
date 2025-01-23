@@ -30,7 +30,7 @@ const Workouts = ({ showAppMessage }) => {
       );
       setAllWorkouts(response.data);
       setFromFuture(true);
-      setWorkoutsData(response.data.futureWorkouts);
+      setWorkoutsData([...response.data.futureWorkouts].reverse());
     } catch (err) {
       setError('fetch worokuts', err.message);
       showAppMessage({
@@ -53,7 +53,7 @@ const Workouts = ({ showAppMessage }) => {
 
   const handleTypeChange = (event, newType) => {
     if (newType === 'future') {
-      setWorkoutsData(allWorkouts.futureWorkouts);
+      setWorkoutsData([...allWorkouts.futureWorkouts].reverse());
       setFromFuture(true);
     } else {
       setWorkoutsData(allWorkouts.pastWorkouts);
