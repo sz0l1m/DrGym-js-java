@@ -10,10 +10,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import Box from '@mui/material/Box';
-import { videos as mockData } from '@/utils/mockData';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined';
 import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
+import axiosInstance from '@/utils/axiosInstance';
 
 const HomePage = () => {
   const [expanded, setExpanded] = useState(false);
@@ -26,14 +26,15 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      // const response = await fetch('/api/exercises');
-      // const data = await response.json();
-      setExerciseData(mockData);
+      const response = await axiosInstance.get('/api/exercises/by-type');
+      console.log(response.data);
+      setExerciseData(response.data);
     };
     fetchData();
   }, []);
 
   const handleTypeChange = (event, newType) => {
+    setExpanded(false);
     setExerciseType(newType);
   };
 
@@ -86,7 +87,9 @@ const HomePage = () => {
               <Typography component="span">{exercise.name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <YouTubePlayer videoId={exercise.videoId} />
+              {expanded === index && (
+                <YouTubePlayer videoId={exercise.videoId} />
+              )}
             </AccordionDetails>
           </Accordion>
         ))}
