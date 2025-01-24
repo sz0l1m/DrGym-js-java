@@ -154,7 +154,7 @@ const Friends = ({ showAppMessage }) => {
           </>
         )}
         <Grid container justifyContent="space-between" sx={{ mb: 4 }}>
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom sx={{ mr: 4 }}>
             {!loading && !friends.length
               ? 'You have not added any friends yet'
               : 'Your Friends'}

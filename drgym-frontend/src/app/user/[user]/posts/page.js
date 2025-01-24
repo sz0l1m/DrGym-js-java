@@ -67,6 +67,7 @@ const PostsContent = ({ showAppMessage }) => {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => setDialogOpen(true)}
+          sx={{ width: { xs: '100%', sm: 'auto' }, mt: { xs: 2, sm: 0 } }}
         >
           Add post
         </Button>

@@ -19,6 +19,7 @@ import WorkoutCard from '@/components/WorkoutCard';
 import { getUsername } from '@/utils/localStorage';
 import CustomInput from '@/components/CustomInput';
 import { PostSchema, PostDefaultValues } from '@/utils/schemas/PostSchema';
+import { useMediaQuery } from '@mui/material';
 
 export default function PostDialog({
   title,
@@ -32,6 +33,7 @@ export default function PostDialog({
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedWorkout, setSelectedWorkout] = useState(null);
+  const fullScreen = useMediaQuery('(max-width: 900px)');
 
   const username = getUsername();
 
@@ -147,7 +149,14 @@ export default function PostDialog({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+    <Dialog
+      fullScreen={fullScreen}
+      open={open}
+      onClose={onClose}
+      maxWidth="md"
+      fullWidth
+      aria-labelledby="new-post-dialog"
+    >
       <Formik
         validationSchema={PostSchema()}
         initialValues={

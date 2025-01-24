@@ -17,6 +17,7 @@ import { formatDate, formatRelativeTime } from '@/utils/dateUtils';
 import Grid from '@mui/material/Grid2';
 import { Typography } from '@mui/material';
 import Chip from '@mui/material/Chip';
+import { useMediaQuery } from '@mui/material';
 
 export default function WorkoutCard({
   workout,
@@ -30,6 +31,8 @@ export default function WorkoutCard({
   const [openDialog, setOpenDialog] = useState(false);
   const [popupType, setPopupType] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const isSmallScreen = useMediaQuery('(max-width: 550px)');
 
   const menuOpen = Boolean(anchorEl);
   const realitveStartDate = formatRelativeTime(workout.startDate);
@@ -78,6 +81,24 @@ export default function WorkoutCard({
     }
   };
 
+  const chips = (
+    <>
+      <Chip
+        label={workout.posted ? 'Public' : 'Private'}
+        color={workout.posted ? 'success' : 'warning'}
+        variant="outlined"
+      />
+      {workout.schedule !== 0 && (
+        <Chip
+          label={getIntervalDescription(workout.schedule)}
+          color="info"
+          variant="outlined"
+          sx={{ ml: 1 }}
+        />
+      )}
+    </>
+  );
+
   return (
     <>
       <Box sx={{ width: '100%', maxWidth: '1000px', margin: '0 auto', py: 2 }}>
@@ -95,19 +116,7 @@ export default function WorkoutCard({
                 <Typography variant="h5" sx={{ mr: 8 }}>
                   {formatDate(workout.startDate, 'd MMMM yyyy')}
                 </Typography>
-                <Chip
-                  label={workout.posted ? 'Public' : 'Private'}
-                  color={workout.posted ? 'success' : 'warning'}
-                  variant="outlined"
-                />
-                {workout.schedule !== 0 && (
-                  <Chip
-                    label={getIntervalDescription(workout.schedule)}
-                    color="info"
-                    variant="outlined"
-                    sx={{ ml: 1 }}
-                  />
-                )}
+                <Box>{!isSmallScreen && chips}</Box>
               </Grid>
             }
             subheader={
@@ -151,6 +160,17 @@ export default function WorkoutCard({
               Delete
             </MenuItem>
           </Menu>
+          {isSmallScreen && (
+            <Box
+              sx={{
+                width: '100%',
+                pl: 2,
+                pb: 1,
+              }}
+            >
+              {chips}
+            </Box>
+          )}
           <WorkoutInfo workout={workout} />
         </Card>
         <WorkoutForm

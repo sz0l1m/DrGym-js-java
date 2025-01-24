@@ -34,7 +34,6 @@ const PostList = ({ username, onlyThisUser, actions, showAppMessage }) => {
     }
   }, [username, onlyThisUser, showAppMessage]);
 
-  // FIXME
   useEffect(() => {
     if (username) {
       fetchPosts();

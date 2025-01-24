@@ -52,7 +52,7 @@ export default function Post({ post, actions, onChanges, showAppMessage }) {
               {post.title}
             </Typography>
             {actions && (
-              <Box sx={{ pt: 2, pr: 2 }}>
+              <Box sx={{ pt: 2, px: 2 }}>
                 <Tooltip title="Edit post">
                   <IconButton
                     aria-label="edit post"

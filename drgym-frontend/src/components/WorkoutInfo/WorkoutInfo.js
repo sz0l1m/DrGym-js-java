@@ -109,14 +109,30 @@ export default function WorkoutCard({ workout, isPost, post, showAppMessage }) {
             <CalendarMonthIcon sx={{ pb: '1px' }} />
           </Tooltip>
           {formatDate(workout.startDate, 'd MMM H:mm')}
-          <Tooltip title="End time">
-            <EastIcon />
-          </Tooltip>
-          {formatDate(workout.endDate, 'd MMM H:mm')}
-          <Tooltip title="Duration">
-            <AccessTimeIcon sx={{ ml: 5 }} />
-          </Tooltip>
-          {getDiffInHoursAndMinutes(workout.startDate, workout.endDate)}
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '12px',
+            }}
+          >
+            <Tooltip title="End time">
+              <EastIcon />
+            </Tooltip>
+            {formatDate(workout.endDate, 'd MMM H:mm')}
+          </Box>
+          <Box
+            sx={{
+              display: 'flex',
+              gap: '12px',
+              ml: { xs: 0, sm: 5 },
+              width: { xs: '100%', sm: '100px' },
+            }}
+          >
+            <Tooltip title="Duration">
+              <AccessTimeIcon />
+            </Tooltip>
+            {getDiffInHoursAndMinutes(workout.startDate, workout.endDate)}
+          </Box>
         </Box>
         {workout.description && !isPost && (
           <Typography sx={{ mt: 3 }}>{workout.description}</Typography>
@@ -134,7 +150,13 @@ export default function WorkoutCard({ workout, isPost, post, showAppMessage }) {
           <ExpandMoreIcon />
         </ExpandMore>
         {isPost && (
-          <Grid container alignItems="center" gap={2} sx={{ pl: 4 }}>
+          <Grid
+            container
+            alignItems="center"
+            gap={2}
+            sx={{ pl: 4 }}
+            flexWrap="nowrap"
+          >
             <IconButton
               onClick={handleLikeClick}
               sx={{

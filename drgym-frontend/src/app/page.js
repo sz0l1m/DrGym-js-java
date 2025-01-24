@@ -14,6 +14,7 @@ import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import MonitorHeartOutlinedIcon from '@mui/icons-material/MonitorHeartOutlined';
 import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
 import axiosInstance from '@/utils/axiosInstance';
+import { useMediaQuery } from '@mui/material';
 
 const HomePage = () => {
   const [error, setError] = useState(null);
@@ -24,6 +25,7 @@ const HomePage = () => {
     strength: [],
     crossfit: [],
   });
+  const isSmallScreen = useMediaQuery('(max-width: 400px)');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,6 +66,7 @@ const HomePage = () => {
             value={exerciseType}
             exclusive
             onChange={handleTypeChange}
+            orientation={isSmallScreen ? 'vertical' : 'horizontal'}
             aria-label="Exercise Type Selector"
           >
             <ToggleButton value="strength">
