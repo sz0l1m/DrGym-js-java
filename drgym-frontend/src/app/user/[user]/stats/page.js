@@ -3,6 +3,7 @@
 import React from 'react';
 import Grid from '@mui/material/Grid2';
 import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
 import Calendar from '@/components/Calendar';
 import { withSnackbar } from '@/utils/snackbarProvider';
 import BodyHighlighter from '@/components/BodyHighlighter';
@@ -27,12 +28,19 @@ const Stats = ({ params, showAppMessage }) => {
         Your workout calendar
       </Typography>
       <Calendar username={user} />
-      <Grid sx={{ mt: 6 }}>
-        <BodyHighlighter username={user} />
-      </Grid>
-      <Grid sx={{ mt: 6 }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-evenly',
+          flexWrap: 'wrap',
+          mt: 6,
+        }}
+      >
+        <Box sx={{ mr: { xs: 0, md: 2 } }}>
+          <BodyHighlighter username={user} />
+        </Box>
         <Ranking username={user} showAppMessage={showAppMessage} />
-      </Grid>
+      </Box>
     </Grid>
   );
 };

@@ -1,14 +1,26 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
-import ToggleButton from '@mui/material/ToggleButton';
+import axiosInstance from '@/utils/axiosInstance';
+import {
+  Autocomplete,
+  Avatar,
+  Box,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from '@mui/material';
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter';
 import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import axiosInstance from '@/utils/axiosInstance';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import StarIcon from '@mui/icons-material/Star';
+import Link from 'next/link';
 
 export default function Ranking({ username, showAppMessage }) {
   const [loading, setLoading] = useState(true);
@@ -24,7 +36,6 @@ export default function Ranking({ username, showAppMessage }) {
       try {
         setLoading(true);
         const response = await axiosInstance.get(`/api/exercises/with-ranking`);
-        console.log('exercises', response.data);
         setExercisesNames(response.data);
       } catch (err) {
         setError('Failed to fetch exercises');
@@ -47,8 +58,6 @@ export default function Ranking({ username, showAppMessage }) {
         const response = await axiosInstance.get(
           `/api/users/${username}/ranking?exerciseId=${exercise.id}`
         );
-        console.log('exerciseType', exerciseType);
-        console.log('ranking', response.data);
         setRanking(response.data);
       } catch (err) {
         setError('Failed to fetch ranking');
@@ -63,8 +72,9 @@ export default function Ranking({ username, showAppMessage }) {
     };
     if (exercise) {
       fetchRanking(exercise);
-    } else if (exercisesNames[exerciseType]?.length > 0)
+    } else if (exercisesNames[exerciseType]?.length > 0) {
       fetchRanking(exercisesNames[exerciseType][0]);
+    }
   }, [exercise, exerciseType, exercisesNames, username, showAppMessage]);
 
   if (loading) {
@@ -77,13 +87,88 @@ export default function Ranking({ username, showAppMessage }) {
       </Typography>
     );
   }
+
+  const renderRanking = () => {
+    if (!ranking || ranking.length === 0) {
+      return (
+        <Typography textAlign="center" color="textSecondary">
+          No rankings available for this exercise.
+        </Typography>
+      );
+    }
+
+    return (
+      <List>
+        {ranking.map((user, index) => {
+          let icon = null;
+          let avatarStyle = {};
+
+          if (index === 0) {
+            icon = <EmojiEventsIcon sx={{ color: 'white' }} />;
+            avatarStyle = { bgcolor: 'gold' };
+          } else if (index === 1) {
+            icon = <MilitaryTechIcon sx={{ color: 'black' }} />;
+            avatarStyle = { bgcolor: 'silver' };
+          } else if (index === 2) {
+            icon = <StarIcon sx={{ color: 'white' }} />;
+            avatarStyle = { bgcolor: '#CD7F32' };
+          }
+
+          return (
+            <ListItem key={user.username}>
+              <ListItemAvatar>
+                <Avatar sx={avatarStyle}>{icon || index + 1}</Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={
+                  <Link href={`/user/${user.username}`} passHref>
+                    <Typography
+                      sx={{
+                        color: 'inherit',
+                        textDecoration: 'none',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          textDecoration: 'underline',
+                        },
+                      }}
+                    >
+                      {user.username}
+                    </Typography>
+                  </Link>
+                }
+                secondary={`Max Weight: ${user.max_weight} kg`}
+              />
+            </ListItem>
+          );
+        })}
+      </List>
+    );
+  };
+
   return (
-    <>
+    <Box
+      sx={{
+        minWidth: {
+          xs: '100%',
+          md: '308px',
+        },
+        pt: {
+          xs: 2,
+          md: 0,
+        },
+      }}
+    >
+      <Typography variant="h6" gutterBottom>
+        Rankings
+      </Typography>
       <ToggleButtonGroup
         color="info"
         value={exerciseType}
         exclusive
-        onChange={(event, newType) => setExerciseType(newType)}
+        onChange={(event, newType) => {
+          setExerciseType(newType);
+          setExercise('');
+        }}
         aria-label="Exercise Type Selector"
         sx={{ mb: 2 }}
       >
@@ -108,17 +193,18 @@ export default function Ranking({ username, showAppMessage }) {
           renderInput={(params) => (
             <TextField {...params} label={'Exercise'} name="exercise" />
           )}
+          sx={{ mt: 1 }}
         />
       ) : (
         <Typography color="textSecondary">
           There are no rankings yet for this type of exercise
         </Typography>
       )}
-      {!loadingRanking ? (
-        <Typography textAlign="center">Loaded...</Typography>
-      ) : (
+      {loadingRanking ? (
         <Typography textAlign="center">Loading ranking...</Typography>
+      ) : (
+        renderRanking()
       )}
-    </>
+    </Box>
   );
 }
