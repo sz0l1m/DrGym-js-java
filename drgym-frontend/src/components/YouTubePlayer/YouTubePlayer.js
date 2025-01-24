@@ -9,8 +9,6 @@ const YouTubePlayer = ({ videoId }) => {
   const [loading, setLoading] = useState(true);
 
   const opts = {
-    height: '390px',
-    width: '640px',
     playerVars: {
       autoplay: 0,
     },
@@ -21,12 +19,26 @@ const YouTubePlayer = ({ videoId }) => {
   };
 
   return (
-    <Box sx={{ position: 'relative', width: opts.width, height: opts.height }}>
+    <Box
+      sx={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: '640px',
+        aspectRatio: '16 / 9',
+        margin: '0 auto',
+        overflow: 'hidden',
+      }}
+    >
       {loading && (
         <Skeleton
           variant="rectangular"
-          width={opts.width}
-          height={opts.height}
+          sx={{
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
           animation="wave"
         />
       )}
@@ -37,6 +49,8 @@ const YouTubePlayer = ({ videoId }) => {
           position: 'absolute',
           top: 0,
           left: 0,
+          width: '100%',
+          height: '100%',
         }}
       >
         <YouTube videoId={videoId} opts={opts} onReady={onReady} />
