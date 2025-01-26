@@ -1,34 +1,63 @@
-//author: Michał Pędziwiatr
 package com.drgym.drgym.model;
 
+import jakarta.persistence.*;
 
+import java.sql.Timestamp;
+
+@Entity
+@Table(name = "activities")
 public class Activity {
-    private Exercise exercise;
-    private int id;
+    @Id
+    @Column(name = "activity_id", nullable = false)
+    private Long id;
 
-    public Activity(Exercise exercise) {
-        this.exercise = exercise;
+    @Column(name = "exercise_id", nullable = false)
+    private Long exercise_id;
+
+    @Column(name = "reps")
+    private Long reps;
+
+    @Column(name = "weight")
+    private Long weight;
+
+    @Column(name = "duration")
+    private Timestamp duration;
+
+    public Activity(Long id, Long exercise_id, Long reps, Long weight, Timestamp duration) {
+        this.id = id;
+        this.exercise_id = exercise_id;
+        this.reps = reps;
+        this.weight = weight;
+        this.duration = duration;
     }
 
-    public int getId(){
-        return id;
-    }
+    public Activity() {}
 
-    public void getId(int newId){
-        id = newId;
-    }
+    // getters
 
-    public Exercise getExercise(){
-        return exercise;
-    }
+    public Long getId() {return id;}
 
-    public void setExercise(Exercise newExercise){
-        exercise = newExercise;
-    }
+    public Long getExerciseId() {return exercise_id;}
 
-    @Override
-    public String toString(){
-        String output = exercise.toString();
-        return output;
+    public Long getReps() {return reps;}
+
+    public Long getWeight() {return weight;}
+
+    public Timestamp getDuration() {return duration;}
+
+    // setters
+
+    public void setId(Long id_workout) {this.id = id_workout;}
+
+    public void setExerciseId(Long exercise_id) {this.exercise_id = exercise_id;}
+
+    public void setReps(Long reps) {this.reps = reps;}
+
+    public void setWeight(Long weight) {this.weight = weight;}
+
+    public void setDuration(Timestamp duration) {this.duration = duration;}
+
+    public String durationToString() {
+        return duration.toString();
     }
 }

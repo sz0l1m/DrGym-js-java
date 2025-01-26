@@ -1,179 +1,69 @@
-// author: ksiemion
 package com.drgym.drgym.model;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-import java.util.List;
+class UserTest {
 
+    private User user;
 
-public class UserTest {
+    @BeforeEach
+    void setUp() {
+        user = new User("ziutson", "test", "test", "test@test.test", "test", 80.0, 180.0);
+    }
 
     @Test
-    public void testUserConstructor() {
-        User user = new User(1, "username", "name", "surname", "email@example.com", "password", 70.0, 180.0);
-        assertEquals(1, user.getId());
-        assertEquals("username", user.getUsername());
-        assertEquals("name", user.getName());
-        assertEquals("surname", user.getSurname());
-        assertEquals("email@example.com", user.getEmail());
-        assertEquals("password", user.getPassword());
-        assertEquals(70.0, user.getWeight());
+    void testUserConstructor() {
+        assertEquals("ziutson", user.getUsername());
+        assertEquals("test", user.getName());
+        assertEquals("test", user.getSurname());
+        assertEquals("test@test.test", user.getEmail());
+        assertEquals("test", user.getPassword());
+        assertEquals(80.0, user.getWeight());
         assertEquals(180.0, user.getHeight());
     }
 
     @Test
-    public void testSetters() {
-        User user = new User();
-        user.setId(1);
-        user.setUsername("username");
-        user.setName("name");
-        user.setSurname("surname");
-        user.setEmail("email@example.com");
-        user.setPassword("password");
-        user.setWeight(70.0);
-        user.setHeight(180.0);
-
-        assertEquals(1, user.getId());
-        assertEquals("username", user.getUsername());
-        assertEquals("name", user.getName());
-        assertEquals("surname", user.getSurname());
-        assertEquals("email@example.com", user.getEmail());
-        assertEquals("password", user.getPassword());
-        assertEquals(70.0, user.getWeight());
-        assertEquals(180.0, user.getHeight());
+    void testSetUsername() {
+        user.setUsername("updatedUsername");
+        assertEquals("updatedUsername", user.getUsername());
     }
 
     @Test
-    public void testAddFriend() {
-        User user1 = new User(1, "username1", "name1", "surname1", "email1@example.com", "password1", 70.0, 180.0);
-        User user2 = new User(2, "username2", "name2", "surname2", "email2@example.com", "password2", 75.0, 175.0);
-
-        user1.addFriend(user2);
-
-        assertTrue(user1.getFriends().contains(user2));
-        assertTrue(user2.getFriends().contains(user1));
+    void testSetName() {
+        user.setName("Updated Name");
+        assertEquals("Updated Name", user.getName());
     }
 
     @Test
-    public void testRemoveFriend() {
-        User user1 = new User(1, "username1", "name1", "surname1", "email1@example.com", "password1", 70.0, 180.0);
-        User user2 = new User(2, "username2", "name2", "surname2", "email2@example.com", "password2", 75.0, 175.0);
-
-        user1.addFriend(user2);
-        user1.removeFriend(user2);
-
-        assertFalse(user1.getFriends().contains(user2));
-        assertFalse(user2.getFriends().contains(user1));
+    void testSetSurname() {
+        user.setSurname("Updated Surname");
+        assertEquals("Updated Surname", user.getSurname());
     }
 
     @Test
-    public void testTrainingHistory() {
-        User user = new User();
-        List<Training> trainingHistory = new ArrayList<>();
-        Training training = new Training();
-        trainingHistory.add(training);
-
-        user.setTrainingHistory(trainingHistory);
-
-        assertEquals(1, user.getTrainingHistory().size());
-        assertEquals(training, user.getTrainingHistory().get(0));
+    void testSetEmail() {
+        user.setEmail("updatedemail@test.com");
+        assertEquals("updatedemail@test.com", user.getEmail());
     }
 
     @Test
-    public void testPosts() {
-        User user = new User();
-        List<Post> posts = new ArrayList<>();
-        Post post = new Post();
-        posts.add(post);
-
-        user.setPosts(posts);
-
-        assertEquals(1, user.getPosts().size());
-        assertEquals(post, user.getPosts().get(0));
-    }
-    @Test
-    public void addFriendShouldNotAddSelf() {
-        User user = new User(1, "username", "name", "surname", "email@example.com", "password", 70.0, 180.0);
-        user.addFriend(user);
-        assertFalse(user.getFriends().contains(user));
+    void testSetPassword() {
+        user.setPassword("newPassword123");
+        assertEquals("newPassword123", user.getPassword());
     }
 
     @Test
-    public void addFriendShouldNotAddDuplicate() {
-        User user1 = new User(1, "username1", "name1", "surname1", "email1@example.com", "password1", 70.0, 180.0);
-        User user2 = new User(2, "username2", "name2", "surname2", "email2@example.com", "password2", 75.0, 175.0);
-        user1.addFriend(user2);
-        user1.addFriend(user2);
-        assertEquals(1, user1.getFriends().size());
+    void testSetWeight() {
+        user.setWeight(95.0);
+        assertEquals(95.0, user.getWeight());
     }
 
     @Test
-    public void removeFriendShouldNotFailIfNotFriend() {
-        User user1 = new User(1, "username1", "name1", "surname1", "email1@example.com", "password1", 70.0, 180.0);
-        User user2 = new User(2, "username2", "name2", "surname2", "email2@example.com", "password2", 75.0, 175.0);
-        user1.removeFriend(user2);
-        assertFalse(user1.getFriends().contains(user2));
-    }
-
-    @Test
-    public void equalsShouldReturnFalseForDifferentClass() {
-        User user = new User(1, "username", "name", "surname", "email@example.com", "password", 70.0, 180.0);
-        assertFalse(user.equals("some string"));
-    }
-
-    @Test
-    public void equalsShouldReturnFalseForNull() {
-        User user = new User(1, "username", "name", "surname", "email@example.com", "password", 70.0, 180.0);
-        assertFalse(user.equals(null));
-    }
-
-    @Test
-    public void equalsShouldReturnTrueForSameObject() {
-        User user = new User(1, "username", "name", "surname", "email@example.com", "password", 70.0, 180.0);
-        assertTrue(user.equals(user));
-    }
-
-    @Test
-    public void equalsShouldReturnTrueForSameId() {
-        User user1 = new User(1, "username1", "name1", "surname1", "email1@example.com", "password1", 70.0, 180.0);
-        User user2 = new User(1, "username2", "name2", "surname2", "email2@example.com", "password2", 75.0, 175.0);
-        assertTrue(user1.equals(user2));
-    }
-
-    @Test
-    public void equalsShouldReturnFalseForDifferentId() {
-        User user1 = new User(1, "username1", "name1", "surname1", "email1@example.com", "password1", 70.0, 180.0);
-        User user2 = new User(2, "username2", "name2", "surname2", "email2@example.com", "password2", 75.0, 175.0);
-        assertFalse(user1.equals(user2));
-    }
-    @Test
-    public void addFriendShouldAddMutualFriend() {
-        User user1 = new User(1, "username1", "name1", "surname1", "email1@example.com", "password1", 70.0, 180.0);
-        User user2 = new User(2, "username2", "name2", "surname2", "email2@example.com", "password2", 75.0, 175.0);
-        user1.addFriend(user2);
-        assertTrue(user1.getFriends().contains(user2));
-        assertTrue(user2.getFriends().contains(user1));
-    }
-
-    @Test
-    public void removeFriendShouldRemoveMutualFriend() {
-        User user1 = new User(1, "username1", "name1", "surname1", "email1@example.com", "password1", 70.0, 180.0);
-        User user2 = new User(2, "username2", "name2", "surname2", "email2@example.com", "password2", 75.0, 175.0);
-        user1.addFriend(user2);
-        user1.removeFriend(user2);
-        assertFalse(user1.getFriends().contains(user2));
-        assertFalse(user2.getFriends().contains(user1));
-    }
-
-    @Test
-    public void addFriendShouldNotAddIfAlreadyFriends() {
-        User user1 = new User(1, "username1", "name1", "surname1", "email1@example.com", "password1", 70.0, 180.0);
-        User user2 = new User(2, "username2", "name2", "surname2", "email2@example.com", "password2", 75.0, 175.0);
-        user1.addFriend(user2);
-        user1.addFriend(user2);
-        assertEquals(1, user1.getFriends().size());
+    void testSetHeight() {
+        user.setHeight(195.0);
+        assertEquals(195.0, user.getHeight());
     }
 }
-

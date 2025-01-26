@@ -1,131 +1,91 @@
 // author: ksiemion
 package com.drgym.drgym.model;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name="users")
+public class User {
+    @Id
+    @Column(name = "username", nullable = false)
+    private String username;
 
-public class User extends UserTemplate {
-    private double weight;
-    private double height;
-    private Set<User> friends = new HashSet<>();
-    private Exercise favouriteExercise;
-    private List<Training> trainingHistory = new ArrayList<>();
-    private List<Post> posts = new ArrayList<>();
+    @Column(name = "name")
+    private String name;
 
-    // empty constructor
+    @Column(name = "surname")
+    private String surname;
+
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "weight")
+    private Double weight;
+
+    @Column(name = "height")
+    private Double height;
+
+    @Column(name = "verified")
+    private boolean verified;
+
     public User() {}
 
-    // basic constructor without lists
     public User(
-            Integer id,
             String username,
             String name,
             String surname,
             String email,
-            String password,
-            double weight,
-            double height
+            String password, // will be encrypted in the future
+            Double weight,
+            Double height
     ) {
-        super(id, username, name, surname, email, password);
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
         this.weight = weight;
         this.height = height;
-    }
-
-    public User(
-            int id,
-            String username,
-            String name,
-            String surname,
-            String email,
-            String password,
-            double weight,
-            double height,
-            Set<User> friends,
-            Exercise favouriteExercise,
-            List<Training> trainingHistory,
-            List<Post> posts
-    ) {
-        super(id, username, name, surname, email, password);
-        this.weight = weight;
-        this.height = height;
-        this.friends = friends;
-        this.favouriteExercise = favouriteExercise;
-        this.trainingHistory = trainingHistory;
-        this.posts = posts;
+        this.verified = false;
     }
 
     // getters
-    public double getWeight() {
-        return weight;
-    }
 
-    public double getHeight() {
-        return height;
-    }
+    public String getUsername() {return username;}
 
-    public Set<User> getFriends() {
-        return friends;
-    }
+    public String getName() {return name;}
 
-    public Exercise getFavoriteExercise() {
-        return favouriteExercise;
-    }
+    public String getSurname() {return surname;}
 
-    public List<Training> getTrainingHistory() {
-        return trainingHistory;
-    }
+    public String getEmail() {return email;}
 
-    public List<Post> getPosts() {
-        return posts;
-    }
+    public String getPassword() {return password;}
+
+    public Double getWeight() {return weight;}
+
+    public Double getHeight() {return height;}
+
+    public boolean isVerified() { return verified; }
 
     // setters
-    public void setWeight(double newWeight) {
-        this.weight = newWeight;
-    }
 
-    public void setHeight(double newHeight) {
-        this.height = newHeight;
-    }
+    public void setUsername(String newUsername) {this.username = newUsername;}
 
-    public void setFriends(Set<User> newFriends) {
-        this.friends = newFriends;
-    }
+    public void setName(String newName) {this.name = newName;}
 
+    public void setSurname(String newSurname) {this.surname = newSurname;}
 
-    public void setFavoriteExercise(Exercise newFavouriteExercise) {
-        this.favouriteExercise = newFavouriteExercise;
-    }
+    public void setEmail(String newEmail) {this.email = newEmail;}
 
-    public void setTrainingHistory(List<Training> newTrainingHistory) {
-        this.trainingHistory = newTrainingHistory;
-    }
+    public void setPassword(String newPassword) {this.password = newPassword;}
 
-    public void setPosts(List<Post> newPosts) {
-        this.posts = newPosts;
-    }
+    public void setWeight(Double newWeight) {this.weight = newWeight;}
 
+    public void setHeight(Double newHeight) {this.height = newHeight;}
 
-    public void addFriend(User newFriend) {
-        if (!this.equals(newFriend)) {
-            this.friends.add(newFriend);
-            newFriend.getFriends().add(this);
-        }
-    }
+    public void setVerified(boolean verified) { this.verified = verified; }
 
-    public void removeFriend(User friend) {
-        this.friends.remove(friend);
-        friend.getFriends().remove(this);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        final User user = (User) obj;
-        return this.getId() != null && this.getId().equals(user.getId());
-    }
 }
