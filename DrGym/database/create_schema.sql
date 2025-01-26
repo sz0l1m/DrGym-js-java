@@ -194,8 +194,9 @@ CREATE trigger TG_DELETE_COMMENTS
     on POSTS
     for each row
 BEGIN
-    DELETE FROM POST_COMMENTS
-    WHERE POST_ID = :OLD.POST_ID;
+    UPDATE workouts
+    SET is_posted = 1
+    WHERE workout_id = :NEW.workout_id;
 END;
 /
 
