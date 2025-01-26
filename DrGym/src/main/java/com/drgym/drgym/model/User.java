@@ -31,6 +31,21 @@ public class User {
     @Column(name = "verified")
     private boolean verified;
 
+    @Column(name = "favorite_exercise")
+    private Long favoriteExercise;
+
+    @Column(name = "avatar")
+    private String avatar;
+
+    @Transient
+    private String token;
+
+    @Transient
+    private String identifier;
+
+    @Transient
+    private String newPassword;
+
     public User() {}
 
     public User(
@@ -38,7 +53,7 @@ public class User {
             String name,
             String surname,
             String email,
-            String password, // will be encrypted in the future
+            String password,
             Double weight,
             Double height
     ) {
@@ -50,6 +65,52 @@ public class User {
         this.weight = weight;
         this.height = height;
         this.verified = false;
+    }
+
+    public User(String email) {
+        this.email = email;
+    }
+
+    public User(String username, String name, String surname, Double weight, Double height, Long favoriteExercise, String avatar) {
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.weight = weight;
+        this.height = height;
+        this.favoriteExercise = favoriteExercise;
+        this.avatar = avatar;
+    }
+
+    public User(String email, String newPassword, String token) {
+        this.email = email;
+        this.newPassword = newPassword;
+        this.token = token;
+    }
+
+    public User(String identifier, String password) {
+        this.identifier = identifier;
+        this.password = password;
+    }
+
+    public User(
+            String username,
+            String name,
+            String surname,
+            String email,
+            String password,
+            Double weight,
+            Double height,
+            Long favoriteExercise
+    ) {
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.password = password;
+        this.weight = weight;
+        this.height = height;
+        this.verified = false;
+        this.favoriteExercise = favoriteExercise;
     }
 
     // getters
@@ -70,6 +131,14 @@ public class User {
 
     public boolean isVerified() { return verified; }
 
+    public Long getFavoriteExercise() { return favoriteExercise; }
+
+    public String getToken() { return token; }
+
+    public String getIdentifier() { return identifier; }
+
+    public String getNewPassword() { return newPassword; }
+
     // setters
 
     public void setUsername(String newUsername) {this.username = newUsername;}
@@ -88,4 +157,15 @@ public class User {
 
     public void setVerified(boolean verified) { this.verified = verified; }
 
+    public void setFavoriteExercise(Long favoriteExercise) { this.favoriteExercise = favoriteExercise; }
+
+    public void setToken(String token) { this.token = token; }
+
+    public void setIdentifier(String identifier) { this.identifier = identifier; }
+
+    public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
+
+    public String getAvatar() { return avatar; }
+
+    public void setAvatar(String avatar) { this.avatar = avatar; }
 }

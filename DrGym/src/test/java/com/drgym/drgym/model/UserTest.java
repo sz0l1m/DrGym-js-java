@@ -23,6 +23,7 @@ class UserTest {
         assertEquals("test", user.getPassword());
         assertEquals(80.0, user.getWeight());
         assertEquals(180.0, user.getHeight());
+        assertFalse(user.isVerified());
     }
 
     @Test
@@ -65,5 +66,41 @@ class UserTest {
     void testSetHeight() {
         user.setHeight(195.0);
         assertEquals(195.0, user.getHeight());
+    }
+
+    @Test
+    void testSetVerified() {
+        user.setVerified(true);
+        assertTrue(user.isVerified());
+    }
+
+    @Test
+    void testSetFavoriteExercise() {
+        user.setFavoriteExercise(123L);
+        assertEquals(123L, user.getFavoriteExercise());
+    }
+
+    @Test
+    void testSetAvatar() {
+        user.setAvatar("avatar.png");
+        assertEquals("avatar.png", user.getAvatar());
+    }
+
+    @Test
+    void testSetToken() {
+        user.setToken("token123");
+        assertEquals("token123", user.getToken());
+    }
+
+    @Test
+    void testSetIdentifier() {
+        user.setIdentifier("identifier123");
+        assertEquals("identifier123", user.getIdentifier());
+    }
+
+    @Test
+    void testSetNewPassword() {
+        user.setNewPassword("newPassword");
+        assertEquals("newPassword", user.getNewPassword());
     }
 }
